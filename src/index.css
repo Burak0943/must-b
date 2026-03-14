@@ -49,6 +49,8 @@
   --indigo: 239 84% 67%;
   --emerald: 160 84% 39%;
   --amber: 38 92% 50%;
+  
+  --glow-color: 239 84% 67%;
 }
 
 @layer base {
@@ -65,6 +67,7 @@
 }
 
 @layer components {
+  /* ===== Glass Surfaces ===== */
   .glass {
     @apply bg-white/[0.03] backdrop-blur-xl;
     box-shadow: 
@@ -84,6 +87,39 @@
       0 8px 24px rgba(0,0,0,0.5);
   }
 
+  .glass-glow {
+    @apply bg-white/[0.03] backdrop-blur-xl;
+    box-shadow: 
+      0 0 0 1px rgba(255,255,255,0.08),
+      0 1px 2px -1px rgba(0,0,0,0.5),
+      0 4px 12px rgba(0,0,0,0.4),
+      0 0 30px -10px hsl(var(--glow-color) / 0.15);
+  }
+  .glass-glow:hover {
+    box-shadow: 
+      0 0 0 1px rgba(255,255,255,0.12),
+      0 2px 4px -1px rgba(0,0,0,0.5),
+      0 8px 24px rgba(0,0,0,0.5),
+      0 0 50px -10px hsl(var(--glow-color) / 0.25);
+  }
+
+  /* ===== Neon Glow Card ===== */
+  .card-neon-glow {
+    @apply bg-white/[0.03] backdrop-blur-xl transition-all duration-500;
+    box-shadow: 
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 2px 8px rgba(0,0,0,0.4);
+  }
+  .card-neon-glow:hover {
+    @apply bg-white/[0.06];
+    box-shadow: 
+      0 0 0 1px hsl(var(--glow-color) / 0.3),
+      0 0 20px -5px hsl(var(--glow-color) / 0.2),
+      0 0 40px -10px hsl(var(--glow-color) / 0.15),
+      0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  /* ===== Animated Glow Border ===== */
   .glow-border {
     position: relative;
     border-radius: var(--radius-outer);
@@ -93,7 +129,7 @@
     content: "";
     position: absolute;
     inset: -2px;
-    background: conic-gradient(from 0deg, transparent, hsl(var(--indigo)), transparent, hsl(var(--indigo)), transparent);
+    background: conic-gradient(from 0deg, transparent 0%, hsl(var(--indigo)) 25%, transparent 50%, hsl(280 60% 50%) 75%, transparent 100%);
     border-radius: inherit;
     animation: glow-rotate 4s linear infinite;
     z-index: -1;
@@ -101,33 +137,37 @@
   .glow-border::after {
     content: "";
     position: absolute;
-    inset: 1px;
+    inset: 2px;
     background: hsl(var(--background));
-    border-radius: inherit;
+    border-radius: calc(var(--radius-outer) - 2px);
     z-index: -1;
   }
 
+  /* ===== Gradient Text ===== */
   .text-gradient-hero {
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(to bottom, hsl(0 0% 100%), hsl(215 20% 55%));
   }
 
+  /* ===== Buttons ===== */
   .btn-primary-glow {
     @apply relative px-8 py-4 bg-primary text-primary-foreground rounded-xl font-semibold transition-all duration-300;
-    box-shadow: 0 0 20px hsl(239 84% 67% / 0.3);
+    box-shadow: 0 0 20px hsl(239 84% 67% / 0.3), 0 0 0 1px hsl(239 84% 67% / 0.2);
   }
   .btn-primary-glow:hover {
     @apply bg-primary/90;
-    box-shadow: 0 0 30px hsl(239 84% 67% / 0.5);
+    box-shadow: 0 0 40px hsl(239 84% 67% / 0.5), 0 0 80px hsl(239 84% 67% / 0.2), 0 0 0 1px hsl(239 84% 67% / 0.4);
   }
 
   .btn-glass {
-    @apply px-4 py-2 glass rounded-full transition-all duration-200;
+    @apply px-4 py-2 glass rounded-full transition-all duration-300;
   }
   .btn-glass:hover {
     @apply bg-white/10;
+    box-shadow: 0 0 20px hsl(var(--glow-color) / 0.1);
   }
 
+  /* ===== Utilities ===== */
   .stat-bar {
     @apply w-full bg-white/5 h-1.5 rounded-full overflow-hidden;
   }
@@ -150,6 +190,7 @@
   }
 }
 
+/* ===== Keyframes ===== */
 @keyframes glow-rotate {
   to { transform: rotate(360deg); }
 }
