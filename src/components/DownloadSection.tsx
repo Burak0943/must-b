@@ -1,4 +1,4 @@
-import { motion, useRef as _useRef } from "framer-motion";
+import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Download, ChevronRight, Monitor, Apple } from "lucide-react";
