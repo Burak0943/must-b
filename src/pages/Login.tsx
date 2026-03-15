@@ -65,15 +65,23 @@ const Login = () => {
 
       <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="w-full max-w-md p-8 glass rounded-outer relative z-10">
         <div className="text-center mb-10">
+          {/* LOGO GÜNCELLEMESİ */}
           <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center overflow-hidden">
-            <img src="/fox.jpg" alt="Logo" className="w-full h-full object-contain" style={{ mixBlendMode: 'plus-lighter' }} />
+            <img 
+              src="/mascot.png" 
+              alt="must-b logo" 
+              className="w-full h-full object-contain pointer-events-none" 
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                console.error("Login logosu bulunamadı!");
+              }}
+            />
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-foreground">Welcome Back</h2>
           <p className="text-muted-foreground text-sm mt-2">Access your global command center.</p>
         </div>
 
         <div className="space-y-4">
-          {/* CANLANDIRILAN OAUTH BUTONLARI */}
           <div className="grid grid-cols-2 gap-3">
             {/* GITHUB */}
             <div className="relative group">
@@ -88,7 +96,6 @@ const Login = () => {
                 onClick={() => handleOAuth('github')}
                 className="relative w-full py-3 px-4 glass rounded-xl flex items-center justify-center gap-3 hover:bg-white/10 transition-all font-medium text-foreground text-sm border border-white/5 overflow-hidden"
               >
-                {/* Shimmer Effect */}
                 <motion.div 
                   animate={{ x: ['-100%', '200%'] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
