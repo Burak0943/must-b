@@ -8,7 +8,6 @@ import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-// ScrollReveal Bileşeni - Performans için optimize edildi
 const ScrollReveal = ({
   children,
   className = "",
@@ -31,7 +30,6 @@ const ScrollReveal = ({
         delay, 
         ease: [0.25, 0.1, 0.25, 1] 
       }}
-      // Donanım ivmelenmesini tetikler, mobilde kasmayı önler
       style={{ willChange: "transform, opacity" }}
       className={className}
     >
@@ -54,7 +52,6 @@ const Index = () => {
       <MeshBackground />
       <Navbar />
 
-      {/* Hero Section */}
       <section className="pt-16 md:pt-24 pb-24 md:pb-32 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div
@@ -62,7 +59,6 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            {/* Versiyon Badge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -73,7 +69,6 @@ const Index = () => {
               <span className="ml-2">v1.0 — Now Available</span>
             </motion.div>
 
-            {/* Ana Başlık */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -83,7 +78,6 @@ const Index = () => {
               Cloud Brain, <br /> Local Muscle.
             </motion.h1>
 
-            {/* Alt Metin */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -94,7 +88,6 @@ const Index = () => {
               Zero latency, total privacy, infinite scale.
             </motion.p>
 
-            {/* Butonlar */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -118,7 +111,6 @@ const Index = () => {
             </motion.div>
           </motion.div>
 
-          {/* Floating Terminal */}
           <div className="mt-16 md:mt-20">
             <HeroTerminal />
           </div>
@@ -128,7 +120,6 @@ const Index = () => {
       <FeaturesSection />
       <DownloadSection />
 
-      {/* Footer */}
       <footer className="py-12 px-6 border-t border-white/5 relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40%] h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
         <ScrollReveal>
@@ -145,11 +136,11 @@ const Index = () => {
                 }}
                 className="relative w-8 h-8 flex items-center justify-center rounded-lg overflow-hidden border border-white/10 bg-[#0f1115]"
               >
-                {/* DÜZELTME: Dosya adını /fox.jpg yaptık ve contain ekledik */}
+                {/* YENİ MASCOT GÜNCELLEMESİ */}
                 <img 
-                  src="/fox.jpg" 
+                  src="/mascot.png" 
                   alt="must-b mascot" 
-                  className="w-full h-full object-contain scale-110"
+                  className="w-full h-full object-contain scale-110 pointer-events-none"
                 />
               </motion.div>
               must-b
