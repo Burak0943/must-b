@@ -12,7 +12,7 @@ const Navbar = () => {
       {/* LOGO BÖLÜMÜ */}
       <Link to="/" className="flex items-center gap-3 font-bold text-xl tracking-tighter text-foreground group">
         
-        {/* Tilki Kutusu - Kare görünümünü silmek için tüm sınırları kaldırdık */}
+        {/* Tilki Kutusu - Mascot.png ile güncellendi */}
         <motion.div
           animate={{ 
             y: [0, -3, 0], 
@@ -24,13 +24,15 @@ const Navbar = () => {
           }}
           whileHover={{ scale: 1.1 }}
           className="relative w-10 h-10 flex items-center justify-center overflow-hidden" 
-          /* bg-black ve rounded-lg sınıflarını sildik, böylece kutu hissi gitti */
         >
           <img 
-            src="/fox.jpg" 
+            src="/mascot.png" // DÜZELTME: fox.jpg yerine mascot.png yaptık
             alt="must-b agent" 
-            className="w-full h-full object-contain" 
-            /* object-contain kullanarak resmin kutu içinde patlamasını engelledik */
+            className="w-full h-full object-contain pointer-events-none" 
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              console.error("Navbar logosu yüklenemedi!");
+            }}
           />
         </motion.div>
         
