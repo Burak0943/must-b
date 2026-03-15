@@ -8,43 +8,62 @@ const Navbar = () => {
 
   return (
     <nav className="relative z-50 flex items-center justify-between px-6 md:px-8 py-6 max-w-7xl mx-auto">
-      <Link to="/" className="flex items-center gap-2 font-bold text-xl tracking-tighter text-foreground">
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground text-sm font-black">
-          B
-        </div>
-        must-b
+      
+      {/* LOGO BÖLÜMÜ */}
+      <Link to="/" className="flex items-center gap-3 font-bold text-xl tracking-tighter text-foreground group">
+        
+        {/* Tilki Kutusu - Kare görünümünü silmek için tüm sınırları kaldırdık */}
+        <motion.div
+          animate={{ 
+            y: [0, -3, 0], 
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          whileHover={{ scale: 1.1 }}
+          className="relative w-10 h-10 flex items-center justify-center overflow-hidden" 
+          /* bg-black ve rounded-lg sınıflarını sildik, böylece kutu hissi gitti */
+        >
+          <img 
+            src="/fox.jpg" 
+            alt="must-b agent" 
+            className="w-full h-full object-contain" 
+            /* object-contain kullanarak resmin kutu içinde patlamasını engelledik */
+          />
+        </motion.div>
+        
+        <span className="group-hover:text-primary transition-colors duration-300">must-b</span>
       </Link>
 
-      {/* Desktop */}
-      <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+      {/* Desktop Menu */}
+      <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground font-medium">
         <a href="#features" className="hover:text-foreground transition-colors duration-200">Features</a>
         <a href="#download" className="hover:text-foreground transition-colors duration-200">Download</a>
-        <Link to="/login" className="btn-glass text-foreground">
+        <Link 
+          to="/login" 
+          className="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-foreground hover:bg-white/10 transition-all backdrop-blur-md"
+        >
           Command Center
         </Link>
       </div>
 
-      {/* Mobile toggle */}
-      <button
-        className="md:hidden text-foreground p-2"
-        onClick={() => setMobileOpen(!mobileOpen)}
-      >
+      {/* Mobile Toggle */}
+      <button className="md:hidden text-foreground p-2" onClick={() => setMobileOpen(!mobileOpen)}>
         {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 glass p-6 mx-4 rounded-2xl flex flex-col gap-4 md:hidden"
+            className="absolute top-full left-0 right-0 glass p-6 mx-4 mt-2 rounded-2xl flex flex-col gap-4 md:hidden border border-white/10 bg-[#0A0A0A] z-50"
           >
-            <a href="#features" onClick={() => setMobileOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors py-2">Features</a>
-            <a href="#download" onClick={() => setMobileOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors py-2">Download</a>
-            <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-primary-glow text-center">
+            <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-primary-glow text-center py-3 rounded-xl font-bold">
               Command Center
             </Link>
           </motion.div>

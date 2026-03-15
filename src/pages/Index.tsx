@@ -4,9 +4,9 @@ import MeshBackground from "@/components/MeshBackground";
 import HeroTerminal from "@/components/HeroTerminal";
 import FeaturesSection from "@/components/FeaturesSection";
 import DownloadSection from "@/components/DownloadSection";
-import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ScrollReveal = ({
   children,
@@ -33,6 +33,8 @@ const ScrollReveal = ({
 };
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -88,10 +90,13 @@ const Index = () => {
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
-                <Link to="/login" className="btn-primary-glow inline-flex items-center gap-2 group">
+                <button 
+                  onClick={() => navigate("/login")} 
+                  className="btn-primary-glow inline-flex items-center gap-2 group border-none cursor-pointer"
+                >
                   Get Started
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                </button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
                 <a href="#features" className="btn-glass inline-flex items-center gap-2 px-8 py-4 text-foreground">
@@ -111,13 +116,31 @@ const Index = () => {
       <FeaturesSection />
       <DownloadSection />
 
-      {/* Footer */}
+      {/* Footer - GÜNCELLENDİ */}
       <footer className="py-12 px-6 border-t border-white/5 relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40%] h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
         <ScrollReveal>
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 font-bold text-foreground tracking-tighter">
-              <div className="w-6 h-6 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-black">B</div>
+            <div className="flex items-center gap-3 font-bold text-foreground tracking-tighter">
+              {/* Footer Maskot Animasyonu */}
+              <motion.div
+                animate={{ 
+                  rotate: [0, -5, 5, -5, 5, 0],
+                  scale: [1, 1.05, 1]
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="relative w-8 h-8 flex items-center justify-center rounded-lg overflow-hidden border border-white/10 bg-[#0f1115]"
+              >
+                <img 
+                  src="/mascot.jpg" 
+                  alt="must-b mascot" 
+                  className="w-full h-full object-cover scale-110"
+                />
+              </motion.div>
               must-b
             </div>
             <p className="text-xs text-muted-foreground">© 2026 must-b. All rights reserved.</p>
