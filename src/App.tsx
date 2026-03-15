@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import LocalSetup from "./pages/LocalSetup"; // YENİ: Yerel kurulum sayfası
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            
+            {/* TİLKİLİ KURULUM ROTASI */}
+            <Route path="/setup" element={<LocalSetup />} /> 
+            
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
