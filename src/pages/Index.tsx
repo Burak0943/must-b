@@ -31,7 +31,7 @@ const ScrollReveal = ({
         delay, 
         ease: [0.25, 0.1, 0.25, 1] 
       }}
-      // Tarayıcıya bu elementin hareket edeceğini söylüyoruz, takılmayı önler
+      // Donanım ivmelenmesini tetikler, mobilde kasmayı önler
       style={{ willChange: "transform, opacity" }}
       className={className}
     >
@@ -145,10 +145,11 @@ const Index = () => {
                 }}
                 className="relative w-8 h-8 flex items-center justify-center rounded-lg overflow-hidden border border-white/10 bg-[#0f1115]"
               >
+                {/* DÜZELTME: Dosya adını /fox.jpg yaptık ve contain ekledik */}
                 <img 
-                  src="/mascot.jpg" 
+                  src="/fox.jpg" 
                   alt="must-b mascot" 
-                  className="w-full h-full object-cover scale-110"
+                  className="w-full h-full object-contain scale-110"
                 />
               </motion.div>
               must-b
