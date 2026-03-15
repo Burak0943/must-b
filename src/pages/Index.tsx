@@ -8,7 +8,6 @@ import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-// ScrollReveal Bileşeni - Performans ve Translate dostu
 const ScrollReveal = ({
   children,
   className = "",
@@ -53,7 +52,6 @@ const Index = () => {
       <MeshBackground />
       <Navbar />
 
-      {/* Hero Section */}
       <section className="pt-16 md:pt-24 pb-24 md:pb-32 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div
@@ -61,62 +59,33 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            {/* Versiyon Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 glass rounded-full text-xs font-mono text-muted-foreground mb-8"
-            >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 glass rounded-full text-xs font-mono text-muted-foreground mb-8">
               <span className="pulse-dot" />
               <span>v1.0 — Now Available</span>
-            </motion.div>
+            </div>
 
-            {/* Ana Başlık - Translate hatasını önlemek için span içinde */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 text-gradient-hero leading-[1.1]"
-            >
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 text-gradient-hero leading-[1.1]">
               <span>Cloud Brain,</span> <br /> <span>Local Muscle.</span>
-            </motion.h1>
+            </h1>
 
-            {/* Alt Metin */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
-            >
+            <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
               <span>The first AI agent that lives on your hardware but learns from the swarm. Zero latency, total privacy, infinite scale.</span>
-            </motion.p>
+            </p>
 
-            {/* Butonlar */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <button 
-                  onClick={() => navigate("/login")} 
-                  className="btn-primary-glow inline-flex items-center gap-2 group border-none cursor-pointer"
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <a href="#features" className="btn-glass inline-flex items-center gap-2 px-8 py-4 text-foreground">
-                  <span>Learn More</span>
-                </a>
-              </motion.div>
-            </motion.div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button 
+                onClick={() => navigate("/login")} 
+                className="btn-primary-glow inline-flex items-center gap-2 group border-none cursor-pointer"
+              >
+                <span>Get Started</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <a href="#features" className="btn-glass inline-flex items-center gap-2 px-8 py-4 text-foreground">
+                <span>Learn More</span>
+              </a>
+            </div>
           </motion.div>
 
-          {/* Floating Terminal */}
           <div className="mt-16 md:mt-20">
             <HeroTerminal />
           </div>
@@ -126,29 +95,18 @@ const Index = () => {
       <FeaturesSection />
       <DownloadSection />
 
-      {/* Footer */}
       <footer className="py-12 px-6 border-t border-white/5 relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40%] h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
         <ScrollReveal>
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3 font-bold text-foreground tracking-tighter">
-              <motion.div
-                animate={{ 
-                  rotate: [0, -5, 5, 0],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="relative w-8 h-8 flex items-center justify-center rounded-lg overflow-hidden border border-white/10 bg-[#0f1115]"
-              >
+              <div className="relative w-8 h-8 flex items-center justify-center rounded-lg overflow-hidden border border-white/10 bg-[#0f1115]">
                 <img 
                   src="/mascot.png" 
                   alt="must-b mascot" 
                   className="w-full h-full object-contain scale-110 pointer-events-none"
                 />
-              </motion.div>
+              </div>
               <span>must-b</span>
             </div>
             <p className="text-xs text-muted-foreground">
