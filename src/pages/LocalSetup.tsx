@@ -15,7 +15,7 @@ const LocalSetup = () => {
   };
 
   const handleVideoEnd = () => {
-    setTimeout(() => setStep('config'), 300;
+    setTimeout(() => setStep('config'), 300);
   };
 
   return (
