@@ -1,141 +1,162 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Activity, Cpu, Zap, Settings, LogOut, 
-  Terminal, Globe, Shield, Brain, Gauge, Radio, HardDrive, ChevronRight
-} from "lucide-react";
+import { Activity, Cpu, Zap, Settings as SettingsIcon, LogOut, Menu, X, ChevronRight, Bot, BrainCircuit, Loader2 } from "lucide-react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
-import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase"; 
+import { toast } from "sonner";
+
+const navItems = [
+  { icon: Activity, label: "Overview" },
+  { icon: Bot, label: "AI Agents" },
+  { icon: SettingsIcon, label: "Settings" },
+];
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [agent, setAgent] = useState<any>(null);
-  const [logs, setLogs] = useState<any[]>([]);
+  const [searchParams] = useSearchParams();
+  const agentId = searchParams.get("agentId");
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Overview");
-  const [pulse, setPulse] = useState(0);
+  const [user, setUser] = useState<any>(null);
+  const [fullName, setFullName] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // --- CANLI VERİ STATE'LERİ ---
+  const [currentAgent, setCurrentAgent] = useState<any>(null);
+  const [logs, setLogs] = useState<any[]>([]);
 
   useEffect(() => {
-    const syncData = async () => {
-      const { data: latest } = await supabase.from('mustb_agents').select('*').order('created_at', { ascending: false }).limit(1).single();
-      if (latest) setAgent(latest);
+    const initDashboard = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { navigate("/login"); return; }
+      setUser(session.user);
 
-      const { data: logData } = await supabase.from('swarm_logs').select('*').order('created_at', { ascending: false }).limit(6);
-      setLogs(logData || []);
+      // Profil Çek
+      const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', session.user.id).single();
+      if (profile) setFullName(profile.full_name);
+
+      // Ajanı Bul (URL'deki ID veya en son aktif olan)
+      let targetId = agentId;
+      if (!targetId) {
+        const { data: latest } = await supabase.from('mustb_agents').select('id').order('created_at', { ascending: false }).limit(1).single();
+        targetId = latest?.id;
+      }
+
+      if (targetId) {
+        const { data: agentData } = await supabase.from('mustb_agents').select('*').eq('id', targetId).single();
+        setCurrentAgent(agentData);
+
+        // REALTIME: Ajan Güncellemelerini Dinle
+        supabase.channel(`sync_${targetId}`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'mustb_agents', filter: `id=eq.${targetId}` }, 
+          (payload) => setCurrentAgent(payload.new)
+        ).subscribe();
+      }
+
+      // Logları Çek
+      const { data: logsData } = await supabase.from('swarm_logs').select('*').order('created_at', { ascending: false }).limit(5);
+      setLogs(logsData || []);
+
+      setLoading(false);
     };
-    syncData();
-    const interval = setInterval(() => setPulse(Math.random() * 2 - 1), 2000);
-    return () => clearInterval(interval);
-  }, []);
+    initDashboard();
+  }, [navigate, agentId]);
+
+  if (loading) return <div className="h-screen flex items-center justify-center bg-[#0a0a0a]"><Loader2 className="animate-spin text-primary" /></div>;
+
+  const displayAgentName = fullName || user?.email?.split('@')[0] || 'Commander';
 
   return (
-    <div className="h-screen w-full bg-[#050505] text-white flex overflow-hidden font-sans selection:bg-orange-500/30">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden">
       
-      {/* 🌑 SLIM SIDEBAR */}
-      <aside className="w-20 border-r border-white/5 bg-black/80 flex flex-col items-center py-10 z-50">
-        <div className="w-10 h-10 bg-orange-600 rounded-xl mb-12 flex items-center justify-center shadow-[0_0_20px_rgba(234,88,12,0.4)]">
-          <span className="font-black text-black text-xl italic">b</span>
+      {/* SIDEBAR (Senin Orijinal Yapın) */}
+      <aside className={`fixed md:static z-50 h-full w-64 border-r border-white/5 p-6 flex flex-col gap-8 bg-background transition-transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="flex items-center justify-between">
+          <Link to="/" className="font-bold text-xl tracking-tighter flex items-center gap-2">
+            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center text-primary-foreground text-xs font-black">B</div> must-b
+          </Link>
+          <button className="md:hidden" onClick={() => setSidebarOpen(false)}><X /></button>
         </div>
-        <nav className="flex-1 space-y-8">
-          {[Gauge, Brain, Globe, Shield].map((Icon, i) => (
-            <button key={i} className="text-gray-600 hover:text-orange-500 transition-colors block mx-auto">
-              <Icon size={20} strokeWidth={1.5} />
+        <nav className="space-y-1 flex-1">
+          {navItems.map((item) => (
+            <button key={item.label} onClick={() => setActiveTab(item.label)} className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all ${activeTab === item.label ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground hover:bg-white/5"}`}>
+              <item.icon className="w-4 h-4" /> {item.label}
             </button>
           ))}
         </nav>
-        <button onClick={() => navigate('/')} className="text-gray-700 hover:text-red-500 transition-colors">
-          <LogOut size={20} />
+        <button onClick={() => supabase.auth.signOut().then(() => navigate('/'))} className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-foreground hover:text-red-500">
+          <LogOut className="w-4 h-4" /> Disconnect
         </button>
       </aside>
 
-      {/* 🚀 MAIN CONTENT */}
-      <main className="flex-1 relative flex flex-col overflow-hidden">
-        
-        {/* Subtle Grid Background (Göz yormayan, çok hafif bir ızgara) */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px]" />
-
-        {/* TOP HUD */}
-        <header className="h-20 border-b border-white/5 flex items-center justify-between px-10 relative z-10 backdrop-blur-md">
-          <div className="flex items-center gap-6">
-            <Radio className="text-orange-500 animate-pulse" size={16} />
-            <h1 className="font-mono text-[10px] uppercase tracking-[0.5em] text-gray-400">
-              System Status: <span className="text-orange-500">Active</span> // Node: 0x943
-            </h1>
+      {/* MAIN CONTENT */}
+      <main className="flex-1 overflow-y-auto p-6 md:p-10">
+        <header className="flex justify-between items-center mb-12">
+          <div>
+            <h1 className="text-2xl font-bold">{activeTab === "Overview" ? "Command Center" : activeTab}</h1>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-xs text-muted-foreground font-mono uppercase tracking-widest">Commander: {displayAgentName}</span>
+            </div>
           </div>
-          <div className="bg-orange-500/10 border border-orange-500/20 px-4 py-1.5 rounded text-[10px] font-mono text-orange-500">
-            {agent?.agent_name || "MUST-B CORE"}
+          <div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center text-primary font-bold bg-primary/5">
+            {displayAgentName.charAt(0)}
           </div>
         </header>
 
-        {/* DATA GRID */}
-        <div className="flex-1 p-10 grid grid-cols-12 gap-6 relative z-10 overflow-y-auto">
-          
-          {/* CPU CARD */}
-          <div className="col-span-12 lg:col-span-4 group">
-            <div className="h-full bg-white/[0.02] border border-white/5 rounded-3xl p-8 hover:border-orange-500/30 transition-all duration-500">
-              <div className="flex justify-between items-center mb-10">
-                <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest">NPU Workload</span>
-                <Cpu size={16} className="text-orange-500" />
-              </div>
-              <div className="text-7xl font-black tracking-tighter mb-6 italic">
-                {agent?.score || 0}<span className="text-orange-500 text-2xl not-italic">%</span>
-              </div>
-              <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                <motion.div animate={{ width: `${(agent?.score || 0) + pulse}%` }} className="h-full bg-orange-500 shadow-[0_0_15px_rgba(234,88,12,0.6)]" />
-              </div>
-            </div>
-          </div>
-
-          {/* RAM CARD */}
-          <div className="col-span-12 lg:col-span-4 group">
-            <div className="h-full bg-white/[0.02] border border-white/5 rounded-3xl p-8 hover:border-emerald-500/30 transition-all duration-500">
-              <div className="flex justify-between items-center mb-10">
-                <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Neural Memory</span>
-                <HardDrive size={16} className="text-emerald-500" />
-              </div>
-              <div className="text-7xl font-black tracking-tighter mb-6 italic text-emerald-500">
-                {agent?.specs?.ram || 0}<span className="text-gray-600 text-2xl not-italic ml-2">GB</span>
-              </div>
-              <div className="flex gap-1">
-                {Array.from({length: 12}).map((_, i) => (
-                  <div key={i} className={`h-1 flex-1 rounded-full ${i < 8 ? 'bg-emerald-500' : 'bg-white/5'}`} />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* ONLINE STATUS */}
-          <div className="col-span-12 lg:col-span-4 bg-white/[0.02] border border-white/5 rounded-3xl p-8 flex flex-col justify-between border-l-orange-500/50">
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Link Status</span>
-              <div className="w-2 h-2 rounded-full bg-orange-500 animate-ping" />
-            </div>
-            <div>
-              <p className="text-5xl font-black tracking-tighter italic uppercase">Online</p>
-              <p className="text-[10px] font-mono text-gray-600 mt-2 uppercase tracking-widest">Encrypted Tunnel Stable</p>
-            </div>
-          </div>
-
-          {/* LOGS - Tertemiz ve Okunaklı */}
-          <div className="col-span-12 lg:col-span-12 bg-black/40 border border-white/5 rounded-[2.5rem] p-10">
-            <h3 className="font-mono text-[10px] uppercase tracking-[0.4em] text-gray-500 mb-8 flex items-center gap-3">
-              <Terminal size={14} className="text-orange-500" /> Live Intelligence Stream
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-              {logs.map((log, i) => (
-                <div key={i} className="flex items-center justify-between py-4 border-b border-white/[0.03] group hover:bg-white/[0.01] px-4 transition-all">
-                  <div className="flex items-center gap-6">
-                    <span className="font-mono text-[10px] text-gray-600 italic">{new Date(log.created_at).toLocaleTimeString()}</span>
-                    <p className="text-sm font-medium text-gray-400 group-hover:text-white transition-colors">{log.action_title}</p>
-                  </div>
-                  <span className={`text-[9px] font-mono px-2 py-0.5 rounded ${log.action_type === 'Warning' ? 'bg-red-500/10 text-red-500' : 'bg-orange-500/10 text-orange-500'}`}>
-                    {log.action_type}
-                  </span>
+        <AnimatePresence mode="wait">
+          {activeTab === "Overview" && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              {/* CPU CARD */}
+              <div className="glass p-6 rounded-2xl border border-white/5">
+                <div className="flex items-center justify-between mb-4"><Cpu className="w-5 h-5 text-primary" /><span className="text-xs font-mono text-muted-foreground uppercase">Global CPU Load</span></div>
+                <div className="text-3xl font-bold mb-4 tabular-nums">{currentAgent?.score || 0}%</div>
+                <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <motion.div animate={{ width: `${currentAgent?.score || 0}%` }} className="bg-primary h-full" />
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-        </div>
+              {/* RAM CARD */}
+              <div className="glass p-6 rounded-2xl border border-white/5">
+                <div className="flex items-center justify-between mb-4"><BrainCircuit className="w-5 h-5 text-emerald-500" /><span className="text-xs font-mono text-muted-foreground uppercase">Neural Memory</span></div>
+                <div className="text-3xl font-bold mb-4 tabular-nums">{currentAgent?.specs?.ram || 0} GB</div>
+                <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <motion.div animate={{ width: `${(currentAgent?.specs?.ram / 32) * 100}%` }} className="bg-emerald-500 h-full" />
+                </div>
+              </div>
+
+              {/* STATUS CARD */}
+              <div className="glass p-6 rounded-2xl border border-white/5">
+                <div className="flex items-center justify-between mb-4"><Zap className="w-5 h-5 text-amber-500" /><span className="text-xs font-mono text-muted-foreground uppercase">Agent Status</span></div>
+                <div className="text-3xl font-bold mb-4 uppercase tracking-tighter italic">{currentAgent ? "Online" : "Scanning..."}</div>
+                <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div className={`h-full ${currentAgent ? 'bg-amber-500 w-full' : 'w-0'}`} />
+                </div>
+              </div>
+
+              {/* LOGS */}
+              <div className="md:col-span-3 glass p-8 rounded-3xl border border-white/5 mt-4">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="font-semibold">Recent Swarm Activity</h3>
+                  <ChevronRight size={16} className="text-muted-foreground" />
+                </div>
+                <div className="space-y-4">
+                  {logs.map((log, i) => (
+                    <div key={i} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-2 h-2 rounded-full ${log.action_type === 'Warning' ? 'bg-red-500' : 'bg-primary'}`} />
+                        <span className="text-sm text-gray-400">{log.action_title}</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-gray-600 uppercase">{new Date(log.created_at).toLocaleTimeString()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );
