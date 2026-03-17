@@ -9,213 +9,180 @@ import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase"; 
 import { toast } from "sonner";
 
-const navItems = [
-  { icon: Activity, label: "Overview" },
-  { icon: Bot, label: "AI Agents" },
-  { icon: SettingsIcon, label: "Settings" },
-];
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const agentId = searchParams.get("agentId"); // URL'den gelen agent ID'si
+  const agentIdFromUrl = searchParams.get("agentId");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("Overview");
-  const [loadingAuth, setLoadingAuth] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // --- MUST-B REALTIME STATE'LERİ ---
-  const [currentAgent, setCurrentAgent] = useState<any>(null);
-  const [fullName, setFullName] = useState("");
-  const [agents, setAgents] = useState<any[]>([]);
+  // --- MUST-B LIVE DATA ---
+  const [agent, setAgent] = useState<any>(null);
   const [logs, setLogs] = useState<any[]>([]);
-  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [fullName, setFullName] = useState("");
 
-  // 1. AUTH VE İLK VERİ ÇEKİMİ
+  // 📡 1. AUTH VE DATA SYNC
   useEffect(() => {
     const initDashboard = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/login");
-        return;
-      }
+      if (!session) { navigate("/login"); return; }
       setUser(session.user);
 
-      // Ajan detaylarını çek (Eğer agentId varsa)
-      if (agentId) {
-        const { data: agentData } = await supabase
-          .from('mustb_agents')
-          .select('*')
-          .eq('id', agentId)
-          .single();
-        if (agentData) setCurrentAgent(agentData);
+      // Profili çek
+      const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', session.user.id).single();
+      if (profile) setFullName(profile.full_name);
+
+      // 🎯 EN ÖNEMLİ KISIM: Ajanı Bul
+      let targetAgentId = agentIdFromUrl;
+
+      if (!targetAgentId) {
+        const { data: latest } = await supabase.from('mustb_agents').select('id').order('created_at', { ascending: false }).limit(1).single();
+        targetAgentId = latest?.id;
       }
 
-      // Diğer veriler
-      const { data: profileData } = await supabase.from('profiles').select('full_name').eq('id', session.user.id).single();
-      if (profileData) setFullName(profileData.full_name);
+      if (targetAgentId) {
+        const { data: agentData } = await supabase.from('mustb_agents').select('*').eq('id', targetAgentId).single();
+        setAgent(agentData);
 
-      const { data: logsData } = await supabase.from('swarm_logs').select('*').order('created_at', { ascending: false }).limit(5);
-      if (logsData) setLogs(logsData);
+        // 🧬 REALTIME: Bu ajanı canlı dinle
+        const channel = supabase
+          .channel(`live_agent_${targetAgentId}`)
+          .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'mustb_agents', filter: `id=eq.${targetAgentId}` }, 
+            (payload) => {
+              setAgent(payload.new);
+              console.log("Canlı Veri Senkronize Edildi 🦊");
+            }
+          ).subscribe();
 
-      setLoadingAuth(false);
+        // 📜 LOGLARI DİNLE
+        const logChannel = supabase
+          .channel('swarm_logs')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'swarm_logs' }, 
+            (payload) => setLogs(prev => [payload.new, ...prev].slice(0, 5))
+          ).subscribe();
+
+        // İlk logları çek
+        const { data: initialLogs } = await supabase.from('swarm_logs').select('*').order('created_at', { ascending: false }).limit(5);
+        if (initialLogs) setLogs(initialLogs);
+
+        return () => {
+          supabase.removeChannel(channel);
+          supabase.removeChannel(logChannel);
+        };
+      }
+      setLoading(false);
     };
     initDashboard();
-  }, [navigate, agentId]);
+  }, [navigate, agentIdFromUrl]);
 
-  // 2. GERÇEK ZAMANLI VERİ TAKİBİ (Realtime)
-  useEffect(() => {
-    if (!agentId) return;
+  if (loading && !agent) return <div className="h-screen bg-black flex items-center justify-center font-mono text-orange-500 animate-pulse uppercase tracking-[0.5em]">Establishing Neural Link...</div>;
 
-    // Terminalden (CLI) gelen güncellemeleri anlık yakala
-    const channel = supabase
-      .channel(`agent_sync_${agentId}`)
-      .on('postgres_changes', { 
-        event: 'UPDATE', 
-        schema: 'public', 
-        table: 'mustb_agents', 
-        filter: `id=eq.${agentId}` 
-      }, (payload) => {
-        setCurrentAgent(payload.new);
-        // İsteğe bağlı: Veri her güncellendiğinde küçük bir log atılabilir
-      })
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, [agentId]);
-
-  // LOG EKLEME FONKSİYONU
-  const addLog = async (title: string, type: string = "Success") => {
-    if (!user) return;
-    const { data, error } = await supabase.from('swarm_logs').insert([{ 
-      user_id: user.id, 
-      action_title: title, 
-      action_type: type 
-    }]).select().single();
-    if (data) setLogs(prev => [data, ...prev].slice(0, 5));
-  };
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    toast.success("Disconnected from neural net.");
-    navigate("/");
-  };
-
-  if (loadingAuth) return (
-    <div className="h-screen flex flex-col items-center justify-center bg-black gap-4 font-mono text-orange-500">
-      <div className="w-12 h-12 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-      <span className="tracking-widest uppercase text-xs">Syncing Neural Core...</span>
-    </div>
-  );
-
-  const displayAgentName = fullName || user?.email?.split('@')[0] || 'Commander';
+  const commanderName = fullName || user?.email?.split('@')[0] || 'Commander';
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex h-screen bg-background text-foreground overflow-hidden">
+    <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans">
       
       {/* SIDEBAR */}
-      <aside className={`fixed md:static z-50 h-full w-64 border-r border-white/5 p-6 flex flex-col gap-8 bg-black/40 backdrop-blur-xl transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="flex items-center justify-between">
-          <Link to="/" className="font-bold text-xl tracking-tighter flex items-center gap-2 italic">
-            <div className="w-7 h-7 bg-orange-600 rounded-lg flex items-center justify-center text-white text-xs font-black">B</div> must-b
-          </Link>
-          <button className="md:hidden" onClick={() => setSidebarOpen(false)}><X className="w-5 h-5" /></button>
+      <aside className={`fixed md:static z-50 h-full w-64 border-r border-white/5 p-6 flex flex-col bg-black/80 backdrop-blur-2xl transition-all ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
+        <div className="flex items-center gap-3 mb-12">
+          <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center font-black shadow-[0_0_15px_rgba(234,88,12,0.4)]">B</div>
+          <span className="font-bold tracking-tighter text-xl italic">must-b</span>
         </div>
-        <nav className="space-y-1 flex-1">
-          {navItems.map((item) => (
-            <button key={item.label} onClick={() => { setActiveTab(item.label); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all ${activeTab === item.label ? "bg-orange-600/10 text-orange-500 border border-orange-500/20 shadow-[0_0_20px_rgba(234,88,12,0.1)]" : "text-muted-foreground hover:bg-white/5 hover:text-foreground"}`}>
-              <item.icon className="w-4 h-4" /> {item.label}
+        
+        <nav className="flex-1 space-y-2">
+          {[
+            { id: 'Overview', icon: Activity, label: "Overview" },
+            { id: 'AI Agents', icon: Bot, label: "Neural Swarm" },
+            { id: 'Settings', icon: SettingsIcon, label: "Kernel Config" }
+          ].map((item) => (
+            <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all ${activeTab === item.id ? "bg-orange-600/10 text-orange-500 border border-orange-500/20" : "text-gray-500 hover:text-white"}`}>
+              <item.icon size={18} /> {item.label}
             </button>
           ))}
         </nav>
-        <button onClick={handleSignOut} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all">
-          <LogOut className="w-4 h-4" /> Disconnect
+
+        <button onClick={() => supabase.auth.signOut()} className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-red-500 transition-colors text-sm">
+          <LogOut size={18} /> Disconnect Hub
         </button>
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-10 relative custom-scrollbar">
+      <main className="flex-1 overflow-y-auto p-6 md:p-10 relative bg-[radial-gradient(circle_at_top_right,_rgba(234,88,12,0.05),_transparent)]">
+        
+        {/* HEADER */}
         <header className="flex justify-between items-center mb-12">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{activeTab}</h1>
+            <h1 className="text-3xl font-black tracking-tight">{activeTab}</h1>
             <div className="flex items-center gap-2 mt-2">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em]">Neural Link: Stable // Cmd: {displayAgentName}</span>
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Neural Link: Stable // Cmd: {commanderName}</span>
             </div>
           </div>
-          <div className="w-12 h-12 rounded-full border-2 border-orange-600/30 p-1 flex items-center justify-center bg-orange-600/5">
-             <span className="font-black text-orange-500">{displayAgentName.charAt(0)}</span>
+          <div className="flex items-center gap-4">
+            <div className="text-right hidden md:block">
+              <p className="text-[10px] font-mono text-gray-500 uppercase">Active Agent</p>
+              <p className="text-sm font-bold text-orange-500">{agent?.agent_name || "Scanning..."}</p>
+            </div>
+            <div className="w-12 h-12 rounded-full border border-orange-500/30 flex items-center justify-center bg-orange-500/5 text-orange-500 font-bold">{commanderName.charAt(0)}</div>
           </div>
         </header>
 
         <AnimatePresence mode="wait">
           {activeTab === "Overview" && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
               
-              {/* METRIKLER (REALTIME) */}
+              {/* 📊 LIVE METRICS */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="glass p-8 rounded-[2rem] border border-white/5 relative overflow-hidden group">
-                  <Cpu className="w-6 h-6 text-orange-500 mb-6" />
-                  <div className="text-[10px] font-mono text-muted-foreground uppercase mb-1">Local CPU Load</div>
-                  <div className="text-4xl font-black tabular-nums">{currentAgent?.score || 0}%</div>
-                  <div className="mt-6 bg-white/5 rounded-full h-1.5 overflow-hidden">
-                    <motion.div animate={{ width: `${currentAgent?.score || 0}%` }} className="bg-orange-500 h-full" />
+                {[
+                  { label: "Local CPU Load", value: `${agent?.score || 0}%`, icon: Cpu, color: "text-orange-500", sub: agent?.tier || "Unknown" },
+                  { label: "Neural Memory", value: `${agent?.specs?.ram || 0} GB`, icon: BrainCircuit, color: "text-emerald-500", sub: "DDR5 Architecture" },
+                  { label: "Agent Status", value: agent ? "ONLINE" : "OFFLINE", icon: Zap, color: "text-amber-500", sub: "Verified Link" }
+                ].map((stat, i) => (
+                  <div key={i} className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] backdrop-blur-md group hover:border-orange-500/30 transition-all duration-500">
+                    <stat.icon className={`${stat.color} mb-6`} size={24} />
+                    <p className="text-[10px] font-mono text-gray-500 uppercase mb-1">{stat.label}</p>
+                    <div className="text-4xl font-black mb-4 tabular-nums">{stat.value}</div>
+                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                      <motion.div animate={{ width: stat.value.includes('%') ? stat.value : '100%' }} className={`h-full bg-gradient-to-r from-transparent to-current ${stat.color}`} />
+                    </div>
                   </div>
-                </div>
-
-                <div className="glass p-8 rounded-[2rem] border border-white/5 relative overflow-hidden">
-                  <BrainCircuit className="w-6 h-6 text-emerald-500 mb-6" />
-                  <div className="text-[10px] font-mono text-muted-foreground uppercase mb-1">System Memory</div>
-                  <div className="text-4xl font-black tabular-nums">{currentAgent?.specs?.ram || 0} GB</div>
-                  <div className="mt-6 text-[10px] text-emerald-500 font-mono italic tracking-tight opacity-50 uppercase">Detected HW Architecture</div>
-                </div>
-
-                <div className="glass p-8 rounded-[2rem] border border-white/5 relative overflow-hidden">
-                  <Zap className="w-6 h-6 text-amber-500 mb-6" />
-                  <div className="text-[10px] font-mono text-muted-foreground uppercase mb-1">Agent Tier</div>
-                  <div className="text-4xl font-black uppercase tracking-tighter text-amber-500">{currentAgent?.tier || "Unknown"}</div>
-                  <div className="mt-6 flex gap-1">
-                    {[1,2,3,4,5].map(i => <div key={i} className={`w-3 h-1 rounded-full ${i <= (currentAgent?.score > 50 ? 5 : 2) ? 'bg-amber-500' : 'bg-white/10'}`} />)}
-                  </div>
-                </div>
+                ))}
               </div>
 
-              {/* TİLKİ VE LOGLAR */}
+              {/* 🦊 HEARTBEAT & LOGS */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div className="lg:col-span-8 glass p-8 rounded-[2.5rem] border border-white/5">
-                  <h3 className="font-bold text-lg mb-8 flex items-center gap-2"><Activity size={18} className="text-orange-500" /> Swarm Intelligence Logs</h3>
-                  <div className="space-y-2">
+                <div className="lg:col-span-8 bg-white/[0.02] border border-white/5 p-8 rounded-[3rem]">
+                  <h3 className="font-bold text-lg mb-8 flex items-center gap-2 italic"><Activity size={18} className="text-orange-500" /> Swarm Intelligence Logs</h3>
+                  <div className="space-y-3">
                     {logs.map((log) => (
-                      <div key={log.id} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all">
+                      <div key={log.id} className="flex items-center justify-between p-4 bg-white/[0.01] border border-white/5 rounded-2xl hover:bg-white/[0.03] transition-all">
                         <div className="flex items-center gap-4">
                           <div className={`w-2 h-2 rounded-full ${log.action_type === 'Warning' ? 'bg-red-500' : 'bg-emerald-500'}`} />
-                          <div>
-                            <p className="text-sm font-medium">{log.action_title}</p>
-                            <p className="text-[10px] text-muted-foreground">{new Date(log.created_at).toLocaleTimeString()}</p>
-                          </div>
+                          <span className="text-sm text-gray-300">{log.action_title}</span>
                         </div>
-                        <span className="text-[10px] font-mono px-3 py-1 bg-white/5 rounded-lg opacity-50 uppercase tracking-widest">{log.action_type}</span>
+                        <span className="text-[10px] font-mono text-gray-600">{new Date(log.created_at).toLocaleTimeString()}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="lg:col-span-4 bg-orange-600/5 border border-orange-500/10 p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-center">
-                  <motion.div animate={{ scale: [1, 1.05, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 4, repeat: Infinity }} className="relative mb-6">
-                    <img src="/fox-awake.png" className="w-32 h-32 object-contain drop-shadow-[0_0_30px_rgba(234,88,12,0.3)]" />
+                <div className="lg:col-span-4 bg-orange-600/[0.03] border border-orange-500/10 p-10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                  <motion.div animate={{ scale: [1, 1.05, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 4, repeat: Infinity }} className="relative mb-8">
+                    <img src="/fox-awake.png" className="w-32 h-32 object-contain drop-shadow-[0_0_40px_rgba(234,88,12,0.3)]" />
                   </motion.div>
-                  <p className="text-[10px] font-mono text-orange-500/50 uppercase tracking-[0.4em]">Neural Heartbeat</p>
-                  <p className="text-xs text-muted-foreground mt-4 leading-relaxed">Agent "{currentAgent?.agent_name}" is currently monitoring your hardware nodes.</p>
+                  <p className="text-[10px] font-mono text-orange-500/50 uppercase tracking-[0.4em] mb-4">Neural Heartbeat</p>
+                  <p className="text-xs text-gray-500 leading-relaxed italic">"Must-b is currently monitoring your hardware nodes and local kernel signals."</p>
                 </div>
               </div>
 
             </motion.div>
           )}
-          {/* AI Agents ve Settings sekmeleri senin kodundaki gibi devam edebilir... */}
         </AnimatePresence>
       </main>
-    </motion.div>
+    </div>
   );
 };
 
