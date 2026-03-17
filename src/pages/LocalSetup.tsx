@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Power, Brain, Shield, ChevronRight, Cpu, Activity, Zap } from "lucide-react";
+import { Power, Brain, ChevronRight, Cpu, Activity, Zap } from "lucide-react";
 import { createClient } from '@supabase/supabase-js';
+import { useNavigate } from "react-router-dom"; // Sayfa geçişi için eklendi
 
 // --- 1. SUPABASE BAĞLANTISI ---
 const supabase = createClient(
@@ -10,14 +11,14 @@ const supabase = createClient(
 );
 
 const LocalSetup = () => {
+  const navigate = useNavigate(); // Yönlendirme fonksiyonu
   const [step, setStep] = useState<'sleeping' | 'awaking' | 'config'>('sleeping');
   const [selected, setSelected] = useState<string | null>(null);
-  const [agents, setAgents] = useState<any[]>([]); // Veritabanından gelen gerçek ajanlar
+  const [agents, setAgents] = useState<any[]>([]); 
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // --- 2. GERÇEK ZAMANLI VERİ TAKİBİ ---
   useEffect(() => {
-    // Sayfa açıldığında mevcut ajanları çek
     const fetchAgents = async () => {
       const { data, error } = await supabase
         .from('mustb_agents')
@@ -29,22 +30,18 @@ const LocalSetup = () => {
 
     fetchAgents();
 
-    // Terminalden yeni bir 'must-b' girişi geldiğinde anında yakala
     const channel = supabase
       .channel('schema-db-changes')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'mustb_agents' },
         (payload) => {
-          console.log('Yeni Ajan Algılandı!', payload.new);
           setAgents((prev) => [payload.new, ...prev]);
         }
       )
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   const handleWakeUp = () => {
@@ -56,6 +53,14 @@ const LocalSetup = () => {
 
   const handleVideoEnd = () => {
     setTimeout(() => setStep('config'), 300);
+  };
+
+  // --- 3. FIRLATMA FONKSİYONU ---
+  const handleLaunch = () => {
+    if (selected) {
+      // Seçilen ajanın ID'si ile Dashboard'a gidiyoruz
+      navigate(`/dashboard?agentId=${selected}`);
+    }
   };
 
   return (
@@ -123,7 +128,7 @@ const LocalSetup = () => {
               </div>
 
               {/* 🧠 DİNAMİK AJAN KARTLARI */}
-              <div className="grid grid-cols-1 gap-4 mb-12 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+              <div className="grid grid-cols-1 gap-4 mb-12 max-h-[350px] overflow-y-auto pr-2">
                 {agents.length > 0 ? (
                   agents.map((agent) => (
                     <button 
@@ -157,12 +162,12 @@ const LocalSetup = () => {
                   <div className="p-16 border border-dashed border-white/10 rounded-[2rem] text-center bg-white/[0.01]">
                     <Activity className="w-10 h-10 text-orange-500/20 mx-auto mb-4 animate-pulse" />
                     <p className="text-white/30 text-xs font-mono tracking-widest uppercase italic">Yerel Kernel Bekleniyor...</p>
-                    <p className="text-[10px] text-white/10 mt-2">Lütfen terminalden 'must-b' yazıp veri gönderin.</p>
                   </div>
                 )}
               </div>
 
               <button 
+                onClick={handleLaunch} // Tıklama fonksiyonu eklendi
                 disabled={!selected}
                 className={`w-full py-6 rounded-2xl font-black text-sm uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all ${
                   selected 
