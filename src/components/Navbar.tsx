@@ -7,66 +7,73 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="relative z-50 flex items-center justify-between px-6 md:px-8 py-6 max-w-7xl mx-auto">
-      
-      {/* LOGO BÖLÜMÜ */}
-      <Link to="/" className="flex items-center gap-3 font-bold text-xl tracking-tighter text-foreground group">
-        
-        {/* Tilki Kutusu - Mascot.png ile güncellendi */}
+    <nav className="relative z-50 flex items-center justify-between px-6 md:px-10 py-5 max-w-7xl mx-auto">
+
+      {/* Logo */}
+      <Link to="/" className="flex items-center gap-2.5 font-bold text-lg tracking-tighter text-foreground group">
         <motion.div
-          animate={{ 
-            y: [0, -3, 0], 
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
+          animate={{ y: [0, -3, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           whileHover={{ scale: 1.1 }}
-          className="relative w-10 h-10 flex items-center justify-center overflow-hidden" 
+          className="relative w-8 h-8 flex items-center justify-center overflow-hidden"
         >
-          <img 
-            src="/mascot.png" // DÜZELTME: fox.jpg yerine mascot.png yaptık
-            alt="must-b agent" 
-            className="w-full h-full object-contain pointer-events-none" 
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              console.error("Navbar logosu yüklenemedi!");
-            }}
+          <img
+            src="/mascot.png"
+            alt="must-b"
+            className="w-full h-full object-contain pointer-events-none"
           />
         </motion.div>
-        
         <span className="group-hover:text-primary transition-colors duration-300">must-b</span>
       </Link>
 
-      {/* Desktop Menu */}
-      <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground font-medium">
-        <a href="#features" className="hover:text-foreground transition-colors duration-200">Features</a>
-        <a href="#download" className="hover:text-foreground transition-colors duration-200">Download</a>
-        <Link 
-          to="/login" 
-          className="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-foreground hover:bg-white/10 transition-all backdrop-blur-md"
+      {/* Desktop nav */}
+      <div className="hidden md:flex items-center gap-3">
+        <Link
+          to="/login"
+          className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground
+                     border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all"
         >
-          Command Center
+          Login
+        </Link>
+        <Link
+          to="/login"
+          className="px-4 py-2 rounded-lg text-sm font-semibold bg-primary text-primary-foreground
+                     hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+        >
+          Sign Up
         </Link>
       </div>
 
-      {/* Mobile Toggle */}
+      {/* Mobile toggle */}
       <button className="md:hidden text-foreground p-2" onClick={() => setMobileOpen(!mobileOpen)}>
-        {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute top-full left-0 right-0 glass p-6 mx-4 mt-2 rounded-2xl flex flex-col gap-4 md:hidden border border-white/10 bg-[#0A0A0A] z-50"
+            exit={{ opacity: 0, y: -8 }}
+            className="absolute top-full left-0 right-0 bg-[#0a0b0e] border border-white/[0.08]
+                       p-4 mx-4 mt-2 rounded-2xl flex flex-col gap-2 md:hidden z-50"
           >
-            <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-primary-glow text-center py-3 rounded-xl font-bold">
-              Command Center
+            <Link
+              to="/login"
+              onClick={() => setMobileOpen(false)}
+              className="py-2.5 text-center text-sm font-medium text-muted-foreground
+                         border border-white/10 rounded-xl hover:bg-white/5 transition-all"
+            >
+              Login
+            </Link>
+            <Link
+              to="/login"
+              onClick={() => setMobileOpen(false)}
+              className="py-2.5 text-center text-sm font-semibold bg-primary text-primary-foreground
+                         rounded-xl transition-all"
+            >
+              Sign Up
             </Link>
           </motion.div>
         )}

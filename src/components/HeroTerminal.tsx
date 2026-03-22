@@ -1,145 +1,183 @@
 import { motion } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
+
+// ── Demo sequences ────────────────────────────────────────────────────────
 
 const commandSets = [
   [
-    { text: "> Initializing local weights...", color: "text-indigo-400" },
-    { text: "> Loading model: must-b-7B-Q4_K_M.gguf", color: "text-indigo-400" },
-    { text: "> VRAM allocated: 8.4GB / 12.0GB", color: "text-muted-foreground" },
-    { text: "> Connection established: Cloud Sync Active", color: "text-emerald-400" },
-    { text: "> Agent ready. Awaiting instructions...", color: "text-emerald-400" },
+    { text: "$ must-b gateway --model llama3:8b", color: "text-[#c9d1d9]" },
+    { text: "  ↳ Initializing local weights…", color: "text-muted-foreground" },
+    { text: "  ↳ VRAM: 8.4 GB / 12.0 GB allocated", color: "text-muted-foreground" },
+    { text: "  ↳ Cloud sync: connected (World-Mode ON)", color: "text-emerald-400" },
+    { text: "  ✓ Agent online. UID: MB-482910384-7", color: "text-emerald-400" },
   ],
   [
-    { text: "> must-b refactor src/auth.ts --optimize", color: "text-indigo-400" },
-    { text: "> Analyzing 247 tokens across 3 functions...", color: "text-muted-foreground" },
-    { text: "> Applying dead-code elimination...", color: "text-indigo-400" },
-    { text: "> Reduced bundle size by 34.2%", color: "text-emerald-400" },
-    { text: "> ✓ Refactoring complete. 0 errors.", color: "text-emerald-400" },
+    { text: "$ must-b run 'refactor src/auth.ts for clarity'", color: "text-[#c9d1d9]" },
+    { text: "  ↳ Planning with claude-3-5-sonnet…", color: "text-muted-foreground" },
+    { text: "  ↳ Spawning 2 sub-agents (Mini tier)…", color: "text-indigo-400" },
+    { text: "  ↳ Applied: dead-code removal, typed returns", color: "text-indigo-400" },
+    { text: "  ✓ Done. Bundle −34%. 0 errors.", color: "text-emerald-400" },
   ],
   [
-    { text: "> must-b test --coverage --parallel", color: "text-indigo-400" },
-    { text: "> Spawning 8 test workers on local cores...", color: "text-muted-foreground" },
-    { text: "> Running 142 test suites...", color: "text-indigo-400" },
-    { text: "> All tests passed. Coverage: 94.7%", color: "text-emerald-400" },
-    { text: "> Results synced to cloud dashboard.", color: "text-emerald-400" },
+    { text: "$ must-b run 'find all TODO comments, open issues'", color: "text-[#c9d1d9]" },
+    { text: "  ↳ Scanning 1,204 files with ripgrep…", color: "text-muted-foreground" },
+    { text: "  ↳ Found 23 TODOs across 11 files", color: "text-amber-400" },
+    { text: "  ↳ Drafting issues…", color: "text-indigo-400" },
+    { text: "  ✓ 23 issues created. Assigned to @you.", color: "text-emerald-400" },
   ],
   [
-    { text: "> must-b deploy --preview --secure", color: "text-indigo-400" },
-    { text: "> Building optimized production bundle...", color: "text-muted-foreground" },
-    { text: "> Encrypting deployment artifacts (AES-256)...", color: "text-indigo-400" },
-    { text: "> Preview URL: https://preview.must-b.dev/a3f2", color: "text-amber-500" },
-    { text: "> ✓ Deployed in 2.4s. Zero cold starts.", color: "text-emerald-400" },
+    { text: "$ must-b run 'deploy to Vercel, tag v1.2.2'", color: "text-[#c9d1d9]" },
+    { text: "  ↳ Running: npm run build…", color: "text-muted-foreground" },
+    { text: "  ↳ Running: git tag v1.2.2 && git push…", color: "text-muted-foreground" },
+    { text: "  ↳ Running: vercel --prod…", color: "text-indigo-400" },
+    { text: "  ✓ Live: https://must-b.com  [2.4s]", color: "text-emerald-400" },
   ],
 ];
 
-const TYPING_SPEED = 30;
-const LINE_PAUSE = 400;
-const SET_PAUSE = 3000;
+const TYPING_MS = 24;
+const LINE_MS   = 360;
+const SET_MS    = 3000;
+
+// ── Display state (the only React state — everything else lives in closure) ─
+
+interface DisplayState {
+  lines: { text: string; color: string }[];
+  activeText: string;
+  activeColor: string;
+  fading: boolean;
+}
+
+// ── Component ─────────────────────────────────────────────────────────────
 
 const HeroTerminal = () => {
-  const [currentSet, setCurrentSet] = useState(0);
-  const [currentLine, setCurrentLine] = useState(0);
-  const [currentChar, setCurrentChar] = useState(0);
-  const [lines, setLines] = useState<{ text: string; color: string }[]>([]);
-  const [isTyping, setIsTyping] = useState(true);
-  const [fadeOut, setFadeOut] = useState(false);
-
-  const commands = commandSets[currentSet];
-
-  const advanceToNextSet = useCallback(() => {
-    setFadeOut(true);
-    setTimeout(() => {
-      setLines([]);
-      setCurrentLine(0);
-      setCurrentChar(0);
-      setCurrentSet((prev) => (prev + 1) % commandSets.length);
-      setFadeOut(false);
-      setIsTyping(true);
-    }, 600);
-  }, []);
+  const [display, setDisplay] = useState<DisplayState>({
+    lines: [],
+    activeText: "",
+    activeColor: "",
+    fading: false,
+  });
 
   useEffect(() => {
-    if (!isTyping) return;
-    if (currentLine >= commands.length) {
-      // All lines typed, pause then advance
-      const timeout = setTimeout(advanceToNextSet, SET_PAUSE);
-      return () => clearTimeout(timeout);
+    // All mutable animation state lives as closure variables — zero extra re-renders
+    let setIdx  = 0;
+    let lineIdx = 0;
+    let charIdx = 0;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let alive = true;
+
+    function schedule(fn: () => void, ms: number) {
+      timer = setTimeout(() => { if (alive) fn(); }, ms);
     }
 
-    const fullText = commands[currentLine].text;
+    function typeChar() {
+      const cmds     = commandSets[setIdx];
+      const fullText = cmds[lineIdx].text;
 
-    if (currentChar < fullText.length) {
-      const timeout = setTimeout(() => {
-        setCurrentChar((c) => c + 1);
-      }, TYPING_SPEED);
-      return () => clearTimeout(timeout);
-    } else {
-      // Line complete
-      const timeout = setTimeout(() => {
-        setLines((prev) => [...prev, commands[currentLine]]);
-        setCurrentLine((l) => l + 1);
-        setCurrentChar(0);
-      }, LINE_PAUSE);
-      return () => clearTimeout(timeout);
+      charIdx++;
+      setDisplay(d => ({
+        ...d,
+        activeText:  fullText.slice(0, charIdx),
+        activeColor: cmds[lineIdx].color,
+      }));
+
+      if (charIdx < fullText.length) {
+        schedule(typeChar, TYPING_MS);
+      } else {
+        // Line complete — commit it then move on
+        schedule(() => {
+          const done = commandSets[setIdx][lineIdx];
+          lineIdx++;
+          charIdx = 0;
+          setDisplay(d => ({
+            ...d,
+            lines:      [...d.lines, done],
+            activeText: "",
+          }));
+          if (lineIdx < commandSets[setIdx].length) {
+            schedule(typeChar, TYPING_MS);
+          } else {
+            // All lines in this set done — pause then fade out
+            schedule(fadeOut, SET_MS);
+          }
+        }, LINE_MS);
+      }
     }
-  }, [currentChar, currentLine, commands, isTyping, advanceToNextSet]);
 
-  const activeLineText = currentLine < commands.length
-    ? commands[currentLine].text.slice(0, currentChar)
-    : "";
-  const activeLineColor = currentLine < commands.length
-    ? commands[currentLine].color
-    : "";
+    function fadeOut() {
+      setDisplay(d => ({ ...d, fading: true }));
+      schedule(() => {
+        setIdx  = (setIdx + 1) % commandSets.length;
+        lineIdx = 0;
+        charIdx = 0;
+        setDisplay({ lines: [], activeText: "", activeColor: "", fading: false });
+        schedule(typeChar, 120);
+      }, 480);
+    }
+
+    // Kick off
+    schedule(typeChar, 400);
+
+    return () => {
+      alive = false;
+      if (timer) clearTimeout(timer);
+    };
+  }, []); // runs once — no dependency churn
+
+  const cmds = commandSets.find((_, i) => {
+    // We can't know setIdx from outside the closure; derive active color from display
+    return true;
+  });
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-      className="relative mx-auto max-w-3xl glass-glow rounded-outer p-4 md:p-6 animate-float"
+      initial={{ opacity: 0, y: 32 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+      className="relative w-full"
     >
-      {/* Glow aura behind terminal */}
-      <div className="absolute -inset-1 rounded-outer bg-primary/5 blur-xl -z-10" />
+      {/* Outer glow */}
+      <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-primary/20 via-primary/5 to-transparent blur-sm -z-10" />
 
-      {/* Traffic lights */}
-      <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-3">
-        <div className="w-3 h-3 rounded-full bg-red-500/60" />
-        <div className="w-3 h-3 rounded-full bg-amber-500/60" />
-        <div className="w-3 h-3 rounded-full bg-emerald-500/60" />
-        <span className="ml-4 text-xs font-mono text-muted-foreground">must-b --local-agent</span>
-        <div className="ml-auto flex items-center gap-1.5">
-          <span className="pulse-dot" />
-          <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-wider">Live</span>
+      <div className="rounded-2xl overflow-hidden border border-white/[0.08] bg-[#080a0e]">
+
+        {/* Chrome bar */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06] bg-white/[0.02]">
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-red-500/70" />
+            <span className="w-3 h-3 rounded-full bg-amber-400/70" />
+            <span className="w-3 h-3 rounded-full bg-emerald-500/70" />
+            <span className="ml-4 text-xs font-mono text-muted-foreground/60">must-b — local agent</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-mono text-muted-foreground/40 uppercase tracking-widest">v1.2.2</span>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-wider">Live</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Terminal content */}
-      <div
-        className={`font-mono text-left text-xs md:text-sm space-y-1.5 min-h-[140px] transition-opacity duration-500 ${
-          fadeOut ? "opacity-0" : "opacity-100"
-        }`}
-      >
-        {/* Completed lines */}
-        {lines.map((line, i) => (
-          <p key={`${currentSet}-${i}`} className={line.color}>
-            {line.text}
-          </p>
-        ))}
+        {/* Animated output */}
+        <div
+          className="px-5 py-5 font-mono text-sm space-y-1.5 min-h-[160px]"
+          style={{ opacity: display.fading ? 0 : 1, transition: "opacity 0.45s ease" }}
+        >
+          {display.lines.map((line, i) => (
+            <p key={i} className={`${line.color} leading-relaxed`}>{line.text}</p>
+          ))}
+          {display.activeText && (
+            <p className={`${display.activeColor} leading-relaxed`}>
+              {display.activeText}
+              <span className="inline-block w-[7px] h-[14px] bg-primary/80 animate-cursor-blink ml-0.5 align-middle rounded-[1px]" />
+            </p>
+          )}
+          {!display.activeText && !display.fading && (
+            <p>
+              <span className="inline-block w-[7px] h-[14px] bg-primary/80 animate-cursor-blink rounded-[1px]" />
+            </p>
+          )}
+        </div>
 
-        {/* Currently typing line */}
-        {currentLine < commands.length && (
-          <p className={activeLineColor}>
-            {activeLineText}
-            <span className="inline-block w-2 h-4 bg-primary animate-cursor-blink ml-0.5 align-middle" />
-          </p>
-        )}
-
-        {/* Idle cursor after all lines */}
-        {currentLine >= commands.length && !fadeOut && (
-          <p className="text-muted-foreground">
-            <span className="inline-block w-2 h-4 bg-primary animate-cursor-blink" />
-          </p>
-        )}
       </div>
     </motion.div>
   );

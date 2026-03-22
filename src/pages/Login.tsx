@@ -1,30 +1,38 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { Github, Mail, Lock, ArrowLeft, Eye, EyeOff, Loader2, User } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import MeshBackground from "@/components/MeshBackground";
-import { supabase } from "../lib/supabase"; 
+import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const emailInputRef = useRef<HTMLInputElement>(null);
   const [focused, setFocused] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState(""); 
+  const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // ?next= is set by AuthConnect when Gateway redirects here unauthenticated.
+  // After a successful sign-in we redirect back so the consent flow can complete.
+  const nextUrl = searchParams.get("next") ?? "/dashboard";
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate("/dashboard", { replace: true });
+      if (session) navigate(nextUrl, { replace: true });
     });
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) navigate("/dashboard", { replace: true });
+      if (event === "SIGNED_IN" && session) {
+        navigate(nextUrl, { replace: true });
+      }
     });
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, nextUrl]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,21 +43,35 @@ const Login = () => {
       if (signInError) {
         if (signInError.message.includes("Invalid login credentials")) {
           const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-            email, password, options: { emailRedirectTo: window.location.origin, data: { full_name: fullName } }
+            email,
+            password,
+            options: {
+              emailRedirectTo: window.location.origin + nextUrl,
+              data: { full_name: fullName },
+            },
           });
           if (signUpError) throw signUpError;
-          if (signUpData.user && !signUpData.session) toast.success("Account created! Verify your email.");
-        } else throw signInError;
+          if (signUpData.user && !signUpData.session) {
+            toast.success("Account created! Check your email to verify, then return here.");
+          }
+        } else {
+          throw signInError;
+        }
       }
     } catch (error: any) {
       toast.error(error.message || "Error occurred.");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleOAuth = async (provider: 'github' | 'google') => {
+  const handleOAuth = async (provider: "github" | "google") => {
+    // After OAuth, Supabase will redirect back to origin; we then navigate to nextUrl
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: window.location.origin + "/dashboard" }
+      options: {
+        redirectTo: window.location.origin + "/login?next=" + encodeURIComponent(nextUrl),
+      },
     });
     if (error) toast.error(error.message);
   };
@@ -65,25 +87,25 @@ const Login = () => {
 
       <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="w-full max-w-md p-8 glass rounded-outer relative z-10">
         <div className="text-center mb-10">
-          {/* LOGO GÜNCELLEMESİ */}
           <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center overflow-hidden">
-            <img 
-              src="/mascot.png" 
-              alt="must-b logo" 
-              className="w-full h-full object-contain pointer-events-none" 
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                console.error("Login logosu bulunamadı!");
-              }}
+            <img
+              src="/mascot.png"
+              alt="must-b logo"
+              className="w-full h-full object-contain pointer-events-none"
+              onError={(e) => { e.currentTarget.style.display = "none"; }}
             />
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-foreground">Welcome Back</h2>
-          <p className="text-muted-foreground text-sm mt-2">Access your global command center.</p>
+          <p className="text-muted-foreground text-sm mt-2">
+            {nextUrl !== "/dashboard"
+              ? "Sign in to authorize your local agent."
+              : "Access your global command center."}
+          </p>
         </div>
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            {/* GITHUB */}
+            {/* GitHub */}
             <div className="relative group">
               <motion.div
                 animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.05, 1] }}
@@ -93,11 +115,11 @@ const Login = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => handleOAuth('github')}
+                onClick={() => handleOAuth("github")}
                 className="relative w-full py-3 px-4 glass rounded-xl flex items-center justify-center gap-3 hover:bg-white/10 transition-all font-medium text-foreground text-sm border border-white/5 overflow-hidden"
               >
-                <motion.div 
-                  animate={{ x: ['-100%', '200%'] }}
+                <motion.div
+                  animate={{ x: ["-100%", "200%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"
                 />
@@ -106,21 +128,21 @@ const Login = () => {
               </motion.button>
             </div>
 
-            {/* GOOGLE */}
+            {/* Google */}
             <div className="relative group">
               <motion.div
                 animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.05, 1] }}
                 transition={{ duration: 2, delay: 0.5, repeat: Infinity }}
                 className="absolute -inset-0.5 bg-primary/20 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity"
               />
-              <motion.button 
+              <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => handleOAuth('google')}
+                onClick={() => handleOAuth("google")}
                 className="relative w-full py-3 px-4 glass rounded-xl flex items-center justify-center gap-3 hover:bg-white/10 transition-all font-medium text-foreground text-sm border border-white/5 overflow-hidden"
               >
-                <motion.div 
-                  animate={{ x: ['-100%', '200%'] }}
+                <motion.div
+                  animate={{ x: ["-100%", "200%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 1.5 }}
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"
                 />
@@ -173,7 +195,12 @@ const Login = () => {
             </motion.button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground mt-8 font-medium">New agent? <button type="button" onClick={() => emailInputRef.current?.focus()} className="text-primary hover:text-primary/80 transition-colors font-bold underline-offset-4 hover:underline">Sign up automatically</button></p>
+          <p className="text-center text-sm text-muted-foreground mt-8 font-medium">
+            New agent?{" "}
+            <button type="button" onClick={() => emailInputRef.current?.focus()} className="text-primary hover:text-primary/80 transition-colors font-bold underline-offset-4 hover:underline">
+              Sign up automatically
+            </button>
+          </p>
         </div>
       </motion.div>
     </motion.div>

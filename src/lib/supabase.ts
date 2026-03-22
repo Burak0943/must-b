@@ -1,10 +1,23 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Vite projelerinde değişkenler import.meta.env ile çekilir
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY!
+const supabaseUrl     = import.meta.env.VITE_SUPABASE_URL     as string | undefined
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn(
+    '[must-b] Supabase env vars are not set.\n' +
+    'Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file or Vercel dashboard.\n' +
+    'Auth features will be disabled until these are configured.'
+  )
+}
+
+// Fall back to placeholder values so the app mounts even without env vars.
+// All auth calls will fail gracefully (network error) rather than crashing on init.
+export const supabase = createClient(
+  supabaseUrl     ?? 'https://placeholder.supabase.co',
+  supabaseAnonKey ?? 'placeholder-anon-key'
+)
 
 // Geliştiriciyi GitHub üzerinden sisteme alır
 export const loginWithGithub = async () => {

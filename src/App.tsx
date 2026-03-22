@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import LocalSetup from "./pages/LocalSetup"; // YENİ: Yerel kurulum sayfası
+import AuthConnect from "./pages/AuthConnect";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,8 @@ const App = () => (
             <Route path="/setup" element={<LocalSetup />} /> 
             
             <Route path="/dashboard" element={<Dashboard />} />
+            {/* CloudAuth handshake — local Gateway redirects here */}
+            <Route path="/auth/connect" element={<AuthConnect />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AnimatePresence>

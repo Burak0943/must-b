@@ -2,7 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Activity, Cpu, Zap, Settings as SettingsIcon, LogOut, Menu, X, ChevronRight, Bot, BrainCircuit, Loader2 } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase"; 
+import { supabase } from "../lib/supabase";
+import { useGatewaySync } from "@/hooks/useGatewaySync";
 import { toast } from "sonner";
 
 const navItems = [
@@ -15,6 +16,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const agentId = searchParams.get("agentId");
+
+  // Keep local Gateway in sync with cloud auth state via Supabase Realtime
+  useGatewaySync();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Overview");

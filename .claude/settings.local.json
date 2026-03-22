@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/aytac -maxdepth 2 -type d -name *must* -o -name *website*)",
+      "Bash(find '/c/Users/aytac/must-b website/src' -type f -name *.tsx -o -name *.ts -o -name *.jsx -o -name *.js)",
+      "Bash(find /c/Users/aytac/must-b/src -type f -name *.ts -o -name *.tsx -o -name *.js)",
+      "Bash(node_modules/.bin/vite.cmd build:*)",
+      "Bash(node -e \":*)",
+      "Bash(npx vercel:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://raw.githubusercontent.com/aytac43-0/must-b/main/install.sh\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://raw.githubusercontent.com/aytac43-0/must-b/main/install.ps1\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://raw.githubusercontent.com/aytac43-0/must-b/main/install.cmd\")"
+    ]
+  }
+}
