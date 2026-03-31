@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, Github } from 'lucide-react';
 import { toast } from "sonner";
@@ -28,17 +28,17 @@ export default function Login() {
   const emailInputRef = useRef<HTMLInputElement>(null);
   
   // State Yönetimi
+  const [isSignUp, setIsSignUp] = useState(false); // <-- Yeni Mod Değiştirici State
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedInput, setFocusedInput] = useState<string | null>(null);
-  const [rememberMe, setRememberMe] = useState(false);
 
   // Yönlendirme Logiği
   const nextUrl = searchParams.get("next") ?? "/dashboard";
 
-  // YÖNLENDİRME BEYNİ (Mevcut kodundan alındı)
+  // YÖNLENDİRME BEYNİ
   useEffect(() => {
     let mounted = true;
 
@@ -62,37 +62,39 @@ export default function Login() {
     };
   }, [navigate, nextUrl]);
 
-  // Auth Logiği (Mevcut kodundan entegre edildi)
+  // Auth Logiği (Giriş ve Kayıt Ayrıştırıldı)
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return toast.error("Please fill in all fields.");
     
     setLoading(true);
     try {
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-      
-      if (signInError) {
-        if (signInError.message.includes("Invalid login credentials")) {
-          // Otomatik Kayıt Akışı
-          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-              emailRedirectTo: window.location.origin + nextUrl,
-            },
-          });
-          if (signUpError) throw signUpError;
-          
-          if (signUpData.user && !signUpData.session) {
-            toast.success("Account created! Check your email to verify, then return here.");
-            setLoading(false);
-          }
-        } else {
-          throw signInError;
+      if (isSignUp) {
+        // KAYIT OL (SIGN UP) AKIŞI
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: window.location.origin + nextUrl,
+          },
+        });
+        
+        if (error) throw error;
+        
+        if (data.user && !data.session) {
+          toast.success("Account created! Check your email to verify, then sign in.");
+          setIsSignUp(false); // Başarılı kayıttan sonra giriş ekranına döndür
+          setPassword(""); // Güvenlik için şifreyi temizle
         }
+      } else {
+        // GİRİŞ YAP (SIGN IN) AKIŞI
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        // Başarılı giriş zaten useEffect'teki onAuthStateChange ile yakalanıp yönlendirilecek
       }
     } catch (error: any) {
-      toast.error(error.message || "Error occurred.");
+      toast.error(error.message || "An error occurred.");
+    } finally {
       setLoading(false);
     }
   };
@@ -107,7 +109,7 @@ export default function Login() {
     if (error) toast.error(error.message);
   };
 
-  // 3D Kart Efekti (Yeni tasarımdan)
+  // 3D Kart Efekti
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const rotateX = useTransform(mouseY, [-300, 300], [10, -10]);
@@ -179,27 +181,37 @@ export default function Login() {
                   />
                 </motion.div>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
-                >
-                  Welcome Back
-                </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-white/60 text-xs"
-                >
-                  {nextUrl !== "/dashboard"
-                    ? "Sign in to authorize your local agent."
-                    : "Access your global command center."}
-                </motion.p>
+                <AnimatePresence mode="wait">
+                  <motion.h1
+                    key={isSignUp ? "signup-title" : "signin-title"}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
+                  >
+                    {isSignUp ? "Create an Account" : "Welcome Back"}
+                  </motion.h1>
+                </AnimatePresence>
+
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={isSignUp ? "signup-desc" : "signin-desc"}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-white/60 text-xs"
+                  >
+                    {isSignUp 
+                      ? "Enter your details to get started." 
+                      : (nextUrl !== "/dashboard" ? "Sign in to authorize your local agent." : "Access your global command center.")
+                    }
+                  </motion.p>
+                </AnimatePresence>
               </div>
 
-              {/* Login form */}
+              {/* Form */}
               <form onSubmit={handleAuth} className="space-y-4">
                 <motion.div className="space-y-3">
                   {/* Email input */}
@@ -245,7 +257,7 @@ export default function Login() {
                   </motion.div>
                 </motion.div>
 
-                {/* Sign in button */}
+                {/* Submit button */}
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -260,7 +272,7 @@ export default function Login() {
                       </motion.div>
                     ) : (
                       <motion.span key="button-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center gap-1 text-sm font-bold">
-                        Initiate System Access
+                        {isSignUp ? "Sign Up" : "Sign In"}
                         <ArrowRight className="w-3 h-3 group-hover/button:translate-x-1 transition-transform" />
                       </motion.span>
                     )}
@@ -303,6 +315,29 @@ export default function Login() {
                     <span className="text-xs">Google</span>
                   </motion.button>
                 </div>
+
+                {/* Toggle Sign In / Sign Up */}
+                <motion.p 
+                  className="text-center text-xs text-white/60 mt-4 pt-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {isSignUp ? "Already have an account?" : "Don't have an account?"}{' '}
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setIsSignUp(!isSignUp);
+                      setPassword(""); // Mod değişirken şifreyi temizle
+                    }}
+                    className="relative inline-block group/signup text-white hover:text-white/70 transition-colors duration-300 font-medium cursor-pointer"
+                  >
+                    <span className="relative z-10">
+                      {isSignUp ? "Sign in" : "Sign up"}
+                    </span>
+                    <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-white group-hover/signup:w-full transition-all duration-300" />
+                  </button>
+                </motion.p>
 
               </form>
             </div>
