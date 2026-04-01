@@ -37,7 +37,8 @@ export default function Login() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState(['', '', '', '', '', '']); 
+  // YENİ: State 8 haneye çıkarıldı
+  const [otp, setOtp] = useState(['', '', '', '', '', '', '', '']); 
   
   const [loading, setLoading] = useState(false);
 
@@ -64,7 +65,7 @@ export default function Login() {
     };
   }, [navigate, nextUrl]);
 
-  // Mod Değişikliğini Dinle (Örn: Navbar'dan Get Started ile gelince)
+  // Mod Değişikliğini Dinle
   useEffect(() => {
     if (searchParams.get("mode") === "signup") {
       setIsSignUp(true);
@@ -110,7 +111,8 @@ export default function Login() {
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     const otpCode = otp.join('');
-    if (otpCode.length !== 6) return toast.error("Lütfen 6 haneli kodu eksiksiz girin.");
+    // YENİ: Doğrulama sınırı 8 yapıldı
+    if (otpCode.length !== 8) return toast.error("Lütfen 8 haneli kodu eksiksiz girin.");
 
     setLoading(true);
     try {
@@ -138,7 +140,8 @@ export default function Login() {
     newOtp[index] = value;
     setOtp(newOtp);
     
-    if (value && index < 5) {
+    // YENİ: İlerleme sınırı 7 yapıldı (8. kutu)
+    if (value && index < 7) {
       document.getElementById(`otp-${index + 1}`)?.focus();
     }
   };
@@ -151,16 +154,19 @@ export default function Login() {
 
   const handleOtpPaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasteData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6).split('');
+    // YENİ: Kesme sınırı 8 yapıldı
+    const pasteData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 8).split('');
     if (pasteData.length === 0) return;
     
     const newOtp = [...otp];
     pasteData.forEach((char, index) => {
-      if (index < 6) newOtp[index] = char;
+      // YENİ: Dağıtma sınırı 8 yapıldı
+      if (index < 8) newOtp[index] = char;
     });
     setOtp(newOtp);
     
-    const nextIndex = Math.min(pasteData.length, 5);
+    // YENİ: Focus sınırı 7 yapıldı
+    const nextIndex = Math.min(pasteData.length, 7);
     document.getElementById(`otp-${nextIndex}`)?.focus();
   };
 
@@ -222,7 +228,7 @@ export default function Login() {
                     className="text-white/60 text-xs"
                   >
                     {isVerifyStep 
-                      ? `We sent a 6-digit code to ${email}`
+                      ? `We sent an 8-digit code to ${email}` // YENİ: Metin 8 haneli olarak güncellendi
                       : isSignUp 
                         ? "Enter your details to get started." 
                         : "Access your global command center."
@@ -234,9 +240,21 @@ export default function Login() {
               <AnimatePresence mode="wait">
                 {isVerifyStep ? (
                   <motion.form key="otp-form" onSubmit={handleVerifyOtp} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
-                    <div className="flex justify-between gap-2 mt-4">
+                    {/* YENİ: Kutu boyutları 8 taneye sığacak şekilde daraltıldı (w-9 h-11 ve gap-1) */}
+                    <div className="flex justify-between gap-1 mt-4">
                       {otp.map((digit, index) => (
-                        <input key={index} id={`otp-${index}`} type="text" inputMode="numeric" autoComplete="one-time-code" value={digit} onChange={(e) => handleOtpChange(index, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(index, e)} onPaste={handleOtpPaste} className="w-10 h-12 text-center text-lg font-bold bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all" />
+                        <input 
+                          key={index} 
+                          id={`otp-${index}`} 
+                          type="text" 
+                          inputMode="numeric" 
+                          autoComplete="one-time-code" 
+                          value={digit} 
+                          onChange={(e) => handleOtpChange(index, e.target.value)} 
+                          onKeyDown={(e) => handleOtpKeyDown(index, e)} 
+                          onPaste={handleOtpPaste} 
+                          className="w-8 sm:w-9 h-11 text-center text-base sm:text-lg font-bold bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all" 
+                        />
                       ))}
                     </div>
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full relative group/button bg-white text-black font-medium h-10 rounded-lg flex items-center justify-center">
@@ -250,7 +268,6 @@ export default function Login() {
                   <motion.form key="auth-form" onSubmit={handleAuth} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-4">
                     
                     <div className="space-y-3">
-                      {/* Animasyonlu İsim Alanı */}
                       <AnimatePresence>
                         {isSignUp && (
                           <motion.div 
@@ -294,7 +311,6 @@ export default function Login() {
                       <div className="flex-grow border-t border-white/5"></div>
                     </div>
 
-                    {/* Sosyal Medya İkonları */}
                     <div className="flex justify-between gap-2">
                       {[
                         { id: 'google', icon: <svg className="w-[18px] h-[18px] text-white/80 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg> },
