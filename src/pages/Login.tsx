@@ -28,12 +28,13 @@ export default function Login() {
   const emailInputRef = useRef<HTMLInputElement>(null);
   
   // State Yönetimi
-  const [isSignUp, setIsSignUp] = useState(false);
+  const initialMode = searchParams.get("mode") === "signup";
+  const [isSignUp, setIsSignUp] = useState(initialMode);
   const [isVerifyStep, setIsVerifyStep] = useState(false); 
   const [showPassword, setShowPassword] = useState(false);
   
   // Form Verileri
-  const [name, setName] = useState(""); // YENİ: Ad Soyad state'i
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState(['', '', '', '', '', '']); 
@@ -63,28 +64,35 @@ export default function Login() {
     };
   }, [navigate, nextUrl]);
 
+  // Mod Değişikliğini Dinle (Örn: Navbar'dan Get Started ile gelince)
+  useEffect(() => {
+    if (searchParams.get("mode") === "signup") {
+      setIsSignUp(true);
+    }
+  }, [searchParams]);
+
   // Auth Logiği (Giriş ve Kayıt)
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return toast.error("Please fill in all fields.");
-    if (isSignUp && !name) return toast.error("Please enter your full name.");
+    if (!email || !password) return toast.error("Lütfen tüm alanları doldurun.");
+    if (isSignUp && !name) return toast.error("Lütfen adınızı ve soyadınızı girin.");
     
     setLoading(true);
     try {
       if (isSignUp) {
-        // KAYIT OL (İsim verisi ile)
+        // KAYIT OL
         const { error } = await supabase.auth.signUp({ 
           email, 
           password,
           options: {
             data: {
-              full_name: name, // İsmi Supabase'e gönderiyoruz
+              full_name: name,
             }
           }
         });
         if (error) throw error;
         
-        toast.success("Verification code sent to your email!");
+        toast.success("Doğrulama kodu e-postanıza gönderildi!");
         setIsVerifyStep(true);
       } else {
         // GİRİŞ YAP
@@ -92,7 +100,7 @@ export default function Login() {
         if (error) throw error;
       }
     } catch (error: any) {
-      toast.error(error.message || "An error occurred.");
+      toast.error(error.message || "Bir hata oluştu.");
     } finally {
       setLoading(false);
     }
@@ -102,7 +110,7 @@ export default function Login() {
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     const otpCode = otp.join('');
-    if (otpCode.length !== 6) return toast.error("Please enter the complete 6-digit code.");
+    if (otpCode.length !== 6) return toast.error("Lütfen 6 haneli kodu eksiksiz girin.");
 
     setLoading(true);
     try {
@@ -113,9 +121,9 @@ export default function Login() {
       });
       if (error) throw error;
       
-      toast.success("Account verified! Initializing session...");
+      toast.success("Hesabınız doğrulandı! İçeri alınıyorsunuz...");
     } catch (error: any) {
-      toast.error("Invalid or expired code. Please try again.");
+      toast.error("Geçersiz veya süresi dolmuş kod. Lütfen tekrar deneyin.");
     } finally {
       setLoading(false);
     }
@@ -242,7 +250,7 @@ export default function Login() {
                   <motion.form key="auth-form" onSubmit={handleAuth} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-4">
                     
                     <div className="space-y-3">
-                      {/* Animasyonlu İsim Alanı (Sadece Sign Up modunda görünür) */}
+                      {/* Animasyonlu İsim Alanı */}
                       <AnimatePresence>
                         {isSignUp && (
                           <motion.div 
@@ -286,7 +294,7 @@ export default function Login() {
                       <div className="flex-grow border-t border-white/5"></div>
                     </div>
 
-                    {/* YENİLENEN, SADE VE TEK RENK SOSYAL MEDYA İKONLARI */}
+                    {/* Sosyal Medya İkonları */}
                     <div className="flex justify-between gap-2">
                       {[
                         { id: 'google', icon: <svg className="w-[18px] h-[18px] text-white/80 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg> },
