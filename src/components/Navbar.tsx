@@ -30,9 +30,26 @@ const Navbar = () => {
 
       {/* Desktop nav (Pill şeklindeki cam kapsayıcı) */}
       <div className="hidden md:flex items-center gap-6 bg-black/40 border border-white/10 rounded-full py-1.5 px-2 backdrop-blur-md">
+        
+        {/* YENİ EKLENEN LİNKLER - (Login'in hemen solu) */}
+        <div className="flex items-center gap-6 pl-4 pr-2 border-r border-white/10">
+          <Link
+            to="/ecosystem"
+            className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+          >
+            Skiller
+          </Link>
+          <Link
+            to="/ecosystem"
+            className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+          >
+            Pluginler
+          </Link>
+        </div>
+
         <Link
           to="/login"
-          className="text-sm font-medium text-white/70 hover:text-white transition-colors pl-4"
+          className="text-sm font-medium text-white/70 hover:text-white transition-colors pl-2"
         >
           Login
         </Link>
@@ -59,6 +76,24 @@ const Navbar = () => {
             className="absolute top-full left-0 right-0 bg-[#0a0b0e] border border-white/[0.08]
                        p-4 mx-4 mt-2 rounded-2xl flex flex-col gap-2 md:hidden z-50 shadow-2xl"
           >
+            {/* MOBİL İÇİN YENİ LİNKLER */}
+            <Link
+              to="/ecosystem"
+              onClick={() => setMobileOpen(false)}
+              className="py-2.5 px-4 text-left text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl"
+            >
+              Skiller
+            </Link>
+            <Link
+              to="/ecosystem"
+              onClick={() => setMobileOpen(false)}
+              className="py-2.5 px-4 text-left text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl mb-2"
+            >
+              Pluginler
+            </Link>
+
+            <div className="h-px w-full bg-white/10 mb-2" />
+
             <Link
               to="/login"
               onClick={() => setMobileOpen(false)}
