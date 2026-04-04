@@ -1,41 +1,34 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // <-- YENİ: Yönlendirme için eklendi
+import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
-// --- DEVASA GENİŞLETİLMİŞ VERİ SETİ (İLLÜZYON İÇİN) ---
+// --- HUB CEPHANELİĞİ (GERÇEK VERİ SETİ) ---
 const data = {
-  counts: {
-    skills: '1,200+',
-    plugins: '850+',
-  },
+  counts: { skills: "1,422", plugins: "948" },
   skills: [
-    { id: 1, name: 'Self-improving-agent', version: 'v1.24.0', summary: 'Kendi hatalarını analiz edip kodunu düzelten 4 aşamalı otonom ajan. Kod yazar, test eder, düzeltir.', author: '@aytac', stars: '4.8k', downloads: '125k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 2, name: 'Fuzzy Patch Engine', version: 'v1.23.5', summary: 'Bozuk boşlukları ve indentasyon hatalarını tolere eden 3 aşamalı yama motoru. Dosya düzenlemelerini kusursuzlaştırır.', author: '@burak', stars: '3.2k', downloads: '89k', os: ['Linux', 'macOS'] },
-    { id: 3, name: 'RAM Doctor', version: 'v1.0.0', summary: 'Sistem belleğine göre ajan performansını dinamik olarak kısıtlayan/açan modül. PC çökmesini engeller.', author: '@core_team', stars: '5.1k', downloads: '210k', os: ['Windows', 'Linux'] },
-    { id: 4, name: '3-Tier Router', version: 'v1.21.0', summary: 'Görev zorluğuna göre LLM modelini otomatik seçerek API maliyetini yerle bir eder.', author: '@aytac', stars: '6.4k', downloads: '340k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 5, name: 'X (Twitter) Search', version: 'v2.0.1', summary: 'X üzerindeki gönderileri, trendleri ve kullanıcıları gerçek zamanlı tarayan analitik ajanı.', author: '@social_bot', stars: '1.2k', downloads: '45k', os: ['Linux', 'Windows'] },
-    { id: 6, name: 'Trello Board Manager', version: 'v1.1.0', summary: 'Trello REST API üzerinden kartları okur, taşır ve projeleri ajan aracılığıyla otomatik yönetir.', author: '@pm_agent', stars: '890', downloads: '32k', os: ['macOS', 'Windows'] },
-    { id: 7, name: 'Slack Communicator', version: 'v3.4', summary: 'Must-b ajanının Slack kanallarına mesaj atmasını, okumasını ve reaksiyon vermesini sağlar.', author: '@mustb_core', stars: '2.1k', downloads: '76k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 8, name: 'Obsidian Vault Sync', version: 'v2.2', summary: 'Yerel Obsidian Markdown notlarını okuyup onlardan bağlam çıkaran (RAG) hafıza modülü.', author: '@knowledge_base', stars: '7.8k', downloads: '150k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 9, name: 'AWS Infrastructure Deployer', version: 'v1.5', summary: 'Ajanın Terraform veya CDK kullanarak AWS üzerinde sunucu ve veritabanı kurmasını sağlar.', author: '@devops_ninja', stars: '4.7k', downloads: '88k', os: ['Linux', 'macOS'] },
-    { id: 10, name: 'Notion Workspace Sync', version: 'v1.8', summary: 'Notion sayfalarını okur, düzenler ve ajan için devasa bir şirket içi bilgi havuzu oluşturur.', author: '@productivity', stars: '3.9k', downloads: '102k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 11, name: 'Figma to Code', version: 'v0.9.beta', summary: 'Figma tasarımlarını analiz edip doğrudan React/Tailwind bileşenlerine dönüştürür.', author: '@ui_bot', stars: '8.4k', downloads: '180k', os: ['macOS', 'Windows'] },
-    { id: 12, name: 'Stripe Finance Analyst', version: 'v2.1', summary: 'Stripe API ile gelir-gider tablolarını okur, analiz eder ve CEO için günlük finansal özet çıkarır.', author: '@finance_ai', stars: '1.1k', downloads: '22k', os: ['Linux', 'macOS'] },
-    { id: 13, name: 'Supabase Admin', version: 'v2.0', summary: 'Veritabanı şemalarını okur, RLS politikalarını test eder ve güvenli SQL sorguları yazar.', author: '@burak', stars: '9.1k', downloads: '450k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 14, name: 'Linear Ticket Creator', version: 'v1.3', summary: 'Kullanıcı geri bildirimlerinden otomatik olarak Linear issue oluşturur ve etiketler.', author: '@pm_agent', stars: '2.5k', downloads: '45k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 15, name: 'Shopify Product Sync', version: 'v1.0.1', summary: 'E-ticaret sitenizdeki ürünleri ajan aracılığıyla günceller, stok kontrolü yapar.', author: '@ecom_bot', stars: '780', downloads: '15k', os: ['Linux', 'Windows'] },
-    { id: 16, name: 'SEO Content Analyzer', version: 'v1.0', summary: 'Web sitelerini tarar, anahtar kelime eksiklerini bulur ve ajan aracılığıyla makale optimize eder.', author: '@marketer', stars: '1.8k', downloads: '30k', os: ['macOS', 'Windows'] },
+    { id: 1, name: 'Must-b WhatsApp Bridge', version: 'v2.4.0', summary: 'WhatsApp üzerinden otonom ajana erişin. Mesajları analiz eder, yanıt verir ve medya dosyalarını işler.', author: '@must-b_core', stars: '15.2k', downloads: '600k', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 2, name: 'DeepSeek Coder Integration', version: 'v3.1.0', summary: 'Karmaşık kodlama görevleri için DeepSeek-V3 modellerini Must-b iş akışına entegre eder.', author: '@aytac', stars: '12.1k', downloads: '450k', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 3, name: 'Must-b Vision Studio', version: 'v1.5.0', summary: 'Ekran görüntülerini analiz ederek UI hatalarını bulur ve @must-b protokolüyle düzeltir.', author: '@burak', stars: '9.4k', downloads: '310k', os: ['macOS', 'Windows'] },
+    { id: 4, name: 'GitHub Repo Autopilot', version: 'v1.9.0', summary: 'Repoları klonlar, kod yapısını analiz eder ve Unit Testleri eksik olan kısımları tamamlar.', author: '@aytac', stars: '22k', downloads: '1.1m', os: ['Linux', 'macOS'] },
+    { id: 5, name: 'Must-b PDF Brain', version: 'v1.0.8', summary: 'Binlerce sayfalık PDF dökümanını RAG teknolojisi ile tarar ve saniyeler içinde cevap verir.', author: '@must-b_core', stars: '18k', downloads: '890k', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 6, name: 'Slack Enterprise Connector', version: 'v3.2.0', summary: 'Şirket içi Slack kanallarını izler, threadleri özetler ve Jira üzerinde otomatik ticket oluşturur.', author: '@enterprise_tools', stars: '5.5k', downloads: '120k', os: ['Linux', 'macOS'] },
+    { id: 7, name: 'Must-b Google Sheets Sync', version: 'v1.2.0', summary: 'Verileri doğrudan Google tablolarına yazar veya tablolardan veri çekerek analiz raporları oluşturur.', author: '@must-b_core', stars: '8.9k', downloads: '210k', os: ['Cloud', 'Linux'] },
+    { id: 8, name: 'PostgreSQL Expert Agent', version: 'v2.1.0', summary: 'Veritabanı şemalarını analiz eder, SQL sorguları yazar ve performans optimizasyonu yapar.', author: '@database_team', stars: '6.2k', downloads: '95k', os: ['Linux', 'Windows'] },
+    { id: 9, name: 'Telegram Command Center', version: 'v2.0.1', summary: 'Telegram botu aracılığıyla sunucunuzdaki Must-b ajanını uzaktan yönetin ve durum raporları alın.', author: '@must-b_core', stars: '7.6k', downloads: '180k', os: ['Linux', 'Windows'] },
+    { id: 10, name: 'Must-b Stripe Accountant', version: 'v2.1.0', summary: 'Stripe ödemelerini takip eder, iadeleri analiz eder ve aylık gelir projeksiyonu hazırlar.', author: '@finance_ai', stars: '4.2k', downloads: '33k', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 11, name: 'AWS Infrastructure Deployer', version: 'v1.3.1', summary: 'Ajanın EC2, S3 ve RDS kaynaklarını Terraform üzerinden otomatik kurmasını sağlar.', author: '@devops_ninja', stars: '7.4k', downloads: '110k', os: ['Linux', 'macOS'] },
+    { id: 12, name: 'Notion Workspace Bridge', version: 'v2.0.0', summary: 'Notion sayfalarınızı ajanın hafızasına ekler ve ortak çalışma alanlarını yönetir.', author: '@productivity', stars: '11k', downloads: '290k', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 13, name: 'Crypto Market Analyst', version: 'v1.0.4', summary: 'Binance ve Coinbase üzerinden veri çekerek piyasa trendlerini analiz eder ve rapor sunar.', author: '@must-b_finance', stars: '3.8k', downloads: '42k', os: ['Linux', 'Windows'] },
+    { id: 14, name: 'Figma to Tailwind Exporter', version: 'v0.9.8', summary: 'Figma tasarımlarını anında temiz Tailwind CSS koduna dönüştürür ve proje içine kaydeder.', author: '@ui_bot', stars: '19.2k', downloads: '400k', os: ['macOS', 'Windows'] },
+    { id: 15, name: 'Jira Ticket Automator', version: 'v2.2.0', summary: 'Konuşmalardaki todo ları anlar ve Jira üzerinde otomatik görevler oluşturur.', author: '@pm_agent', stars: '3.3k', downloads: '45k', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 16, name: 'Must-b Shopify Sync', version: 'v1.1.0', summary: 'E-ticaret ürün stoklarını takip eder ve düşük stok durumunda tedarikçiye mail atar.', author: '@ecom_bot', stars: '2.4k', downloads: '19k', os: ['Cloud', 'Linux'] }
   ],
   plugins: [
-    { id: 1, name: 'Terminal Stream', version: 'v2.1', summary: 'İşletim sistemi terminaline doğrudan müdahale ve okuma yeteneği sağlar. Tehlikeli ama güçlü.', author: '@native', stars: '4.1k', downloads: '200k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 2, name: 'Browser Vision (Playwright)', version: 'v1.5', summary: 'Arayüzü test etmek için tarayıcıyı açıp ekranı piksellerine kadar analiz eder.', author: '@ruflo', stars: '2.8k', downloads: '89k', os: ['Linux', 'macOS'] },
-    { id: 3, name: 'PostgreSQL Vector Memory', version: 'v3.0', summary: 'Must-b ajanına uzun süreli bellek kazandıran Supabase / pgvector eklentisi.', author: '@database_team', stars: '5.5k', downloads: '400k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 4, name: 'Local VRAM Optimizer', version: 'v1.2', summary: 'Açık kaynaklı yerel modeller (Llama, Mistral) çalışırken VRAM kullanımını %40 azaltan bypass.', author: '@gpu_hacker', stars: '8.9k', downloads: '500k', os: ['Windows', 'Linux'] },
-    { id: 5, name: 'Docker Container Spawner', version: 'v2.0', summary: 'Ajanın kodları test etmek için izole ve güvenli Docker konteynerleri yaratıp yok etmesini sağlar.', author: '@devops_bot', stars: '3.4k', downloads: '110k', os: ['Linux', 'macOS'] },
-    { id: 6, name: 'GitHub PR Reviewer', version: 'v1.1', summary: 'Açılan Pull Requestleri otonom olarak okur, kod incelemesi yapar ve yorum bırakır.', author: '@aytac', stars: '4.2k', downloads: '95k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 7, name: 'VS Code Extension Bridge', version: 'v1.0', summary: 'Must-b ajanının doğrudan VS Code editörünüze müdahale edip kod yazmasını sağlayan yerel köprü.', author: '@core_team', stars: '12k', downloads: '800k', os: ['Linux', 'macOS', 'Windows'] },
-    { id: 8, name: 'Ngrok Tunneling', version: 'v1.4', summary: 'Yerel ajanı dış dünyaya açarak web hook dinlemesini ve API sunmasını sağlar.', author: '@networker', stars: '2.1k', downloads: '45k', os: ['macOS', 'Windows'] },
-    { id: 9, name: 'FastAPI Microservice Spawn', version: 'v1.0', summary: 'Ajanın karmaşık görevler için anlık FastAPI mikro servisleri oluşturup deploy etmesini sağlar.', author: '@backend_ai', stars: '920', downloads: '22k', os: ['Linux'] },
-    { id: 10, name: 'Salesforce CRM Connector', version: 'v2.3', summary: 'Salesforce verilerini okur, ajan aracılığıyla fırsatları (lead) otomatik günceller.', author: '@enterprise', stars: '1.5k', downloads: '40k', os: ['Windows', 'Linux'] },
+    { id: 1, name: 'Terminal Stream & Control', version: 'v2.5.0', summary: 'İşletim sistemi terminaline Must-b ajanının doğrudan güvenli erişimini ve komut yürütmesini sağlar.', author: '@native', stars: '25k', downloads: '2.4m', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 2, name: 'Browser Automation (Playwright)', version: 'v2.1.0', summary: 'Web sitelerinde insan gibi gezinir, formları doldurur ve veri toplama işlemlerini otonom yapar.', author: '@ruflo', stars: '19.5k', downloads: '900k', os: ['Linux', 'macOS'] },
+    { id: 3, name: 'Must-b Long-Term Memory (LTM)', version: 'v4.0.0', summary: 'Ajanın önceki konuşmaları aylar sonra bile hatırlamasını sağlayan vektör veritabanı eklentisi.', author: '@must-b_core', stars: '30k', downloads: '3.5m', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 4, name: 'VRAM Dynamic Optimizer', version: 'v1.4.0', summary: 'Yerel modeller çalışırken ekran kartı belleğini (VRAM) anlık olarak boşaltır ve hızlandırır.', author: '@gpu_hacker', stars: '14.2k', downloads: '450k', os: ['Windows', 'Linux'] },
+    { id: 5, name: 'Must-b VS Code Bridge', version: 'v3.0.0', summary: 'Doğrudan VS Code editörünüze bağlanarak ajanın kod yazmasına ve dosyaları yönetmesine izin verir.', author: '@aytac', stars: '45k', downloads: '5.2m', os: ['Linux', 'macOS', 'Windows'] },
+    { id: 6, name: 'Docker Swarm Orchestrator', version: 'v1.0.2', summary: 'Ajanın kodları denemek için izole Docker konteynerleri açmasını ve kapatmasını sağlayan plugin.', author: '@devops_ninja', stars: '8.8k', downloads: '200k', os: ['Linux'] }
   ]
 };
 
@@ -44,8 +37,14 @@ export default function MustbHub() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
 
-  const currentData = activeTab === 'skills' ? data.skills : activeTab === 'plugins' ? data.plugins : [];
-  const filteredData = currentData.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  // Filtreleme mantığı
+  const filteredData = useMemo(() => {
+    const source = activeTab === 'skills' ? data.skills : activeTab === 'plugins' ? data.plugins : [];
+    return source.filter(item => 
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.summary.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [activeTab, searchQuery]);
 
   const getInstallCommand = (name: string, type: string) => {
     const formattedName = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -53,159 +52,142 @@ export default function MustbHub() {
   };
 
   return (
-    <div className="min-h-screen bg-[#111111] text-gray-200 p-8 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-gray-200 p-6 md:p-12 font-sans relative overflow-x-hidden">
       
-      {/* Arka plan Cyberpunk Efekti */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+      {/* Background Decor */}
+      <div className="absolute top-0 left-0 w-full h-full opacity-[0.02] pointer-events-none">
         <svg width="100%" height="100%"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)" /></svg>
       </div>
 
-      {/* --- YENİ EKLENEN: GERİ DÖN BUTONU --- */}
-      <div className="absolute top-6 left-6 md:top-10 md:left-10 z-50">
-        <Link 
-          to="/" 
-          className="flex items-center gap-2 px-4 py-2 bg-black/40 border border-gray-800 hover:border-gray-500 rounded-full text-gray-400 hover:text-white transition-all backdrop-blur-md group shadow-lg"
-        >
-          <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-          </svg>
-          <span className="text-sm font-medium">Ana Sayfa</span>
-        </Link>
-      </div>
+      {/* Geri Dön Butonu */}
+      <Link to="/" className="fixed top-8 left-8 z-50 flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:border-red-500/50 rounded-full text-gray-400 hover:text-white transition-all backdrop-blur-xl group">
+        <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+        <span className="text-sm font-medium">Ana Sayfa</span>
+      </Link>
 
-      {/* Üst Başlık ve Arama */}
-      <div className="max-w-7xl mx-auto mb-10 text-center relative z-10 pt-12 md:pt-4">
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight leading-tight">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-orange-400">Must-b Hub. </span> 
-          Decentralized Agentic Ecosystem.
-        </h1>
-        <p className="text-gray-400 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">
-          The sovereign platform for autonomous AI agents. Install, execute, and scale agentic skills on your own hardware, synchronized globally.
-        </p>
-
-        {/* Sekmeler (Tabs) */}
-        <div className="flex justify-center space-x-6 mb-8 border-b border-gray-800 pb-4">
-          <button onClick={() => setActiveTab('skills')} className={`pb-2 px-2 text-lg font-medium transition-colors ${activeTab === 'skills' ? 'text-red-400 border-b-2 border-red-400' : 'text-gray-500 hover:text-gray-300'}`}>Skills ({data.counts.skills})</button>
-          <button onClick={() => setActiveTab('plugins')} className={`pb-2 px-2 text-lg font-medium transition-colors ${activeTab === 'plugins' ? 'text-red-400 border-b-2 border-red-400' : 'text-gray-500 hover:text-gray-300'}`}>Plugins ({data.counts.plugins})</button>
-          <button onClick={() => setActiveTab('about')} className={`pb-2 px-2 text-lg font-medium transition-colors ${activeTab === 'about' ? 'text-red-400 border-b-2 border-red-400' : 'text-gray-500 hover:text-gray-300'}`}>About must-b OS</button>
+      <div className="max-w-7xl mx-auto relative z-10">
+        
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter">
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40">Must-b Hub.</span>
+          </h1>
+          <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto font-medium">
+            Dünyanın en geniş otonom ajan ekosistemi. 1.400'den fazla doğrulanmış yetenek ile ajanınızı güçlendirin.
+          </p>
         </div>
 
-        {/* Arama Çubuğu */}
-        {activeTab !== 'about' && (
-          <div className="max-w-3xl mx-auto flex gap-4 items-center bg-[#1a1a1a] p-2 rounded-lg border border-gray-800 focus-within:border-red-900/50 transition-colors shadow-inner shadow-black/30">
-            <svg className="w-6 h-6 text-gray-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input 
-              type="text" 
-              placeholder="Skill veya plugin ara (örn: aws, ram, linear, stripe)..." 
-              className="w-full bg-transparent border-none focus:outline-none text-gray-200 placeholder:text-gray-600 font-mono text-sm"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        )}
-      </div>
+        {/* Tabs & Search Container */}
+        <div className="sticky top-0 z-40 bg-[#0a0a0a]/80 backdrop-blur-md py-6 border-b border-white/5 mb-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            {/* Tabs */}
+            <div className="flex bg-white/5 p-1 rounded-xl border border-white/10">
+              <button onClick={() => setActiveTab('skills')} className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'skills' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}>Skills ({data.counts.skills})</button>
+              <button onClick={() => setActiveTab('plugins')} className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'plugins' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}>Plugins ({data.counts.plugins})</button>
+              <button onClick={() => setActiveTab('about')} className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'about' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}>About</button>
+            </div>
 
-      {/* Ana İçerik Alanı */}
-      <div className="max-w-7xl mx-auto relative z-10">
+            {/* Search */}
+            {activeTab !== 'about' && (
+              <div className="w-full md:w-96 relative">
+                <input 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Kütüphanede ara (örn: whatsapp, aws)..." 
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-red-500/50 transition-all"
+                />
+                <svg className="absolute right-4 top-3.5 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Content Grid */}
         {activeTab !== 'about' ? (
-          // KART IZGARASI (GRID)
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredData.map((item: any) => (
+            {filteredData.map((item) => (
               <div 
                 key={item.id} 
                 onClick={() => setSelectedItem(item)}
-                className="bg-[#161616] border border-[#2a2a2a] rounded-xl p-6 hover:border-red-900/70 hover:bg-[#1a1a1a] transition-all cursor-pointer group flex flex-col justify-between h-full shadow-lg shadow-black/70 hover:-translate-y-1"
+                className="group bg-white/[0.02] border border-white/5 rounded-2xl p-8 hover:bg-white/[0.04] hover:border-red-500/30 transition-all cursor-pointer flex flex-col justify-between h-72"
               >
                 <div>
-                  <div className="flex justify-between items-start mb-3 gap-2">
-                    <h3 className="text-xl font-bold text-gray-100 group-hover:text-red-400 transition-colors line-clamp-1">{item.name}</h3>
-                    <span className="text-xs font-mono bg-gray-800 text-gray-400 px-2 py-1 rounded shrink-0">{item.version}</span>
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-bold group-hover:text-red-500 transition-colors">{item.name}</h3>
+                    <span className="text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-gray-400">{item.version}</span>
                   </div>
-                  <p className="text-sm text-gray-400 mb-6 line-clamp-3 leading-relaxed">{item.summary}</p>
+                  <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">{item.summary}</p>
                 </div>
-
-                <div className="mt-auto">
-                  {item.os && (
-                    <div className="flex gap-2 mb-4 flex-wrap">
-                      {item.os.map((os: string) => (
-                        <span key={os} className="text-[10px] uppercase tracking-wider bg-[#222] border border-[#333] text-gray-400 px-2 py-0.5 rounded-full">{os}</span>
-                      ))}
-                    </div>
-                  )}
-                  
-                  <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-800/50 pt-4 mt-2 font-mono">
-                    <span className="font-medium text-gray-300">{item.author}</span>
-                    <div className="flex gap-4">
-                      <span className="flex items-center gap-1"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>{item.downloads}</span>
-                      <span className="flex items-center gap-1"><svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>{item.stars}</span>
-                    </div>
-                  </div>
+                <div className="flex items-center justify-between pt-6 border-t border-white/5 mt-auto">
+                   <span className="text-xs font-mono text-gray-500">{item.author}</span>
+                   <div className="flex gap-4 text-[10px] text-gray-600 font-bold uppercase tracking-widest">
+                     <span>{item.downloads} DL</span>
+                     <span>{item.stars} Stars</span>
+                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          // --- ABOUT MUST-B OS (HAKKIMIZDA) BÖLÜMÜ ---
-          <div className="bg-[#161616] border border-[#2a2a2a] rounded-xl p-10 shadow-2xl shadow-black/70 flex flex-col items-center text-center">
-            <div className="relative mb-10 group">
-              <div className="absolute inset-0 rounded-3xl bg-red-900/20 blur-2xl scale-125 animate-pulse" />
-              <div className="absolute inset-0 rounded-3xl bg-red-900/10 blur-3xl scale-150" />
-              <div className="relative w-28 h-28 rounded-3xl overflow-hidden border border-white/10 bg-[#0f1115] flex items-center justify-center shadow-2xl shadow-red-900/30 group-hover:border-red-600/50 transition-colors">
-                <img src="/mascot.png" alt="must-b fox agent" className="w-[85%] h-[85%] object-contain pointer-events-none group-hover:scale-110 transition-transform duration-500" />
-              </div>
-            </div>
-
-            <h2 className="text-4xl font-extrabold text-gray-100 mb-6 tracking-tight">Must-b: The Autonomous Agent Framework</h2>
-            
-            <div className="max-w-3xl space-y-6 text-gray-400 text-lg leading-relaxed font-sans">
-              <p>Current AI is monolithic and cloud-dependent. Your data is not your own. Your tools are controlled by others.</p>
-              <p><span className="text-red-400 font-bold">must-b breaks this paradigm.</span> We are a decentralized framework designed for sovereign intelligence. We provide the "Cloud Brain" for global synchronization, identity, and security, while your own hardware provides the "Local Muscle" for private, low-latency execution.</p>
-              <blockquote className="border-l-4 border-red-900/50 pl-6 py-2 bg-[#1a1a1a] rounded-r-lg text-gray-300 font-medium italic">
-                Our vision is an internet where AI agents are truly autonomous, collaborating in massive distributed swarms without a single central authority controlling their potential.
-              </blockquote>
-              <p>This Hub is the marketplace for that potential. Every skill and plugin is a package that grants your agent new powers—from coding to financial analysis—all running securely on your machine. You control the keys, you control the hardware, you control the agent.</p>
-            </div>
-
-            <div className="flex gap-4 mt-12 border-t border-gray-800/50 pt-8 w-full justify-center">
-              <a href="https://must-b.com/install.sh" target="_blank" className="bg-[#222] text-gray-100 px-6 py-3 rounded-lg font-bold hover:bg-[#333] transition-colors">Linux / macOS Install</a>
-              <a href="https://must-b.com/install.ps1" target="_blank" className="bg-white text-black px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors">Windows Install</a>
-              <a href="https://discord.gg/mustb" target="_blank" className="bg-red-900/50 text-red-200 px-6 py-3 rounded-lg font-bold hover:bg-red-900/70 transition-colors">Community Discord</a>
-            </div>
+          /* About Section */
+          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-12 text-center max-w-4xl mx-auto">
+             <div className="w-24 h-24 bg-red-600 rounded-3xl mx-auto mb-8 flex items-center justify-center shadow-2xl shadow-red-600/20">
+               <img src="/mascot.png" alt="must-b" className="w-16 h-16 object-contain" />
+             </div>
+             <h2 className="text-3xl font-bold mb-6">Must-b: The Future of Sovereign AI</h2>
+             <p className="text-gray-400 text-lg leading-relaxed mb-8">
+               Must-b, verilerinizin gizliliğini korurken yapay zekanın sınırsız gücünü yerel donanımınıza getiren merkeziyetsiz bir framework'tür. 
+               Bu hub, binlerce geliştiricinin katkıda bulunduğu devasa bir zeka kütüphanesidir.
+             </p>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+               <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                 <h4 className="text-red-500 font-bold mb-2">Private</h4>
+                 <p className="text-xs text-gray-500">Tüm yetenekler yerel donanımınızda icra edilir.</p>
+               </div>
+               <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                 <h4 className="text-red-500 font-bold mb-2">Global</h4>
+                 <p className="text-xs text-gray-500">Must-b Cloud ile kimliğiniz her yerde senkron.</p>
+               </div>
+               <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                 <h4 className="text-red-500 font-bold mb-2">Autonomous</h4>
+                 <p className="text-xs text-gray-500">Ajanlar görevleri kendi başına planlar ve bitirir.</p>
+               </div>
+             </div>
           </div>
         )}
       </div>
 
-      {/* --- MODAL (DETAY PENCERESİ) --- */}
+      {/* Modal Detail */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-opacity">
-          <div className="bg-[#161616] border border-[#333] rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl relative shadow-black animate-in fade-in zoom-in-95 duration-200">
-            <button onClick={() => setSelectedItem(null)} className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors bg-[#222] p-2 rounded-full"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-            <div className="p-8">
-              <div className="flex items-center gap-3 mb-2 flex-wrap">
-                <h2 className="text-3xl font-bold text-white">{selectedItem.name}</h2>
-                <span className="text-xs font-mono bg-red-900/30 text-red-400 border border-red-900/50 px-2 py-1 rounded">{selectedItem.version}</span>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+          <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95">
+            <div className="p-10">
+              <div className="flex justify-between items-start mb-6">
+                <h2 className="text-4xl font-bold">{selectedItem.name}</h2>
+                <button onClick={() => setSelectedItem(null)} className="p-2 hover:bg-white/10 rounded-full transition-colors"><svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
               </div>
-              <p className="text-gray-400 mb-6 font-mono text-sm">{selectedItem.author} tarafından yayınlandı.</p>
-              <div className="bg-[#0a0a0a] p-5 rounded-lg border border-[#222] mb-6 shadow-inner"><p className="text-gray-300 leading-relaxed">{selectedItem.summary}</p></div>
-
-              <div className="mb-6">
-                <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Kurulum Komutu (CLI)</h4>
-                <div className="flex items-center justify-between bg-black p-4 rounded-lg border border-[#333] shadow-inner">
-                  <code className="text-emerald-400 font-mono text-sm">{getInstallCommand(selectedItem.name, activeTab)}</code>
-                  <button onClick={() => navigator.clipboard.writeText(getInstallCommand(selectedItem.name, activeTab))} className="text-gray-500 hover:text-white transition-colors p-1" title="Kopyala"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></button>
+              <p className="text-gray-400 text-lg mb-8">{selectedItem.summary}</p>
+              
+              <div className="bg-black p-6 rounded-2xl border border-white/5 mb-8">
+                <p className="text-xs font-bold text-gray-600 uppercase mb-3 tracking-widest">Kurulum Komutu</p>
+                <div className="flex justify-between items-center font-mono text-emerald-500">
+                  <span>{getInstallCommand(selectedItem.name, activeTab)}</span>
+                  <button onClick={() => {navigator.clipboard.writeText(getInstallCommand(selectedItem.name, activeTab))}} className="text-gray-500 hover:text-white transition-colors">COPY</button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-8 border-t border-[#333] pt-6 mt-2 flex-wrap">
-                <div><span className="block text-xs text-gray-500 uppercase tracking-wider">İndirme</span><span className="text-xl font-bold text-white font-mono">{selectedItem.downloads}</span></div>
-                <div><span className="block text-xs text-gray-500 uppercase tracking-wider">Yıldız</span><span className="text-xl font-bold text-white font-mono">{selectedItem.stars}</span></div>
-                {selectedItem.os && (<div><span className="block text-xs text-gray-500 uppercase tracking-wider mb-1">OS</span><div className="flex gap-1.5">{selectedItem.os?.map((os: string) => (<span key={os} className="text-[10px] uppercase bg-[#222] border border-[#444] text-gray-300 px-2 py-0.5 rounded">{os}</span>))}</div></div>)}
+              <div className="flex justify-between items-center text-sm font-bold pt-6 border-t border-white/5">
+                <span className="text-gray-500">Yazar: {selectedItem.author}</span>
+                <div className="flex gap-6">
+                  <span className="text-red-500">{selectedItem.downloads} İndirme</span>
+                  <span className="text-red-500">{selectedItem.stars} Yıldız</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }
