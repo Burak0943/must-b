@@ -1,104 +1,83 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase'; 
 import PackageCard from './PackageCard';
-import { Search, Terminal, Cpu, Zap, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Search, Cpu, Globe, Lock, Code } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Veya projen neyi kullanıyorsa (a etiketi de olur)
 
 export default function MustbHub() {
   const [packages, setPackages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchPackages() {
-      try {
-        setLoading(true);
-        // 1400 verinin hepsini tek seferde çekmek yerine limit koyabilirsin, 
-        // ama şimdilik client-side search için hepsini çekiyoruz.
-        const { data, error: sbError } = await supabase
-          .from('packages')
-          .select('*')
-          .order('downloads', { ascending: false });
+      const { data } = await supabase
+        .from('packages')
+        .select('*')
+        .order('stars', { ascending: false });
 
-        if (sbError) throw sbError;
-        if (data) setPackages(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+      if (data) setPackages(data);
+      setLoading(false);
     }
     fetchPackages();
   }, []);
 
-  // Gelişmiş Arama Filtresi
   const filteredPackages = useMemo(() => {
     return packages.filter(pkg => 
-      pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pkg.summary.toLowerCase().includes(searchTerm.toLowerCase())
+      pkg.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, packages]);
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-      <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-      <p className="text-cyan-400 font-mono animate-pulse">[[ AJANLAR SENKRONİZE EDİLİYOR... ]]</p>
-    </div>
-  );
-
-  if (error) return (
-    <div className="bg-red-500/10 border border-red-500 p-6 rounded-lg text-red-500 text-center my-10">
-      <p className="font-bold">Bağlantı Hatası!</p>
-      <p className="text-sm">{error}</p>
-      <button onClick={() => window.location.reload()} className="mt-4 underline">Tekrar Dene</button>
-    </div>
-  );
+  // YÜKLEME ANİMASYONU KALDIRILDI (Sadece veri yokken boş döner)
+  if (loading && packages.length === 0) return null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-      {/* ÜST BİLGİ VE İSTATİSTİKLER */}
-      <div className="relative mb-16 overflow-hidden bg-gradient-to-r from-cyan-900/20 to-transparent p-8 rounded-3xl border border-white/5">
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 text-cyan-400 mb-4 font-mono text-sm tracking-widest">
-            <Terminal size={16} /> <span>MUST-B CORE NETWORK v4.0</span>
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-cyan-500/30">
+      
+      {/* YENİ SADE HEADER VE GERİ DÖN BUTONU */}
+      <nav className="border-b border-white/5 bg-black/50 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <Link to="/" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+              <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+              <span className="text-sm font-medium">Ana Sayfaya Dön</span>
+            </Link>
+            <div className="h-6 w-px bg-white/10 hidden md:block" />
+            <h1 className="text-xl font-bold tracking-tighter hidden md:block">
+              AGENT<span className="text-cyan-500">HUB</span>
+            </h1>
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-4 tracking-tighter italic">
-            AGENT <span className="text-cyan-500">HUB</span>
-          </h1>
-          <div className="flex flex-wrap gap-6 text-gray-400 text-sm font-mono">
-            <div className="flex items-center gap-2"><Cpu size={14}/> {packages.length} YETENEK</div>
-            <div className="flex items-center gap-2"><Zap size={14}/> OTONOM AKTİF</div>
-            <div className="flex items-center gap-2"><ShieldCheck size={14}/> GÜVENLİ RLS</div>
+
+          <div className="flex items-center gap-4 text-xs font-mono text-gray-500">
+            <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"/> {packages.length} YETENEK AKTİF</span>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* ARAMA BARI */}
-      <div className="relative mb-12">
-        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-500">
-          <Search size={20} />
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        {/* ARAMA BARI - DAHA SADE */}
+        <div className="max-w-2xl mx-auto mb-16">
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-gray-500 group-focus-within:text-cyan-500 transition-colors">
+              <Search size={18} />
+            </div>
+            <input 
+              type="text"
+              placeholder="Sistemde yetenek ara..."
+              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-white focus:outline-none focus:border-cyan-500/50 focus:ring-4 focus:ring-cyan-500/10 transition-all placeholder:text-gray-600 italic"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
-        <input 
-          type="text"
-          placeholder="Yetenek ara (örn: Vision, Logic, Crypto...)"
-          className="w-full bg-[#0a0a0a] border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder:text-gray-600"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
 
-      {/* SONUÇLAR */}
-      {filteredPackages.length > 0 ? (
+        {/* KUTUCUKLAR */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredPackages.map((pkg) => (
             <PackageCard key={pkg.id} pkg={pkg} />
           ))}
         </div>
-      ) : (
-        <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl">
-          <p className="text-gray-500 font-mono text-lg italic">" {searchTerm} " ile eşleşen bir ajan bulunamadı.</p>
-        </div>
-      )}
+      </main>
     </div>
   );
 }
