@@ -10,8 +10,9 @@ import Dashboard from "./pages/Dashboard";
 import LocalSetup from "./pages/LocalSetup";
 import AuthConnect from "./pages/AuthConnect";
 import NotFound from "./pages/NotFound";
-import MustbHub from "./components/MustbHub"; 
+import MustbHub from "./components/MustbHub";
 import HubDetail from "./pages/HubDetail";
+import DocsPage from "./pages/DocsPage";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => {
             {/* MUST-B HUB - Herkese Açık (Yatırımcılar ve misafirler görsün diye) */}
             <Route path="/ecosystem" element={<MustbHub />} />
             <Route path="/ecosystem/:type/:id" element={<HubDetail />} />
+            <Route path="/docs" element={<DocsPage />} />
             
             {/* Giriş yapmışsa Login'e gidemez, Dashboard'a fırlatılır */}
             <Route 

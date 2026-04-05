@@ -28,6 +28,9 @@ const Navbar = () => {
         <Link to="/ecosystem" className="text-sm font-medium text-white/70 hover:text-white transition-colors pl-2">
           Hub
         </Link>
+        <Link to="/docs" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+          Docs
+        </Link>
         <Link to="/login" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
           Login
         </Link>
@@ -58,6 +61,10 @@ const Navbar = () => {
             <Link to="/ecosystem" onClick={() => setMobileOpen(false)}
               className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl">
               Hub
+            </Link>
+            <Link to="/docs" onClick={() => setMobileOpen(false)}
+              className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl">
+              Docs
             </Link>
             <div className="h-px w-full bg-white/10 mb-2" />
             <Link to="/login" onClick={() => setMobileOpen(false)}
