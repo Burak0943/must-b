@@ -109,9 +109,9 @@ export default function HubDetail() {
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center space-y-4">
-            <p className="text-white/40">Paket bulunamadı.</p>
+            <p className="text-white/40">Package not found.</p>
             <Link to="/ecosystem" className="text-cyan-400 text-sm hover:underline">
-              ← Ekosisteme dön
+              ← Back to Ecosystem
             </Link>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function HubDetail() {
                      hover:text-white/70 transition-colors mb-8"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Ekosisteme dön
+          Back to Ecosystem
         </Link>
 
         {/* ── Hero Header ── */}
@@ -223,7 +223,7 @@ export default function HubDetail() {
             </span>
           </a>
           <p className="text-center text-[11px] text-white/25 mt-3">
-            Must-b Core ile uyumlu · Lisans: MIT · Node 18+ gerektirir
+            Compatible with Must-b Core · License: MIT · Requires Node 18+
           </p>
         </motion.div>
 
@@ -240,7 +240,7 @@ export default function HubDetail() {
             {/* Header */}
             <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.06] bg-white/[0.02]">
               <BookOpen className="w-4 h-4 text-cyan-400" />
-              <span className="text-sm font-semibold text-white/80">Dökümantasyon</span>
+              <span className="text-sm font-semibold text-white/80">Documentation</span>
               <span className="ml-auto text-[10px] text-white/25 font-mono">README.md</span>
             </div>
             {/* Body */}
@@ -248,7 +248,7 @@ export default function HubDetail() {
               {item.readme ? (
                 <MarkdownBlock content={item.readme} />
               ) : (
-                <p className="text-white/30 text-sm">Dökümantasyon bulunamadı.</p>
+                <p className="text-white/30 text-sm">Documentation not found.</p>
               )}
             </div>
           </motion.div>
@@ -264,7 +264,7 @@ export default function HubDetail() {
               {/* Header */}
               <div className="flex items-center gap-3 px-6 py-4 border-b border-cyan-500/[0.12] bg-cyan-500/[0.04]">
                 <Puzzle className="w-4 h-4 text-cyan-400" />
-                <span className="text-sm font-semibold text-white/80">Entegrasyon Kılavuzu</span>
+                <span className="text-sm font-semibold text-white/80">Integration Guide</span>
                 <span className="ml-auto text-[10px] text-cyan-400/50 font-mono">integration_guide.md</span>
               </div>
               {/* Body — with code block support */}
@@ -283,7 +283,7 @@ export default function HubDetail() {
                        bg-white/[0.02] border border-white/[0.06] rounded-2xl"
           >
             <div className="text-sm text-white/40">
-              Sürüm <span className="text-white/60 font-mono">{item.version}</span> · {item.author}
+              Version <span className="text-white/60 font-mono">{item.version}</span> · {item.author}
             </div>
             <a
               href={downloadUrl}
@@ -292,7 +292,7 @@ export default function HubDetail() {
                          hover:bg-cyan-500/10 transition-all duration-200"
             >
               <Download className="w-3.5 h-3.5" />
-              .ZIP İndir
+              Download .ZIP
             </a>
           </motion.div>
 

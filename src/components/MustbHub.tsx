@@ -145,21 +145,21 @@ function AboutTab() {
                         flex items-center justify-center mx-auto text-2xl">
           🦊
         </div>
-        <h2 className="text-3xl font-bold text-white">Must-b Core Nedir?</h2>
+        <h2 className="text-3xl font-bold text-white">What is Must-b Core?</h2>
         <p className="text-white/50 leading-relaxed text-sm max-w-xl mx-auto">
-          Must-b, yerel donanımında çalışan, buluttan senkronize olan ve görevleri
-          otonom ajan sürülerine dağıtan bir <strong className="text-white/80">next-generation AI agent framework</strong>'tür.
-          Bir komut yaz — Must-b planlar, parçalar, çalıştırır ve teslim eder.
+          Must-b is a <strong className="text-white/80">next-generation AI agent framework</strong> that
+          runs on your local hardware, syncs via the cloud, and distributes tasks across autonomous agent swarms.
+          Write a command — Must-b plans, splits, executes, and delivers.
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { value: "1,422", label: "Skill" },
-          { value: "948",   label: "Plugin" },
-          { value: "3.5M+", label: "İndirme" },
-          { value: "50K+",  label: "Aktif Ajan" },
+          { value: "1,422", label: "Skills" },
+          { value: "948",   label: "Plugins" },
+          { value: "3.5M+", label: "Downloads" },
+          { value: "50K+",  label: "Active Agents" },
         ].map(({ value, label }) => (
           <div key={label} className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-4 text-center">
             <div className="text-xl font-bold text-cyan-400">{value}</div>
@@ -168,38 +168,37 @@ function AboutTab() {
         ))}
       </div>
 
-      {/* Nasıl çalışır */}
+      {/* How it works */}
       <div className="space-y-6">
         <h3 className="text-lg font-bold text-white border-b border-white/[0.07] pb-3">
-          Otonom Ajan Ekosistemi Nasıl Çalışır?
+          How Does the Autonomous Agent Ecosystem Work?
         </h3>
         <div className="space-y-4 text-sm text-white/55 leading-relaxed">
           <p>
-            Geleneksel yazılım araçları, bir görevi yerine getirmek için insan müdahalesi gerektirir.
-            Must-b bunun tam tersini yapar: <strong className="text-white/75">doğal dil komutunu</strong> alır,
-            internal LLM (GPT-4o veya Claude) ile bir görev grafiği çizer ve her düğüm için
-            özelleşmiş bir alt ajan atar.
+            Traditional software tools require human intervention to complete a task.
+            Must-b does the opposite: it takes a <strong className="text-white/75">natural-language command</strong>,
+            draws a task graph with an internal LLM (GPT-4o or Claude), and assigns
+            a specialised sub-agent to each node.
           </p>
           <p>
-            Her Must-b ajana ajan, bir <strong className="text-white/75">Skill</strong> veya
-            <strong className="text-white/75"> Plugin</strong> ile genişletilebilir.
-            Skill'ler belirli bir dış servisle konuşan adaptor katmanıdır — Stripe ödemelerini
-            dinlemek, AWS'ye deploy yapmak, GitHub PR açmak gibi. Plugin'ler ise ajanın temel
-            yeteneklerini artıran, sisteme yerleşik modüllerdir: terminal erişimi, tarayıcı
-            otomasyonu, uzun süreli hafıza.
+            Every Must-b agent can be extended with a <strong className="text-white/75">Skill</strong> or
+            a <strong className="text-white/75">Plugin</strong>.
+            Skills are adapter layers that talk to a specific external service — listening to Stripe events,
+            deploying to AWS, opening GitHub PRs. Plugins enhance the agent's core capabilities:
+            terminal access, browser automation, long-term memory.
           </p>
           <p>
-            Sonuçlar, üst seviye koordinatör ajan tarafından birleştirilir ve kullanıcıya
-            tek bir tutarlı çıktı olarak sunulur. Tüm süreç boyunca hiçbir veri yerel makinenin
-            dışına çıkmaz — model, araç çağrıları ve dosya sistemi tamamen lokaldedir.
+            Results are merged by a top-level coordinator agent and delivered to the user as a single
+            coherent output. Throughout the entire process, no data leaves your local machine —
+            the model, tool calls, and file system remain fully local.
           </p>
         </div>
       </div>
 
-      {/* Dört temel sütun */}
+      {/* Core pillars */}
       <div className="space-y-6">
         <h3 className="text-lg font-bold text-white border-b border-white/[0.07] pb-3">
-          Temel Mimari Sütunlar
+          Core Architecture Pillars
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
           {pillars.map(({ icon, title, desc }) => (
@@ -216,10 +215,10 @@ function AboutTab() {
         </div>
       </div>
 
-      {/* Zaman çizelgesi */}
+      {/* Timeline */}
       <div className="space-y-6">
         <h3 className="text-lg font-bold text-white border-b border-white/[0.07] pb-3">
-          Yol Haritası & Tarihçe
+          Roadmap &amp; History
         </h3>
         <div className="relative space-y-6 ml-4">
           <div className="absolute left-0 top-2 bottom-2 w-px bg-white/[0.08]" />
@@ -241,15 +240,15 @@ function AboutTab() {
       {/* CTA */}
       <div className="bg-cyan-500/[0.07] border border-cyan-500/20 rounded-2xl p-6 text-center space-y-4">
         <p className="text-sm text-white/60 leading-relaxed max-w-md mx-auto">
-          Must-b'yi yerel makinende çalıştırmak için tek satır yeterli.
-          Kurulum &lt; 90 saniye, sıfır konfigürasyon.
+          Running Must-b on your local machine takes a single line.
+          Setup &lt; 90 seconds, zero configuration.
         </p>
         <a href="/"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full
                      bg-cyan-500 text-black font-semibold text-sm
                      hover:bg-cyan-400 transition-all
                      shadow-[0_0_24px_hsl(192_91%_43%/0.35)]">
-          Başlamak için Ana Sayfaya Git →
+          Go to Home →
         </a>
       </div>
     </motion.div>
@@ -283,11 +282,11 @@ export default function MustbHub() {
               Must-b Hub
             </span>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
-              Ekosistem
+              Ecosystem
             </h1>
             <p className="text-white/50 text-sm max-w-lg">
-              Stripe, AWS, OpenAI ve daha fazlası için hazır Must-b entegrasyonları.
-              Tek tıkla indir, konfigüre et, çalıştır.
+              Ready-made Must-b integrations for Stripe, AWS, OpenAI, and more.
+              Download in one click, configure, and run.
             </p>
           </motion.div>
 
@@ -298,13 +297,13 @@ export default function MustbHub() {
             transition={{ delay: 0.2 }}
             className="flex items-center gap-6 mt-6 text-xs text-white/40"
           >
-            <span><span className="text-white/70 font-semibold">{hubData.counts.skills}</span> skill</span>
+            <span><span className="text-white/70 font-semibold">{hubData.counts.skills}</span> skills</span>
             <span className="w-px h-4 bg-white/10" />
-            <span><span className="text-white/70 font-semibold">{hubData.counts.plugins}</span> plugin</span>
+            <span><span className="text-white/70 font-semibold">{hubData.counts.plugins}</span> plugins</span>
             <span className="w-px h-4 bg-white/10" />
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Canlı
+              Live
             </span>
           </motion.div>
         </div>
@@ -331,7 +330,7 @@ export default function MustbHub() {
                 />
               )}
               <span className="relative z-10">
-                {tab === "skills" ? "Skills" : tab === "plugins" ? "Plugins" : "Hakkında"}
+                {tab === "skills" ? "Skills" : tab === "plugins" ? "Plugins" : "About"}
               </span>
             </button>
           ))}
@@ -356,10 +355,10 @@ export default function MustbHub() {
               <div className="flex items-center gap-4 px-5 md:px-7 py-3 border-b border-white/[0.06]
                               bg-white/[0.02] text-[10px] uppercase tracking-widest text-white/30">
                 <span className="w-10 shrink-0" />
-                <span className="flex-1">İSİM</span>
+                <span className="flex-1">NAME</span>
                 <div className="hidden md:flex items-center gap-5 shrink-0 pr-8">
-                  <span className="w-12 text-right">YILDIZ</span>
-                  <span className="w-16 text-right">İNDİRME</span>
+                  <span className="w-12 text-right">STARS</span>
+                  <span className="w-16 text-right">DOWNLOADS</span>
                   <span className="w-24 text-center">PLATFORM</span>
                 </div>
               </div>

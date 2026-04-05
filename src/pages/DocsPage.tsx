@@ -7,23 +7,23 @@ import Navbar from "@/components/Navbar";
 
 const SIDEBAR = [
   {
-    group: "Genel Bakış",
-    items: ["Giriş", "Hızlı Başlangıç", "Kurulum", "Mimari"],
+    group: "Overview",
+    items: ["Introduction", "Quick Start", "Installation", "Architecture"],
   },
   {
-    group: "Ajan Mimarisi",
-    items: ["Swarm Modeli", "Task Grafı", "Sub-Agent Sistemi", "Memory Katmanı"],
+    group: "Agent Architecture",
+    items: ["Swarm Model", "Task Graph", "Sub-Agent System", "Memory Layer"],
   },
   {
-    group: "API Referansı",
+    group: "API Reference",
     items: ["REST Endpoints", "WebSocket API", "Webhook Events", "SDK — Node.js", "SDK — Python"],
   },
   {
-    group: "Geliştirici Rehberi",
-    items: ["Skill Yazma", "Plugin Geliştirme", "Test & Debug", "Deployment"],
+    group: "Developer Guide",
+    items: ["Writing Skills", "Plugin Development", "Testing & Debug", "Deployment"],
   },
   {
-    group: "Entegrasyonlar",
+    group: "Integrations",
     items: ["Stripe", "AWS", "OpenAI", "GitHub", "Slack"],
   },
 ];
@@ -69,7 +69,7 @@ function Sidebar() {
       <div className="mt-auto pt-6 border-t border-white/[0.06]">
         <span className="inline-flex items-center gap-1.5 text-[11px] text-white/25">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400/60" />
-          v1.2.2 — docs yakında
+          v1.2.2 — docs coming soon
         </span>
       </div>
     </aside>
@@ -89,7 +89,6 @@ function ComingSoon() {
       >
         {/* Animated icon */}
         <div className="relative flex justify-center">
-          {/* Outer glow rings */}
           <motion.div
             animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.05, 0.15] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -100,8 +99,6 @@ function ComingSoon() {
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
             className="absolute inset-0 rounded-full bg-cyan-400/15 blur-2xl"
           />
-
-          {/* Icon box */}
           <motion.div
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -112,8 +109,6 @@ function ComingSoon() {
                        shadow-[0_0_60px_hsl(192_91%_43%/0.2)]"
           >
             <BookOpen className="w-10 h-10 text-cyan-400" strokeWidth={1.5} />
-
-            {/* Corner dots decoration */}
             <span className="absolute top-2.5 left-2.5 w-1 h-1 rounded-full bg-cyan-400/40" />
             <span className="absolute top-2.5 right-2.5 w-1 h-1 rounded-full bg-cyan-400/40" />
             <span className="absolute bottom-2.5 left-2.5 w-1 h-1 rounded-full bg-cyan-400/20" />
@@ -135,18 +130,18 @@ function ComingSoon() {
               transition={{ duration: 1.6, repeat: Infinity }}
               className="w-1.5 h-1.5 rounded-full bg-cyan-400"
             />
-            Hazırlanıyor
+            In Progress
           </motion.div>
 
           <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
             Must-b Core<br />
-            <span className="text-white/40">Dökümantasyonu</span>
+            <span className="text-white/40">Documentation</span>
           </h1>
 
           <p className="text-sm text-white/45 leading-relaxed max-w-sm mx-auto">
-            Otonom ajan ekosistemimizin detaylı teknik dökümanları, entegrasyon
-            rehberleri ve API referansları hazırlanıyor.
-            <strong className="text-white/60"> Çok yakında</strong> burada olacak.
+            Detailed technical documentation, integration guides, and API references
+            for the autonomous agent ecosystem are being prepared.
+            <strong className="text-white/60"> Coming soon.</strong>
           </p>
         </div>
 
@@ -158,7 +153,7 @@ function ComingSoon() {
           className="space-y-2"
         >
           <div className="flex justify-between text-[11px] text-white/30 px-1">
-            <span>İçerik hazırlık durumu</span>
+            <span>Content readiness</span>
             <span className="text-cyan-400/70">68%</span>
           </div>
           <div className="w-full h-1 rounded-full bg-white/[0.06] overflow-hidden">
@@ -171,7 +166,7 @@ function ComingSoon() {
           </div>
         </motion.div>
 
-        {/* Skeleton cards – preview of what's coming */}
+        {/* Skeleton cards */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -179,10 +174,10 @@ function ComingSoon() {
           className="grid grid-cols-2 gap-3 text-left"
         >
           {[
-            { label: "Hızlı Başlangıç", pct: "90%" },
-            { label: "API Referansı",   pct: "75%" },
-            { label: "Skill Geliştirme","pct": "60%" },
-            { label: "Plugin Rehberi",  pct: "45%" },
+            { label: "Quick Start",       pct: "90%" },
+            { label: "API Reference",     pct: "75%" },
+            { label: "Skill Development", pct: "60%" },
+            { label: "Plugin Guide",      pct: "45%" },
           ].map(({ label, pct }) => (
             <div
               key={label}
@@ -195,7 +190,7 @@ function ComingSoon() {
                   style={{ width: pct }}
                 />
               </div>
-              <div className="text-[10px] text-white/25">{pct} tamamlandı</div>
+              <div className="text-[10px] text-white/25">{pct} complete</div>
             </div>
           ))}
         </motion.div>
@@ -211,7 +206,7 @@ function ComingSoon() {
             className="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white/70
                        transition-colors border-b border-white/20 hover:border-white/40 pb-0.5"
           >
-            ← Ana Sayfaya Dön
+            ← Back to Home
           </Link>
         </motion.div>
       </motion.div>
@@ -225,7 +220,6 @@ export default function DocsPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       <Navbar />
-
       <div className="flex">
         <Sidebar />
         <ComingSoon />
