@@ -1,5 +1,8 @@
 {
-  "counts": { "skills": "1,422", "plugins": "948" },
+  "counts": {
+    "skills": "100",
+    "plugins": "50"
+  },
   "skills": [
     {
       "id": 1,
@@ -9,10 +12,15 @@
       "author": "@must-b_core",
       "stars": "15.2k",
       "downloads": "600k",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b Stripe Billing Agent\n\nBu skill, Stripe Billing API'yi Must-b ajan çerçevesine tam entegre eder. Ajan, Stripe webhook event'larını (invoice.payment_failed, customer.subscription.updated vb.) gerçek zamanlı olarak dinler ve iş kurallarınıza göre otomatik aksiyon alır.\n\n### Özellikler\n- **Webhook İmzalama**: Tüm Stripe webhook'ları `stripe-signature` header'ı ile doğrulanır.\n- **Otomatik Retry**: Başarısız ödemeler için exponential backoff ile 3 deneme yapılır.\n- **Churn Tahmini**: Son 30 günlük ödeme geçmişine dayanarak churn riski skorlar.\n- **Dashboard**: Stripe Dashboard'a yazılabilir metadata ile zenginleştirilmiş müşteri profilleri.\n\n### Desteklenen Stripe API'ler\n- `stripe.customers.*`\n- `stripe.subscriptions.*`\n- `stripe.invoices.*`\n- `stripe.webhooks.*`\n\n### Gereksinimler\n- Stripe API Key (Secret Key)\n- Webhook Endpoint URL (public)\n- Node.js 18+",
-      "integration_guide": "### Stripe Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nStripe Dashboard → Developers → API Keys → Secret Key'i kopyalayın.\nMust-b agent config'e ekleyin:\n```json\n{ \"STRIPE_SECRET_KEY\": \"sk_live_...\" }\n```\n\n**Adım 2 — Webhook Endpoint**\nStripe Dashboard → Webhooks → Add Endpoint:\n- URL: `https://your-domain.com/webhooks/stripe`\n- Events: `invoice.*`, `customer.subscription.*`\n- Signing Secret'ı `STRIPE_WEBHOOK_SECRET` olarak kaydedin.\n\n**Adım 3 — Aktivasyon**\nMust-b skill registry'den yükleyin ve gateway'i yeniden başlatın. Ajan otomatik olarak Stripe event'larını işlemeye başlar."
+      "integration_guide": "### Stripe Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nStripe Dashboard → Developers → API Keys → Secret Key'i kopyalayın.\nMust-b agent config'e ekleyin:\n```json\n{ \"STRIPE_SECRET_KEY\": \"sk_live_...\" }\n```\n\n**Adım 2 — Webhook Endpoint**\nStripe Dashboard → Webhooks → Add Endpoint:\n- URL: `https://your-domain.com/webhooks/stripe`\n- Events: `invoice.*`, `customer.subscription.*`\n- Signing Secret'ı `STRIPE_WEBHOOK_SECRET` olarak kaydedin.\n\n**Adım 3 — Aktivasyon**\nMust-b skill registry'den yükleyin ve gateway'i yeniden başlatın. Ajan otomatik olarak Stripe event'larını işlemeye başlar.",
+      "download_url": "/downloads/skill-1.zip"
     },
     {
       "id": 2,
@@ -22,10 +30,14 @@
       "author": "@must-b_core",
       "stars": "22k",
       "downloads": "1.1m",
-      "os": ["Linux", "macOS"],
+      "os": [
+        "Linux",
+        "macOS"
+      ],
       "is_certified": true,
       "readme": "## Must-b AWS Infrastructure Deployer\n\nAWS kaynaklarını doğal dil komutları ile provision eden, güncelleyen ve teardown eden bir Must-b skill. Terraform state dosyaları S3 backend'de saklanır; ajan her deploy öncesi drift detection uygular.\n\n### Özellikler\n- **Multi-Region Deployment**: us-east-1, eu-west-1, ap-southeast-1 bölgelerinde paralel deployment\n- **Cost Estimation**: Deploy öncesi AWS Pricing API üzerinden maliyet tahmini\n- **Drift Detection**: Mevcut AWS state ile Terraform state karşılaştırması\n- **Rollback**: Başarısız deploy'larda otomatik rollback\n\n### Desteklenen AWS Servisleri\n- EC2 (t3, m5, c6g serisi)\n- S3 (versioning, lifecycle, replication)\n- RDS (PostgreSQL 15, MySQL 8)\n- Lambda (Node.js 20, Python 3.12)\n- VPC, Security Groups, IAM Roles\n\n### Gereksinimler\n- AWS Access Key ID + Secret Access Key\n- Terraform 1.6+\n- AWS CLI v2",
-      "integration_guide": "### AWS Entegrasyon Kılavuzu\n\n**Adım 1 — IAM Kullanıcısı**\nAWS Console → IAM → Users → Create User.\nPolicy olarak `PowerUserAccess` veya özel bir least-privilege policy ekleyin.\nAccess Key oluşturun.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"AWS_ACCESS_KEY_ID\": \"AKIA...\",\n  \"AWS_SECRET_ACCESS_KEY\": \"...\",\n  \"AWS_DEFAULT_REGION\": \"eu-west-1\"\n}\n```\n\n**Adım 3 — Terraform Backend**\nS3 bucket oluşturun (örn: `mustb-tfstate-prod`) ve DynamoDB tablosu ile state locking aktif edin.\n\n**Adım 4 — İlk Deploy**\nAgana `Deploy a t3.medium EC2 on eu-west-1 with Ubuntu 22.04` yazın. Ajan Terraform planını çalıştırır, onayınızı bekler ve uygular."
+      "integration_guide": "### AWS Entegrasyon Kılavuzu\n\n**Adım 1 — IAM Kullanıcısı**\nAWS Console → IAM → Users → Create User.\nPolicy olarak `PowerUserAccess` veya özel bir least-privilege policy ekleyin.\nAccess Key oluşturun.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"AWS_ACCESS_KEY_ID\": \"AKIA...\",\n  \"AWS_SECRET_ACCESS_KEY\": \"...\",\n  \"AWS_DEFAULT_REGION\": \"eu-west-1\"\n}\n```\n\n**Adım 3 — Terraform Backend**\nS3 bucket oluşturun (örn: `mustb-tfstate-prod`) ve DynamoDB tablosu ile state locking aktif edin.\n\n**Adım 4 — İlk Deploy**\nAgana `Deploy a t3.medium EC2 on eu-west-1 with Ubuntu 22.04` yazın. Ajan Terraform planını çalıştırır, onayınızı bekler ve uygular.",
+      "download_url": "/downloads/skill-2.zip"
     },
     {
       "id": 3,
@@ -35,10 +47,15 @@
       "author": "@must-b_core",
       "stars": "35k",
       "downloads": "2.2m",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b OpenAI Orchestrator\n\nMust-b'nin birincil LLM köprüsü. OpenAI API'nin tüm endpoint'lerini Must-b ajan pipeline'ına entegre eder. Akıllı model seçimi, token yönetimi ve multi-turn konuşma hafızası içerir.\n\n### Özellikler\n- **Akıllı Model Seçimi**: Görev karmaşıklığına göre GPT-4o vs GPT-4o-mini otomatik seçimi\n- **Token Optimizasyonu**: Konteks penceresini aşan konuşmalar için akıllı summarization\n- **Rate Limit Yönetimi**: Otomatik retry ve exponential backoff\n- **Streaming**: Real-time token streaming desteği\n- **Embeddings**: text-embedding-3-large ile semantic search\n\n### Desteklenen Modeller\n- gpt-4o, gpt-4o-mini\n- gpt-4-turbo\n- text-embedding-3-large, text-embedding-3-small\n- dall-e-3 (görsel görevler için)\n\n### Gereksinimler\n- OpenAI API Key\n- Organization ID (isteğe bağlı)",
-      "integration_guide": "### OpenAI Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nOpenAI Platform → API Keys → Create new secret key.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"OPENAI_API_KEY\": \"sk-proj-...\",\n  \"OPENAI_ORG_ID\": \"org-...\",\n  \"OPENAI_DEFAULT_MODEL\": \"gpt-4o\"\n}\n```\n\n**Adım 3 — Token Bütçesi**\nConfig'e aylık token limiti ekleyin. Ajan, bu limiti aşmamak için otomatik model degradation uygular:\n```json\n{ \"OPENAI_MONTHLY_TOKEN_BUDGET\": 5000000 }\n```"
+      "integration_guide": "### OpenAI Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nOpenAI Platform → API Keys → Create new secret key.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"OPENAI_API_KEY\": \"sk-proj-...\",\n  \"OPENAI_ORG_ID\": \"org-...\",\n  \"OPENAI_DEFAULT_MODEL\": \"gpt-4o\"\n}\n```\n\n**Adım 3 — Token Bütçesi**\nConfig'e aylık token limiti ekleyin. Ajan, bu limiti aşmamak için otomatik model degradation uygular:\n```json\n{ \"OPENAI_MONTHLY_TOKEN_BUDGET\": 5000000 }\n```",
+      "download_url": "/downloads/skill-3.zip"
     },
     {
       "id": 4,
@@ -48,10 +65,15 @@
       "author": "@must-b_core",
       "stars": "9.4k",
       "downloads": "310k",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b Datadog Observability\n\nMust-b ajanlarının tüm operasyonel metriklerini, yapılandırılmış loglarını ve dağıtık trace'lerini Datadog platformuna aktarır.\n\n### Özellikler\n- **Custom Metrics**: Ajan başarı oranı, görev süreleri, tool call sayıları\n- **Structured Logging**: JSON formatında log shipper (loglar Datadog Log Management'a akar)\n- **APM Tracing**: Her ajan görevini Datadog APM span olarak raporlar\n- **Anomaly Detection**: Hata oranı spike'larında otomatik Datadog Monitor tetiklenebilir\n- **Dashboard Template**: Hazır Must-b Datadog dashboard JSON'u dahil\n\n### Metrik Listesi\n- `mustb.task.duration_ms` (histogram)\n- `mustb.task.success_rate` (gauge)\n- `mustb.llm.token_usage` (counter)\n- `mustb.tool.call_count` (counter)",
-      "integration_guide": "### Datadog Entegrasyon Kılavuzu\n\n**Adım 1 — API & App Key**\nDatadog → Organization Settings → API Keys → New Key.\nApp Key için: Organization Settings → Application Keys.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"DATADOG_API_KEY\": \"...\",\n  \"DATADOG_APP_KEY\": \"...\",\n  \"DATADOG_SITE\": \"datadoghq.eu\"\n}\n```\n\n**Adım 3 — Dashboard Import**\nDatadog → Dashboards → New Dashboard → Import JSON. Skill paketindeki `mustb-datadog-dashboard.json` dosyasını yükleyin.\n\n**Adım 4 — Monitor Kurulumu**\nDatadog Monitors → New Monitor → Metric. `mustb.task.success_rate < 0.95` alertini `@your-team` kanalına bağlayın."
+      "integration_guide": "### Datadog Entegrasyon Kılavuzu\n\n**Adım 1 — API & App Key**\nDatadog → Organization Settings → API Keys → New Key.\nApp Key için: Organization Settings → Application Keys.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"DATADOG_API_KEY\": \"...\",\n  \"DATADOG_APP_KEY\": \"...\",\n  \"DATADOG_SITE\": \"datadoghq.eu\"\n}\n```\n\n**Adım 3 — Dashboard Import**\nDatadog → Dashboards → New Dashboard → Import JSON. Skill paketindeki `mustb-datadog-dashboard.json` dosyasını yükleyin.\n\n**Adım 4 — Monitor Kurulumu**\nDatadog Monitors → New Monitor → Metric. `mustb.task.success_rate < 0.95` alertini `@your-team` kanalına bağlayın.",
+      "download_url": "/downloads/skill-4.zip"
     },
     {
       "id": 5,
@@ -61,10 +83,14 @@
       "author": "@must-b_core",
       "stars": "18k",
       "downloads": "890k",
-      "os": ["Linux", "macOS"],
+      "os": [
+        "Linux",
+        "macOS"
+      ],
       "is_certified": true,
       "readme": "## Must-b GitHub Repo Autopilot\n\nGitHub API ve git CLI üzerinden tam otonom repo yönetimi.\n\n### Özellikler\n- **Code Review**: PR diff'lerini analiz eder, test coverage raporlar\n- **Auto-PR**: Verilen göreve göre feature branch açar, kod yazar, PR oluşturur\n- **CI Status Monitoring**: GitHub Actions workflow sonuçlarını takip eder\n- **Issue Triaging**: Issue'ları önceliklendirir ve milestone'lara atar\n- **Dependency Audit**: `npm audit` ve `dependabot` çıktılarını işler\n\n### Gereksinimler\n- GitHub Personal Access Token (repo + workflow scopes)\n- Git 2.40+",
-      "integration_guide": "### GitHub Entegrasyon Kılavuzu\n\n**Adım 1 — PAT Oluşturma**\nGitHub → Settings → Developer Settings → Personal Access Tokens → Fine-grained tokens.\nGerekli izinler: `Contents (RW)`, `Pull Requests (RW)`, `Issues (RW)`, `Actions (R)`.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"GITHUB_TOKEN\": \"github_pat_...\",\n  \"GITHUB_DEFAULT_ORG\": \"your-org\"\n}\n```\n\n**Adım 3 — Webhook (Opsiyonel)**\nRepo → Settings → Webhooks → Add webhook. `https://your-mustb-gateway/gh-events` adresine `push`, `pull_request`, `issues` event'larını yönlendirin."
+      "integration_guide": "### GitHub Entegrasyon Kılavuzu\n\n**Adım 1 — PAT Oluşturma**\nGitHub → Settings → Developer Settings → Personal Access Tokens → Fine-grained tokens.\nGerekli izinler: `Contents (RW)`, `Pull Requests (RW)`, `Issues (RW)`, `Actions (R)`.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"GITHUB_TOKEN\": \"github_pat_...\",\n  \"GITHUB_DEFAULT_ORG\": \"your-org\"\n}\n```\n\n**Adım 3 — Webhook (Opsiyonel)**\nRepo → Settings → Webhooks → Add webhook. `https://your-mustb-gateway/gh-events` adresine `push`, `pull_request`, `issues` event'larını yönlendirin.",
+      "download_url": "/downloads/skill-5.zip"
     },
     {
       "id": 6,
@@ -74,10 +100,14 @@
       "author": "@must-b_core",
       "stars": "5.5k",
       "downloads": "120k",
-      "os": ["Linux", "macOS"],
+      "os": [
+        "Linux",
+        "macOS"
+      ],
       "is_certified": false,
       "readme": "## Must-b Slack Enterprise Bridge\n\nSlack workspace'inizdeki konuşmaları gerçek zamanlı izler ve yapılandırılmış iş akışlarını tetikler.\n\n### Özellikler\n- **Mention Listener**: Ajan, @mustb mention'larına otomatik yanıt verir\n- **Thread Summarizer**: Uzun thread'leri özetleyerek digest gönderir\n- **Jira Auto-Ticket**: `!ticket` komutuyla thread içeriğinden Jira issue üretir\n- **Scheduled Reports**: Günlük/haftalık kanal özetleri belirlenmiş saatte paylaşır",
-      "integration_guide": "### Slack Entegrasyon Kılavuzu\n\n**Adım 1 — Slack App Oluşturma**\napi.slack.com → Your Apps → Create New App → From Scratch.\n\n**Adım 2 — Bot Token Scopes**\nOAuth Scopes: `channels:read`, `chat:write`, `users:read`, `reactions:read`.\n\n**Adım 3 — Must-b Config**\n```json\n{\n  \"SLACK_BOT_TOKEN\": \"xoxb-...\",\n  \"SLACK_SIGNING_SECRET\": \"...\"\n}\n```"
+      "integration_guide": "### Slack Entegrasyon Kılavuzu\n\n**Adım 1 — Slack App Oluşturma**\napi.slack.com → Your Apps → Create New App → From Scratch.\n\n**Adım 2 — Bot Token Scopes**\nOAuth Scopes: `channels:read`, `chat:write`, `users:read`, `reactions:read`.\n\n**Adım 3 — Must-b Config**\n```json\n{\n  \"SLACK_BOT_TOKEN\": \"xoxb-...\",\n  \"SLACK_SIGNING_SECRET\": \"...\"\n}\n```",
+      "download_url": "/downloads/skill-6.zip"
     },
     {
       "id": 7,
@@ -87,10 +117,14 @@
       "author": "@must-b_core",
       "stars": "8.9k",
       "downloads": "210k",
-      "os": ["Cloud", "Linux"],
+      "os": [
+        "Cloud",
+        "Linux"
+      ],
       "is_certified": false,
       "readme": "## Must-b Google Sheets Sync\n\nGoogle Sheets API v4 üzerinden bidirectional veri senkronizasyonu.\n\n### Özellikler\n- Spreadsheet okuma/yazma (batch işlemler)\n- Named range desteği\n- Formül koruyarak satır ekleme\n- Webhook ile değişiklik bildirimi",
-      "integration_guide": "### Google Sheets Entegrasyon Kılavuzu\n\n**Adım 1 — Service Account**\nGoogle Cloud Console → IAM → Service Accounts → Create.\nJSON key indirin.\n\n**Adım 2 — API Aktifleştirme**\nGoogle Cloud → APIs → Google Sheets API + Google Drive API'yi aktif edin.\n\n**Adım 3 — Must-b Config**\n```json\n{ \"GOOGLE_SERVICE_ACCOUNT_JSON\": \"{...}\" }\n```\nSpreadsheet'i service account e-postasıyla paylaşın (Editor)."
+      "integration_guide": "### Google Sheets Entegrasyon Kılavuzu\n\n**Adım 1 — Service Account**\nGoogle Cloud Console → IAM → Service Accounts → Create.\nJSON key indirin.\n\n**Adım 2 — API Aktifleştirme**\nGoogle Cloud → APIs → Google Sheets API + Google Drive API'yi aktif edin.\n\n**Adım 3 — Must-b Config**\n```json\n{ \"GOOGLE_SERVICE_ACCOUNT_JSON\": \"{...}\" }\n```\nSpreadsheet'i service account e-postasıyla paylaşın (Editor).",
+      "download_url": "/downloads/skill-7.zip"
     },
     {
       "id": 8,
@@ -100,10 +134,14 @@
       "author": "@must-b_core",
       "stars": "6.2k",
       "downloads": "95k",
-      "os": ["Linux", "Windows"],
+      "os": [
+        "Linux",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b PostgreSQL Expert Agent\n\nNatural language ile PostgreSQL veritabanı yönetimi.\n\n### Özellikler\n- Text-to-SQL: Doğal dil sorularını güvenli SQL'e çevirir\n- EXPLAIN ANALYZE çıktısını yorumlar\n- Missing index tespiti ve önerisi\n- Schema migration script üretimi\n- Read-only mode desteği (production güvenliği için)",
-      "integration_guide": "### PostgreSQL Entegrasyon Kılavuzu\n\n**Adım 1 — Connection String**\n```json\n{ \"DATABASE_URL\": \"postgresql://user:pass@host:5432/dbname?sslmode=require\" }\n```\n\n**Adım 2 — Read-Only User (Önerilir)**\n```sql\nCREATE USER mustb_reader WITH PASSWORD '...';\nGRANT CONNECT ON DATABASE mydb TO mustb_reader;\nGRANT USAGE ON SCHEMA public TO mustb_reader;\nGRANT SELECT ON ALL TABLES IN SCHEMA public TO mustb_reader;\n```"
+      "integration_guide": "### PostgreSQL Entegrasyon Kılavuzu\n\n**Adım 1 — Connection String**\n```json\n{ \"DATABASE_URL\": \"postgresql://user:pass@host:5432/dbname?sslmode=require\" }\n```\n\n**Adım 2 — Read-Only User (Önerilir)**\n```sql\nCREATE USER mustb_reader WITH PASSWORD '...';\nGRANT CONNECT ON DATABASE mydb TO mustb_reader;\nGRANT USAGE ON SCHEMA public TO mustb_reader;\nGRANT SELECT ON ALL TABLES IN SCHEMA public TO mustb_reader;\n```",
+      "download_url": "/downloads/skill-8.zip"
     },
     {
       "id": 9,
@@ -113,10 +151,14 @@
       "author": "@must-b_core",
       "stars": "7.6k",
       "downloads": "180k",
-      "os": ["Linux", "Windows"],
+      "os": [
+        "Linux",
+        "Windows"
+      ],
       "is_certified": false,
       "readme": "## Must-b Telegram Command Center\n\nTelegram Bot API üzerinden Must-b'ye uzaktan erişim.\n\n### Komutlar\n- `/status` — Ajan durumunu ve son görevleri raporlar\n- `/run [görev]` — Yeni görev başlatır\n- `/logs` — Son 10 log satırını gönderir\n- `/alert on|off` — Hata alertlerini açar/kapatır",
-      "integration_guide": "### Telegram Entegrasyon Kılavuzu\n\n**Adım 1 — Bot Oluşturma**\n@BotFather ile konuşun → `/newbot` → Token alın.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"TELEGRAM_BOT_TOKEN\": \"...\",\n  \"TELEGRAM_ALLOWED_CHAT_IDS\": [\"12345678\"]\n}\n```\n\n**Adım 3 — Chat ID**\n@userinfobot'a yazarak Chat ID'nizi öğrenin ve allowed list'e ekleyin."
+      "integration_guide": "### Telegram Entegrasyon Kılavuzu\n\n**Adım 1 — Bot Oluşturma**\n@BotFather ile konuşun → `/newbot` → Token alın.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"TELEGRAM_BOT_TOKEN\": \"...\",\n  \"TELEGRAM_ALLOWED_CHAT_IDS\": [\"12345678\"]\n}\n```\n\n**Adım 3 — Chat ID**\n@userinfobot'a yazarak Chat ID'nizi öğrenin ve allowed list'e ekleyin.",
+      "download_url": "/downloads/skill-9.zip"
     },
     {
       "id": 10,
@@ -126,10 +168,15 @@
       "author": "@must-b_core",
       "stars": "18k",
       "downloads": "890k",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b PDF Brain\n\nRAG (Retrieval-Augmented Generation) tabanlı döküman işleme motoru.\n\n### Özellikler\n- PDF, DOCX, TXT, MD formatları desteklenir\n- Akıllı chunking (paragraph, sentence, semantic)\n- pgvector veya Pinecone ile vektör depolama\n- Citation-backed yanıtlar (hangi sayfadan alındığı gösterilir)\n- Batch ingestion: 1000+ dosya paralel işlenir",
-      "integration_guide": "### PDF Brain Entegrasyon Kılavuzu\n\n**Adım 1 — Vector DB Seçin**\npgvector (ücretsiz, self-hosted) veya Pinecone (cloud) seçin.\n\n**Adım 2 — Must-b Config (pgvector)**\n```json\n{\n  \"VECTOR_DB\": \"pgvector\",\n  \"DATABASE_URL\": \"postgresql://...\"\n}\n```\n\n**Adım 3 — İlk Indexleme**\nMust-b'ye `Index the PDF files in /docs folder` yazın. Ajan dosyaları tarar, chunk'lar ve vector DB'ye yazar."
+      "integration_guide": "### PDF Brain Entegrasyon Kılavuzu\n\n**Adım 1 — Vector DB Seçin**\npgvector (ücretsiz, self-hosted) veya Pinecone (cloud) seçin.\n\n**Adım 2 — Must-b Config (pgvector)**\n```json\n{\n  \"VECTOR_DB\": \"pgvector\",\n  \"DATABASE_URL\": \"postgresql://...\"\n}\n```\n\n**Adım 3 — İlk Indexleme**\nMust-b'ye `Index the PDF files in /docs folder` yazın. Ajan dosyaları tarar, chunk'lar ve vector DB'ye yazar.",
+      "download_url": "/downloads/skill-10.zip"
     },
     {
       "id": 11,
@@ -139,10 +186,15 @@
       "author": "@must-b_core",
       "stars": "11k",
       "downloads": "290k",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": false,
       "readme": "## Must-b Notion Workspace Bridge\n\nNotion API üzerinden tam bidirectional entegrasyon.\n\n### Özellikler\n- Database query, filter, sort\n- Page oluşturma ve güncelleme\n- Block-level düzenleme\n- Relation ve Rollup desteği",
-      "integration_guide": "### Notion Entegrasyon Kılavuzu\n\n**Adım 1 — Integration Oluşturma**\nnotion.so/my-integrations → New integration → Internal.\nToken kopyalayın.\n\n**Adım 2 — Sayfa Paylaşımı**\nEntegre etmek istediğiniz Notion sayfasını açın → Share → Mention integration adını.\n\n**Adım 3 — Must-b Config**\n```json\n{ \"NOTION_TOKEN\": \"secret_...\" }\n```"
+      "integration_guide": "### Notion Entegrasyon Kılavuzu\n\n**Adım 1 — Integration Oluşturma**\nnotion.so/my-integrations → New integration → Internal.\nToken kopyalayın.\n\n**Adım 2 — Sayfa Paylaşımı**\nEntegre etmek istediğiniz Notion sayfasını açın → Share → Mention integration adını.\n\n**Adım 3 — Must-b Config**\n```json\n{ \"NOTION_TOKEN\": \"secret_...\" }\n```",
+      "download_url": "/downloads/skill-11.zip"
     },
     {
       "id": 12,
@@ -152,10 +204,13 @@
       "author": "@must-b_core",
       "stars": "9.1k",
       "downloads": "150k",
-      "os": ["Linux"],
+      "os": [
+        "Linux"
+      ],
       "is_certified": true,
       "readme": "## Must-b Docker Swarm Master\n\nDocker Engine API ve Docker Swarm orkestrasyon katmanına tam erişim.\n\n### Özellikler\n- Sandboxed code execution (ephemeral containers)\n- Docker Compose v2 desteği\n- Multi-stage build otomasyonu\n- Registry push/pull (Docker Hub, GHCR, ECR)\n- Swarm service scaling",
-      "integration_guide": "### Docker Entegrasyon Kılavuzu\n\n**Adım 1 — Docker Socket Erişimi**\nMust-b ajanının `/var/run/docker.sock` dosyasına okuma/yazma erişimi olmalı.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"DOCKER_HOST\": \"unix:///var/run/docker.sock\",\n  \"DOCKER_REGISTRY\": \"ghcr.io/your-org\"\n}\n```\n\n**Adım 3 — Güvenlik**\nProduction'da Docker socket'i rootless Docker ile kullanın veya network namespace izolasyonu ekleyin."
+      "integration_guide": "### Docker Entegrasyon Kılavuzu\n\n**Adım 1 — Docker Socket Erişimi**\nMust-b ajanının `/var/run/docker.sock` dosyasına okuma/yazma erişimi olmalı.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"DOCKER_HOST\": \"unix:///var/run/docker.sock\",\n  \"DOCKER_REGISTRY\": \"ghcr.io/your-org\"\n}\n```\n\n**Adım 3 — Güvenlik**\nProduction'da Docker socket'i rootless Docker ile kullanın veya network namespace izolasyonu ekleyin.",
+      "download_url": "/downloads/skill-12.zip"
     },
     {
       "id": 13,
@@ -165,10 +220,14 @@
       "author": "@must-b_core",
       "stars": "19.2k",
       "downloads": "400k",
-      "os": ["macOS", "Windows"],
+      "os": [
+        "macOS",
+        "Windows"
+      ],
       "is_certified": false,
       "readme": "## Must-b Figma to Tailwind Exporter\n\nFigma REST API üzerinden tasarım token'larını ve bileşenlerini kod'a çevirir.\n\n### Özellikler\n- Frame → React Component dönüşümü\n- Design token extraction (renkler, tipografi, spacing)\n- Tailwind class mapping\n- Responsive variant üretimi",
-      "integration_guide": "### Figma Entegrasyon Kılavuzu\n\n**Adım 1 — Figma API Token**\nFigma → Profile → Account Settings → Personal Access Tokens → Generate.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"FIGMA_ACCESS_TOKEN\": \"figd_...\",\n  \"FIGMA_FILE_KEY\": \"AbCdEf123...\"\n}\n```\n\n**Adım 3 — Export**\nMust-b'ye `Export the Login screen from Figma as React + Tailwind` yazın."
+      "integration_guide": "### Figma Entegrasyon Kılavuzu\n\n**Adım 1 — Figma API Token**\nFigma → Profile → Account Settings → Personal Access Tokens → Generate.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"FIGMA_ACCESS_TOKEN\": \"figd_...\",\n  \"FIGMA_FILE_KEY\": \"AbCdEf123...\"\n}\n```\n\n**Adım 3 — Export**\nMust-b'ye `Export the Login screen from Figma as React + Tailwind` yazın.",
+      "download_url": "/downloads/skill-13.zip"
     },
     {
       "id": 14,
@@ -178,10 +237,15 @@
       "author": "@must-b_core",
       "stars": "12.1k",
       "downloads": "450k",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b WhatsApp Business Bridge\n\nMeta WhatsApp Business Cloud API entegrasyonu.\n\n### Özellikler\n- Gelen mesajları sınıflandırır (sorgu, şikayet, sipariş vb.)\n- Template message gönderimi\n- Media (resim, PDF, ses) işleme\n- Human handoff: Belirli durumlarda insan desteğine yönlendirme",
-      "integration_guide": "### WhatsApp Entegrasyon Kılavuzu\n\n**Adım 1 — Meta Business Hesabı**\ndevelopers.facebook.com → WhatsApp → Getting Started.\nPhone Number ID ve Access Token alın.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"WHATSAPP_ACCESS_TOKEN\": \"EAAa...\",\n  \"WHATSAPP_PHONE_NUMBER_ID\": \"...\",\n  \"WHATSAPP_VERIFY_TOKEN\": \"your-verify-token\"\n}\n```\n\n**Adım 3 — Webhook**\nMeta Console → Webhooks → URL: `https://your-gateway/whatsapp`. Tüm mesaj event'larını subscribe edin."
+      "integration_guide": "### WhatsApp Entegrasyon Kılavuzu\n\n**Adım 1 — Meta Business Hesabı**\ndevelopers.facebook.com → WhatsApp → Getting Started.\nPhone Number ID ve Access Token alın.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"WHATSAPP_ACCESS_TOKEN\": \"EAAa...\",\n  \"WHATSAPP_PHONE_NUMBER_ID\": \"...\",\n  \"WHATSAPP_VERIFY_TOKEN\": \"your-verify-token\"\n}\n```\n\n**Adım 3 — Webhook**\nMeta Console → Webhooks → URL: `https://your-gateway/whatsapp`. Tüm mesaj event'larını subscribe edin.",
+      "download_url": "/downloads/skill-14.zip"
     },
     {
       "id": 15,
@@ -191,10 +255,15 @@
       "author": "@must-b_core",
       "stars": "3.3k",
       "downloads": "45k",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": false,
       "readme": "## Must-b Jira Project Automator\n\nJira REST API v3 üzerinden proje yönetimi otomasyonu.\n\n### Özellikler\n- Issue oluşturma, güncelleme, geçiş (transition)\n- Backlog'dan sprint atama\n- Epic ve story hiyerarşisi yönetimi\n- JQL sorguları ile raporlama",
-      "integration_guide": "### Jira Entegrasyon Kılavuzu\n\n**Adım 1 — API Token**\nid.atlassian.com → Security → Create API token.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"JIRA_BASE_URL\": \"https://your-org.atlassian.net\",\n  \"JIRA_EMAIL\": \"you@company.com\",\n  \"JIRA_API_TOKEN\": \"...\",\n  \"JIRA_DEFAULT_PROJECT\": \"PROJ\"\n}\n```"
+      "integration_guide": "### Jira Entegrasyon Kılavuzu\n\n**Adım 1 — API Token**\nid.atlassian.com → Security → Create API token.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"JIRA_BASE_URL\": \"https://your-org.atlassian.net\",\n  \"JIRA_EMAIL\": \"you@company.com\",\n  \"JIRA_API_TOKEN\": \"...\",\n  \"JIRA_DEFAULT_PROJECT\": \"PROJ\"\n}\n```",
+      "download_url": "/downloads/skill-15.zip"
     },
     {
       "id": 16,
@@ -204,10 +273,15 @@
       "author": "@must-b_core",
       "stars": "14k",
       "downloads": "300k",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b Obsidian Vault Reader\n\nObsidian vault'unuzu Must-b'nin uzun süreli hafıza katmanına bağlar.\n\n### Özellikler\n- [[wikilink]] graph traversal\n- Tag ve frontmatter indexleme\n- Incremental sync (sadece değişen notları yeniden indexler)\n- Dataview sorgu desteği",
-      "integration_guide": "### Obsidian Entegrasyon Kılavuzu\n\n**Adım 1 — Vault Yolu**\n```json\n{ \"OBSIDIAN_VAULT_PATH\": \"/Users/you/Documents/MyVault\" }\n```\n\n**Adım 2 — Obsidian REST API Plugin**\nObsidian Settings → Community Plugins → Local REST API'yi kurun ve API key paylaşın:\n```json\n{ \"OBSIDIAN_API_KEY\": \"...\" }\n```\n\n**Adım 3 — İlk Sync**\nMust-b'ye `Sync my Obsidian vault` yazın. Tüm notlar taranır ve vektör DB'ye yazılır."
+      "integration_guide": "### Obsidian Entegrasyon Kılavuzu\n\n**Adım 1 — Vault Yolu**\n```json\n{ \"OBSIDIAN_VAULT_PATH\": \"/Users/you/Documents/MyVault\" }\n```\n\n**Adım 2 — Obsidian REST API Plugin**\nObsidian Settings → Community Plugins → Local REST API'yi kurun ve API key paylaşın:\n```json\n{ \"OBSIDIAN_API_KEY\": \"...\" }\n```\n\n**Adım 3 — İlk Sync**\nMust-b'ye `Sync my Obsidian vault` yazın. Tüm notlar taranır ve vektör DB'ye yazılır.",
+      "download_url": "/downloads/skill-16.zip"
     },
     {
       "id": 17,
@@ -217,10 +291,14 @@
       "author": "@must-b_core",
       "stars": "2.4k",
       "downloads": "19k",
-      "os": ["Cloud", "Linux"],
+      "os": [
+        "Cloud",
+        "Linux"
+      ],
       "is_certified": false,
       "readme": "## Must-b Shopify Commerce Sync\n\nShopify Admin API ve Storefront API entegrasyonu.\n\n### Özellikler\n- Ürün, varyant ve stok yönetimi\n- Sipariş akışı takibi\n- Otomatik indirim kodu üretimi\n- Müşteri segmentasyonu ve email tetikleme",
-      "integration_guide": "### Shopify Entegrasyon Kılavuzu\n\n**Adım 1 — Custom App**\nShopify Admin → Apps → Develop Apps → Create App.\nAdmin API scopes: `products`, `orders`, `customers`, `inventory`.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"SHOPIFY_STORE_URL\": \"your-store.myshopify.com\",\n  \"SHOPIFY_ACCESS_TOKEN\": \"shpat_...\"\n}\n```"
+      "integration_guide": "### Shopify Entegrasyon Kılavuzu\n\n**Adım 1 — Custom App**\nShopify Admin → Apps → Develop Apps → Create App.\nAdmin API scopes: `products`, `orders`, `customers`, `inventory`.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"SHOPIFY_STORE_URL\": \"your-store.myshopify.com\",\n  \"SHOPIFY_ACCESS_TOKEN\": \"shpat_...\"\n}\n```",
+      "download_url": "/downloads/skill-17.zip"
     },
     {
       "id": 18,
@@ -230,10 +308,15 @@
       "author": "@must-b_core",
       "stars": "4.5k",
       "downloads": "50k",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": false,
       "readme": "## Must-b Linear Dev Ops\n\nLinear GraphQL API üzerinden end-to-end issue ve sprint yönetimi.\n\n### Özellikler\n- Issue oluşturma ve atama\n- Cycle (sprint) planlama\n- Roadmap güncelleme\n- GitHub PR — Linear issue senkronizasyonu",
-      "integration_guide": "### Linear Entegrasyon Kılavuzu\n\n**Adım 1 — API Key**\nLinear Settings → Security → Personal API Keys → Create Key.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"LINEAR_API_KEY\": \"lin_api_...\",\n  \"LINEAR_TEAM_ID\": \"...\"\n}\n```"
+      "integration_guide": "### Linear Entegrasyon Kılavuzu\n\n**Adım 1 — API Key**\nLinear Settings → Security → Personal API Keys → Create Key.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"LINEAR_API_KEY\": \"lin_api_...\",\n  \"LINEAR_TEAM_ID\": \"...\"\n}\n```",
+      "download_url": "/downloads/skill-18.zip"
     },
     {
       "id": 19,
@@ -243,10 +326,14 @@
       "author": "@must-b_core",
       "stars": "9.4k",
       "downloads": "310k",
-      "os": ["macOS", "Windows"],
+      "os": [
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b Vision Studio\n\nGPT-4o Vision ve Claude 3.5 Sonnet Vision modelleri ile görsel analiz.\n\n### Özellikler\n- UI screenshot → bug report\n- WCAG 2.1 erişilebilirlik denetimi\n- Figma mock vs. production karşılaştırması\n- A/B test görseli analizi",
-      "integration_guide": "### Vision Studio Entegrasyon Kılavuzu\n\nBu skill, Must-b OpenAI Orchestrator veya Anthropic Connector kurulu olduğunda otomatik aktif olur.\n\n**Adım 1 — Screenshot Yolu**\n```json\n{ \"VISION_SCREENSHOT_DIR\": \"/tmp/screenshots\" }\n```\n\n**Adım 2 — Kullanım**\nMust-b'ye `Analyze the screenshot at /tmp/screenshots/app.png for accessibility issues` yazın."
+      "integration_guide": "### Vision Studio Entegrasyon Kılavuzu\n\nBu skill, Must-b OpenAI Orchestrator veya Anthropic Connector kurulu olduğunda otomatik aktif olur.\n\n**Adım 1 — Screenshot Yolu**\n```json\n{ \"VISION_SCREENSHOT_DIR\": \"/tmp/screenshots\" }\n```\n\n**Adım 2 — Kullanım**\nMust-b'ye `Analyze the screenshot at /tmp/screenshots/app.png for accessibility issues` yazın.",
+      "download_url": "/downloads/skill-19.zip"
     },
     {
       "id": 20,
@@ -256,10 +343,1422 @@
       "author": "@must-b_core",
       "stars": "35k",
       "downloads": "2.2m",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b Terminal Executor\n\nMust-b'nin temel OS kontrol katmanı. Güvenli, denetlenmiş shell command execution.\n\n### Özellikler\n- Allowlist tabanlı komut filtreleme\n- Her komut için audit log (timestamp, çıktı, exit code)\n- Timeout ve resource limit (CPU, memory) desteği\n- Root koruması: `sudo` komutları varsayılan olarak engellenir\n\n### Desteklenen Shell'ler\n- bash, zsh, fish (Linux/macOS)\n- PowerShell 7, cmd (Windows)",
-      "integration_guide": "### Terminal Executor Entegrasyon Kılavuzu\n\n**Adım 1 — Allowlist Yapılandırması**\n```json\n{\n  \"TERMINAL_ALLOWLIST\": [\"git\", \"npm\", \"node\", \"python3\", \"ls\", \"cat\", \"grep\"],\n  \"TERMINAL_DENYLIST\": [\"rm -rf\", \"sudo\", \"chmod 777\"]\n}\n```\n\n**Adım 2 — Audit Log**\n```json\n{ \"TERMINAL_AUDIT_LOG_PATH\": \"/var/log/mustb-terminal.log\" }\n```\n\n**Adım 3 — Timeout**\n```json\n{ \"TERMINAL_COMMAND_TIMEOUT_MS\": 30000 }\n```"
+      "integration_guide": "### Terminal Executor Entegrasyon Kılavuzu\n\n**Adım 1 — Allowlist Yapılandırması**\n```json\n{\n  \"TERMINAL_ALLOWLIST\": [\"git\", \"npm\", \"node\", \"python3\", \"ls\", \"cat\", \"grep\"],\n  \"TERMINAL_DENYLIST\": [\"rm -rf\", \"sudo\", \"chmod 777\"]\n}\n```\n\n**Adım 2 — Audit Log**\n```json\n{ \"TERMINAL_AUDIT_LOG_PATH\": \"/var/log/mustb-terminal.log\" }\n```\n\n**Adım 3 — Timeout**\n```json\n{ \"TERMINAL_COMMAND_TIMEOUT_MS\": 30000 }\n```",
+      "download_url": "/downloads/skill-20.zip"
+    },
+    {
+      "id": 21,
+      "name": "Must-b Anthropic Claude Bridge",
+      "version": "v2.0.0",
+      "summary": "Claude 3.5 Sonnet ve Claude 3 Haiku modellerini Must-b pipeline'ına entegre eder.",
+      "author": "@must-b_core",
+      "stars": "14144",
+      "downloads": "3.6m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Anthropic Claude Bridge\n\nClaude 3.5 Sonnet ve Claude 3 Haiku modellerini Must-b pipeline'ına entegre eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Anthropic hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Anthropic Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nAnthropic dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ANTHROPIC_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-21.zip"
+    },
+    {
+      "id": 22,
+      "name": "Must-b Pinecone Vector Store",
+      "version": "v1.3.0",
+      "summary": "Pinecone vektör veritabanına embedding yazar ve semantic arama yapar.",
+      "author": "@must-b_core",
+      "stars": "12k",
+      "downloads": "6.6m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Pinecone Vector Store\n\nPinecone vektör veritabanına embedding yazar ve semantic arama yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Pinecone hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Pinecone Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nPinecone dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"PINECONE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-22.zip"
+    },
+    {
+      "id": 23,
+      "name": "Must-b Supabase Realtime",
+      "version": "v2.1.0",
+      "summary": "Supabase tablolarını gerçek zamanlı dinler ve ajan tetikleyicileri çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "15k",
+      "downloads": "5.7m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Supabase Realtime\n\nSupabase tablolarını gerçek zamanlı dinler ve ajan tetikleyicileri çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Supabase hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Supabase Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSupabase dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SUPABASE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-23.zip"
+    },
+    {
+      "id": 24,
+      "name": "Must-b Firebase Admin Bridge",
+      "version": "v1.5.0",
+      "summary": "Firestore, Auth ve Storage'ı ajan kontrolüyle yönetir.",
+      "author": "@must-b_core",
+      "stars": "4419k",
+      "downloads": "8.1m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Firebase Admin Bridge\n\nFirestore, Auth ve Storage'ı ajan kontrolüyle yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Firebase hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Firebase Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nFirebase dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"FIREBASE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-24.zip"
+    },
+    {
+      "id": 25,
+      "name": "Must-b Vercel Deploy Agent",
+      "version": "v1.2.0",
+      "summary": "Next.js ve Vite projelerini Vercel'e tek komutla deploy eder.",
+      "author": "@must-b_core",
+      "stars": "2841k",
+      "downloads": "6.6m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Vercel Deploy Agent\n\nNext.js ve Vite projelerini Vercel'e tek komutla deploy eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Vercel hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Vercel Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nVercel dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"VERCEL_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-25.zip"
+    },
+    {
+      "id": 26,
+      "name": "Must-b Cloudflare Workers Deploy",
+      "version": "v1.1.0",
+      "summary": "Cloudflare Workers ve Pages projelerini otomatik push eder.",
+      "author": "@must-b_core",
+      "stars": "13348",
+      "downloads": "153k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Cloudflare Workers Deploy\n\nCloudflare Workers ve Pages projelerini otomatik push eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Cloudflare hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Cloudflare Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nCloudflare dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"CLOUDFLARE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-26.zip"
+    },
+    {
+      "id": 27,
+      "name": "Must-b Redis Cache Manager",
+      "version": "v3.0.0",
+      "summary": "Redis key-value store üzerinde akıllı cache stratejileri uygular.",
+      "author": "@must-b_core",
+      "stars": "13755",
+      "downloads": "9.6m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Redis Cache Manager\n\nRedis key-value store üzerinde akıllı cache stratejileri uygular.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Redis hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Redis Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nRedis dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"REDIS_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-27.zip"
+    },
+    {
+      "id": 28,
+      "name": "Must-b MongoDB Atlas Agent",
+      "version": "v2.2.0",
+      "summary": "MongoDB koleksiyonlarını sorgular, indeksler ve aggregation pipeline'ları çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "3k",
+      "downloads": "381k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b MongoDB Atlas Agent\n\nMongoDB koleksiyonlarını sorgular, indeksler ve aggregation pipeline'ları çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- MongoDB hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### MongoDB Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nMongoDB dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"MONGODB_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-28.zip"
+    },
+    {
+      "id": 29,
+      "name": "Must-b Elasticsearch Search",
+      "version": "v2.0.0",
+      "summary": "Elasticsearch cluster'ına belge indeksler ve full-text / semantic arama yapar.",
+      "author": "@must-b_core",
+      "stars": "2881k",
+      "downloads": "507k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Elasticsearch Search\n\nElasticsearch cluster'ına belge indeksler ve full-text / semantic arama yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Elastic hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Elastic Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nElastic dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ELASTIC_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-29.zip"
+    },
+    {
+      "id": 30,
+      "name": "Must-b Apache Kafka Producer",
+      "version": "v1.4.0",
+      "summary": "Kafka topic'lerine mesaj üretir ve consumer group'larını yönetir.",
+      "author": "@must-b_core",
+      "stars": "15843",
+      "downloads": "7.0m",
+      "os": [
+        "Linux"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Apache Kafka Producer\n\nKafka topic'lerine mesaj üretir ve consumer group'larını yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Kafka hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Kafka Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nKafka dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"KAFKA_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-30.zip"
+    },
+    {
+      "id": 31,
+      "name": "Must-b RabbitMQ Message Bus",
+      "version": "v1.3.0",
+      "summary": "RabbitMQ exchange ve queue'larına mesaj gönderir/alır.",
+      "author": "@must-b_core",
+      "stars": "18370",
+      "downloads": "5.0m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b RabbitMQ Message Bus\n\nRabbitMQ exchange ve queue'larına mesaj gönderir/alır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- RabbitMQ hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### RabbitMQ Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nRabbitMQ dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"RABBITMQ_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-31.zip"
+    },
+    {
+      "id": 32,
+      "name": "Must-b SendGrid Email Engine",
+      "version": "v2.5.0",
+      "summary": "SendGrid API ile transactional ve marketing e-posta gönderir.",
+      "author": "@must-b_core",
+      "stars": "15081",
+      "downloads": "8.6m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b SendGrid Email Engine\n\nSendGrid API ile transactional ve marketing e-posta gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- SendGrid hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### SendGrid Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSendGrid dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SENDGRID_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-32.zip"
+    },
+    {
+      "id": 33,
+      "name": "Must-b Twilio SMS & Voice",
+      "version": "v1.9.0",
+      "summary": "Twilio üzerinden SMS, WhatsApp ve sesli arama gönderir.",
+      "author": "@must-b_core",
+      "stars": "8640k",
+      "downloads": "2.0m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Twilio SMS & Voice\n\nTwilio üzerinden SMS, WhatsApp ve sesli arama gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Twilio hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Twilio Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nTwilio dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"TWILIO_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-33.zip"
+    },
+    {
+      "id": 34,
+      "name": "Must-b HubSpot CRM Sync",
+      "version": "v2.0.0",
+      "summary": "HubSpot contact, deal ve company kayıtlarını ajan hafızasıyla senkronize eder.",
+      "author": "@must-b_core",
+      "stars": "3k",
+      "downloads": "774k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b HubSpot CRM Sync\n\nHubSpot contact, deal ve company kayıtlarını ajan hafızasıyla senkronize eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- HubSpot hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### HubSpot Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nHubSpot dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"HUBSPOT_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-34.zip"
+    },
+    {
+      "id": 35,
+      "name": "Must-b Salesforce Integration",
+      "version": "v1.7.0",
+      "summary": "Salesforce Object'lerini okur, yazar ve Apex trigger'larını çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "2k",
+      "downloads": "4.2m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Salesforce Integration\n\nSalesforce Object'lerini okur, yazar ve Apex trigger'larını çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Salesforce hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Salesforce Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSalesforce dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SALESFORCE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-35.zip"
+    },
+    {
+      "id": 36,
+      "name": "Must-b Zendesk Support Agent",
+      "version": "v1.4.0",
+      "summary": "Zendesk ticket'larını okur, yanıtlar ve önceliklendirir.",
+      "author": "@must-b_core",
+      "stars": "10k",
+      "downloads": "7.5m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Zendesk Support Agent\n\nZendesk ticket'larını okur, yanıtlar ve önceliklendirir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Zendesk hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Zendesk Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nZendesk dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ZENDESK_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-36.zip"
+    },
+    {
+      "id": 37,
+      "name": "Must-b Intercom Live Assist",
+      "version": "v1.1.0",
+      "summary": "Intercom konuşmalarına ajan yanıtları ekler ve otomatik segmentasyon yapar.",
+      "author": "@must-b_core",
+      "stars": "14977",
+      "downloads": "4.0m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Intercom Live Assist\n\nIntercom konuşmalarına ajan yanıtları ekler ve otomatik segmentasyon yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Intercom hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Intercom Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nIntercom dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"INTERCOM_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-37.zip"
+    },
+    {
+      "id": 38,
+      "name": "Must-b Asana Task Manager",
+      "version": "v1.6.0",
+      "summary": "Asana proje ve görevlerini oluşturur, günceller ve takip eder.",
+      "author": "@must-b_core",
+      "stars": "8729",
+      "downloads": "6.0m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Asana Task Manager\n\nAsana proje ve görevlerini oluşturur, günceller ve takip eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Asana hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Asana Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nAsana dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ASANA_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-38.zip"
+    },
+    {
+      "id": 39,
+      "name": "Must-b ClickUp Workspace",
+      "version": "v1.3.0",
+      "summary": "ClickUp task, space ve doc yapılarını ajan kontrolüyle yönetir.",
+      "author": "@must-b_core",
+      "stars": "18479",
+      "downloads": "5.3m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b ClickUp Workspace\n\nClickUp task, space ve doc yapılarını ajan kontrolüyle yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- ClickUp hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### ClickUp Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nClickUp dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"CLICKUP_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-39.zip"
+    },
+    {
+      "id": 40,
+      "name": "Must-b Airtable Database Bridge",
+      "version": "v2.0.0",
+      "summary": "Airtable base ve table'larından veri okur, yazar ve formül hesaplar.",
+      "author": "@must-b_core",
+      "stars": "12207",
+      "downloads": "6.1m",
+      "os": [
+        "Cloud",
+        "Linux"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Airtable Database Bridge\n\nAirtable base ve table'larından veri okur, yazar ve formül hesaplar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Airtable hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Airtable Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nAirtable dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"AIRTABLE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-40.zip"
+    },
+    {
+      "id": 41,
+      "name": "Must-b Zapier Workflow Engine",
+      "version": "v1.0.0",
+      "summary": "Zapier Zap'larını programatik olarak tetikler ve veri geçişi yapar.",
+      "author": "@must-b_core",
+      "stars": "9009k",
+      "downloads": "512k",
+      "os": [
+        "Cloud",
+        "Linux"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Zapier Workflow Engine\n\nZapier Zap'larını programatik olarak tetikler ve veri geçişi yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Zapier hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Zapier Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nZapier dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ZAPIER_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-41.zip"
+    },
+    {
+      "id": 42,
+      "name": "Must-b Make Scenario Runner",
+      "version": "v1.0.0",
+      "summary": "Make (Integromat) senaryolarını çalıştırır ve veri pipe'lar.",
+      "author": "@must-b_core",
+      "stars": "6478k",
+      "downloads": "1.4m",
+      "os": [
+        "Cloud"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Make Scenario Runner\n\nMake (Integromat) senaryolarını çalıştırır ve veri pipe'lar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Make hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Make Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nMake dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"MAKE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-42.zip"
+    },
+    {
+      "id": 43,
+      "name": "Must-b Resend Email API",
+      "version": "v1.2.0",
+      "summary": "Resend API ile React Email şablonlarını render edip gönderir.",
+      "author": "@must-b_core",
+      "stars": "14k",
+      "downloads": "841k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Resend Email API\n\nResend API ile React Email şablonlarını render edip gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Resend hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Resend Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nResend dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"RESEND_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-43.zip"
+    },
+    {
+      "id": 44,
+      "name": "Must-b Auth0 Identity Manager",
+      "version": "v2.3.0",
+      "summary": "Auth0 kullanıcı ve rol yönetimini ajan akışına entegre eder.",
+      "author": "@must-b_core",
+      "stars": "4093",
+      "downloads": "2.3m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Auth0 Identity Manager\n\nAuth0 kullanıcı ve rol yönetimini ajan akışına entegre eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Auth0 hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Auth0 Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nAuth0 dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"AUTH0_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-44.zip"
+    },
+    {
+      "id": 45,
+      "name": "Must-b Clerk Auth Integration",
+      "version": "v1.5.0",
+      "summary": "Clerk oturum yönetimi ve organizasyon yapısını kontrol eder.",
+      "author": "@must-b_core",
+      "stars": "9938",
+      "downloads": "1.2m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Clerk Auth Integration\n\nClerk oturum yönetimi ve organizasyon yapısını kontrol eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Clerk hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Clerk Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nClerk dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"CLERK_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-45.zip"
+    },
+    {
+      "id": 46,
+      "name": "Must-b PlanetScale DB Agent",
+      "version": "v1.1.0",
+      "summary": "PlanetScale serverless MySQL veritabanına bağlanır ve migration uygular.",
+      "author": "@must-b_core",
+      "stars": "1796k",
+      "downloads": "8.0m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b PlanetScale DB Agent\n\nPlanetScale serverless MySQL veritabanına bağlanır ve migration uygular.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- PlanetScale hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### PlanetScale Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nPlanetScale dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"PLANETSCALE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-46.zip"
+    },
+    {
+      "id": 47,
+      "name": "Must-b Neon Serverless Postgres",
+      "version": "v1.4.0",
+      "summary": "Neon branching ve serverless Postgres endpoint'lerini yönetir.",
+      "author": "@must-b_core",
+      "stars": "5549",
+      "downloads": "5.2m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Neon Serverless Postgres\n\nNeon branching ve serverless Postgres endpoint'lerini yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Neon hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Neon Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNeon dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NEON_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-47.zip"
+    },
+    {
+      "id": 48,
+      "name": "Must-b InfluxDB Time-Series",
+      "version": "v1.2.0",
+      "summary": "InfluxDB'ye zaman serisi verisi yazar ve Flux sorguları çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "10k",
+      "downloads": "3.7m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b InfluxDB Time-Series\n\nInfluxDB'ye zaman serisi verisi yazar ve Flux sorguları çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- InfluxDB hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### InfluxDB Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nInfluxDB dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"INFLUXDB_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-48.zip"
+    },
+    {
+      "id": 49,
+      "name": "Must-b Grafana Dashboard Agent",
+      "version": "v1.3.0",
+      "summary": "Grafana dashboard'larını oluşturur, panel ekler ve alert kurar.",
+      "author": "@must-b_core",
+      "stars": "7646",
+      "downloads": "281k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Grafana Dashboard Agent\n\nGrafana dashboard'larını oluşturur, panel ekler ve alert kurar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Grafana hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Grafana Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nGrafana dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"GRAFANA_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-49.zip"
+    },
+    {
+      "id": 50,
+      "name": "Must-b Prometheus Metrics",
+      "version": "v2.0.0",
+      "summary": "Prometheus metriklerini push gateway üzerinden kaydeder ve PromQL sorgular.",
+      "author": "@must-b_core",
+      "stars": "9308",
+      "downloads": "4.6m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Prometheus Metrics\n\nPrometheus metriklerini push gateway üzerinden kaydeder ve PromQL sorgular.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Prometheus hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Prometheus Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nPrometheus dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"PROMETHEUS_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-50.zip"
+    },
+    {
+      "id": 51,
+      "name": "Must-b Sentry Error Tracker",
+      "version": "v2.1.0",
+      "summary": "Sentry issue'larını listeler, önceliklendirir ve release ilişkilendirir.",
+      "author": "@must-b_core",
+      "stars": "16722",
+      "downloads": "2.5m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Sentry Error Tracker\n\nSentry issue'larını listeler, önceliklendirir ve release ilişkilendirir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Sentry hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Sentry Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSentry dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SENTRY_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-51.zip"
+    },
+    {
+      "id": 52,
+      "name": "Must-b LogRocket Session Replay",
+      "version": "v1.0.0",
+      "summary": "LogRocket oturum replay'lerini analiz eder ve hata raporlar.",
+      "author": "@must-b_core",
+      "stars": "7k",
+      "downloads": "680k",
+      "os": [
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b LogRocket Session Replay\n\nLogRocket oturum replay'lerini analiz eder ve hata raporlar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- LogRocket hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### LogRocket Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nLogRocket dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"LOGROCKET_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-52.zip"
+    },
+    {
+      "id": 53,
+      "name": "Must-b Segment Analytics",
+      "version": "v1.6.0",
+      "summary": "Segment track/identify/group event'larını ajan görevlerinden tetikler.",
+      "author": "@must-b_core",
+      "stars": "16726",
+      "downloads": "346k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Segment Analytics\n\nSegment track/identify/group event'larını ajan görevlerinden tetikler.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Segment hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Segment Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSegment dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SEGMENT_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-53.zip"
+    },
+    {
+      "id": 54,
+      "name": "Must-b Mixpanel Event Tracker",
+      "version": "v1.4.0",
+      "summary": "Mixpanel event ve funnel analizlerini ajan karar süreçlerine dahil eder.",
+      "author": "@must-b_core",
+      "stars": "9862k",
+      "downloads": "277k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Mixpanel Event Tracker\n\nMixpanel event ve funnel analizlerini ajan karar süreçlerine dahil eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Mixpanel hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Mixpanel Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nMixpanel dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"MIXPANEL_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-54.zip"
+    },
+    {
+      "id": 55,
+      "name": "Must-b PostHog Product Analytics",
+      "version": "v1.2.0",
+      "summary": "PostHog feature flag ve event'larını ajan akışına entegre eder.",
+      "author": "@must-b_core",
+      "stars": "7085",
+      "downloads": "621k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b PostHog Product Analytics\n\nPostHog feature flag ve event'larını ajan akışına entegre eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- PostHog hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### PostHog Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nPostHog dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"POSTHOG_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-55.zip"
+    },
+    {
+      "id": 56,
+      "name": "Must-b CloudWatch Monitor",
+      "version": "v1.5.0",
+      "summary": "AWS CloudWatch alarm ve metric'lerini izler, kritik durumlarda aksiyon alır.",
+      "author": "@must-b_core",
+      "stars": "13168",
+      "downloads": "382k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b CloudWatch Monitor\n\nAWS CloudWatch alarm ve metric'lerini izler, kritik durumlarda aksiyon alır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- AWS hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### AWS Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nAWS dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"AWS_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-56.zip"
+    },
+    {
+      "id": 57,
+      "name": "Must-b New Relic APM",
+      "version": "v1.3.0",
+      "summary": "New Relic trace ve metric verilerini işler, performans anomalilerini raporlar.",
+      "author": "@must-b_core",
+      "stars": "2032k",
+      "downloads": "8.1m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b New Relic APM\n\nNew Relic trace ve metric verilerini işler, performans anomalilerini raporlar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- New Relic hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### New Relic Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNew Relic dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NEW_RELIC_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-57.zip"
+    },
+    {
+      "id": 58,
+      "name": "Must-b PagerDuty Alerting",
+      "version": "v2.0.0",
+      "summary": "PagerDuty incident oluşturur, acknowledge eder ve eskalasyon yönetir.",
+      "author": "@must-b_core",
+      "stars": "3721",
+      "downloads": "7.8m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b PagerDuty Alerting\n\nPagerDuty incident oluşturur, acknowledge eder ve eskalasyon yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- PagerDuty hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### PagerDuty Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nPagerDuty dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"PAGERDUTY_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-58.zip"
+    },
+    {
+      "id": 59,
+      "name": "Must-b Terraform Cloud Deploy",
+      "version": "v1.4.0",
+      "summary": "Terraform Cloud workspace'lerini tetikler ve plan/apply çıktılarını ayrıştırır.",
+      "author": "@must-b_core",
+      "stars": "5653",
+      "downloads": "347k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Terraform Cloud Deploy\n\nTerraform Cloud workspace'lerini tetikler ve plan/apply çıktılarını ayrıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Terraform hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Terraform Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nTerraform dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"TERRAFORM_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-59.zip"
+    },
+    {
+      "id": 60,
+      "name": "Must-b Pulumi IaC Agent",
+      "version": "v1.1.0",
+      "summary": "Pulumi stack'lerini güncelleyin ve preview/up komutlarını ajan kontrolüyle çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "12570",
+      "downloads": "1.3m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Pulumi IaC Agent\n\nPulumi stack'lerini güncelleyin ve preview/up komutlarını ajan kontrolüyle çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Pulumi hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Pulumi Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nPulumi dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"PULUMI_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-60.zip"
+    },
+    {
+      "id": 61,
+      "name": "Must-b Ansible Playbook Runner",
+      "version": "v1.3.0",
+      "summary": "Ansible playbook'larını uzak host'larda çalıştırır ve inventory yönetir.",
+      "author": "@must-b_core",
+      "stars": "10827",
+      "downloads": "220k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Ansible Playbook Runner\n\nAnsible playbook'larını uzak host'larda çalıştırır ve inventory yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Ansible hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Ansible Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nAnsible dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ANSIBLE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-61.zip"
+    },
+    {
+      "id": 62,
+      "name": "Must-b GitHub Actions Trigger",
+      "version": "v1.6.0",
+      "summary": "GitHub Actions workflow'larını tetikler ve run sonuçlarını takip eder.",
+      "author": "@must-b_core",
+      "stars": "11783",
+      "downloads": "874k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b GitHub Actions Trigger\n\nGitHub Actions workflow'larını tetikler ve run sonuçlarını takip eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- GitHub hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### GitHub Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nGitHub dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"GITHUB_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-62.zip"
+    },
+    {
+      "id": 63,
+      "name": "Must-b GitLab CI Manager",
+      "version": "v1.2.0",
+      "summary": "GitLab pipeline'larını başlatır ve job artifact'larını indirir.",
+      "author": "@must-b_core",
+      "stars": "15k",
+      "downloads": "910k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b GitLab CI Manager\n\nGitLab pipeline'larını başlatır ve job artifact'larını indirir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- GitLab hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### GitLab Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nGitLab dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"GITLAB_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-63.zip"
+    },
+    {
+      "id": 64,
+      "name": "Must-b CircleCI Orchestrator",
+      "version": "v1.1.0",
+      "summary": "CircleCI pipeline tetikler ve workflow durumunu raporlar.",
+      "author": "@must-b_core",
+      "stars": "14k",
+      "downloads": "514k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b CircleCI Orchestrator\n\nCircleCI pipeline tetikler ve workflow durumunu raporlar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- CircleCI hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### CircleCI Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nCircleCI dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"CIRCLECI_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-64.zip"
+    },
+    {
+      "id": 65,
+      "name": "Must-b ArgoCD GitOps Deploy",
+      "version": "v1.0.0",
+      "summary": "ArgoCD application'larını sync eder ve Kubernetes manifest'lerini uygular.",
+      "author": "@must-b_core",
+      "stars": "13043",
+      "downloads": "7.1m",
+      "os": [
+        "Linux"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b ArgoCD GitOps Deploy\n\nArgoCD application'larını sync eder ve Kubernetes manifest'lerini uygular.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- ArgoCD hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### ArgoCD Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nArgoCD dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ARGOCD_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-65.zip"
+    },
+    {
+      "id": 66,
+      "name": "Must-b Kubernetes Operator",
+      "version": "v2.0.0",
+      "summary": "Kubernetes pod, deployment ve service kaynaklarını ajan kontrolüyle yönetir.",
+      "author": "@must-b_core",
+      "stars": "6047",
+      "downloads": "969k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Kubernetes Operator\n\nKubernetes pod, deployment ve service kaynaklarını ajan kontrolüyle yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Kubernetes hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Kubernetes Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nKubernetes dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"KUBERNETES_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-66.zip"
+    },
+    {
+      "id": 67,
+      "name": "Must-b Helm Chart Deployer",
+      "version": "v1.3.0",
+      "summary": "Helm chart'larını upgrade, rollback ve uninstall eder.",
+      "author": "@must-b_core",
+      "stars": "2676k",
+      "downloads": "1.8m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Helm Chart Deployer\n\nHelm chart'larını upgrade, rollback ve uninstall eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Helm hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Helm Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nHelm dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"HELM_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-67.zip"
+    },
+    {
+      "id": 68,
+      "name": "Must-b HashiCorp Vault Secrets",
+      "version": "v1.5.0",
+      "summary": "Vault secret engine'lerden gizli bilgileri çeker ve döndürür.",
+      "author": "@must-b_core",
+      "stars": "1011",
+      "downloads": "118k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b HashiCorp Vault Secrets\n\nVault secret engine'lerden gizli bilgileri çeker ve döndürür.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Vault hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Vault Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nVault dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"VAULT_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-68.zip"
+    },
+    {
+      "id": 69,
+      "name": "Must-b Okta Identity SSO",
+      "version": "v1.2.0",
+      "summary": "Okta kullanıcı ve grup yönetimini ajan akışına bağlar.",
+      "author": "@must-b_core",
+      "stars": "1690k",
+      "downloads": "552k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Okta Identity SSO\n\nOkta kullanıcı ve grup yönetimini ajan akışına bağlar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Okta hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Okta Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nOkta dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"OKTA_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-69.zip"
+    },
+    {
+      "id": 70,
+      "name": "Must-b Microsoft Teams Bridge",
+      "version": "v1.4.0",
+      "summary": "Teams kanallarına mesaj gönderir ve Adaptive Card yayınlar.",
+      "author": "@must-b_core",
+      "stars": "3878",
+      "downloads": "338k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Microsoft Teams Bridge\n\nTeams kanallarına mesaj gönderir ve Adaptive Card yayınlar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Microsoft hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Microsoft Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nMicrosoft dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"MICROSOFT_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-70.zip"
+    },
+    {
+      "id": 71,
+      "name": "Must-b Mailchimp Campaigns",
+      "version": "v1.1.0",
+      "summary": "Mailchimp kampanyaları oluşturur, segment tanımlar ve istatistik çeker.",
+      "author": "@must-b_core",
+      "stars": "14337",
+      "downloads": "3.2m",
+      "os": [
+        "Cloud",
+        "Linux"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Mailchimp Campaigns\n\nMailchimp kampanyaları oluşturur, segment tanımlar ve istatistik çeker.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Mailchimp hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Mailchimp Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nMailchimp dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"MAILCHIMP_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-71.zip"
+    },
+    {
+      "id": 72,
+      "name": "Must-b Dropbox File Manager",
+      "version": "v1.2.0",
+      "summary": "Dropbox hesabında dosya yükler, indirir ve paylaşım linki üretir.",
+      "author": "@must-b_core",
+      "stars": "5595k",
+      "downloads": "701k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Dropbox File Manager\n\nDropbox hesabında dosya yükler, indirir ve paylaşım linki üretir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Dropbox hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Dropbox Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nDropbox dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"DROPBOX_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-72.zip"
+    },
+    {
+      "id": 73,
+      "name": "Must-b Box Enterprise Storage",
+      "version": "v1.1.0",
+      "summary": "Box klasör ve dosyalarını yönetir, metadata etiketler.",
+      "author": "@must-b_core",
+      "stars": "2639",
+      "downloads": "769k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Box Enterprise Storage\n\nBox klasör ve dosyalarını yönetir, metadata etiketler.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Box hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Box Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nBox dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"BOX_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-73.zip"
+    },
+    {
+      "id": 74,
+      "name": "Must-b Cloudinary Media Manager",
+      "version": "v1.5.0",
+      "summary": "Görsel ve video dosyalarını Cloudinary'ye yükler, transform eder.",
+      "author": "@must-b_core",
+      "stars": "6531k",
+      "downloads": "2.7m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Cloudinary Media Manager\n\nGörsel ve video dosyalarını Cloudinary'ye yükler, transform eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Cloudinary hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Cloudinary Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nCloudinary dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"CLOUDINARY_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-74.zip"
+    },
+    {
+      "id": 75,
+      "name": "Must-b Algolia Smart Search",
+      "version": "v2.0.0",
+      "summary": "Algolia indekslerine veri yazar ve instant search sorguları çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "13328",
+      "downloads": "8.6m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Algolia Smart Search\n\nAlgolia indekslerine veri yazar ve instant search sorguları çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Algolia hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Algolia Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nAlgolia dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ALGOLIA_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-75.zip"
+    },
+    {
+      "id": 76,
+      "name": "Must-b Meilisearch Agent",
+      "version": "v1.2.0",
+      "summary": "Meilisearch instance'ına belge ekler ve full-text arama yapar.",
+      "author": "@must-b_core",
+      "stars": "4k",
+      "downloads": "808k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Meilisearch Agent\n\nMeilisearch instance'ına belge ekler ve full-text arama yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Meilisearch hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Meilisearch Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nMeilisearch dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"MEILISEARCH_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-76.zip"
+    },
+    {
+      "id": 77,
+      "name": "Must-b Weaviate Vector Store",
+      "version": "v1.4.0",
+      "summary": "Weaviate GraphQL API üzerinden vektör nesnesi yazar ve sorgular.",
+      "author": "@must-b_core",
+      "stars": "3770k",
+      "downloads": "127k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Weaviate Vector Store\n\nWeaviate GraphQL API üzerinden vektör nesnesi yazar ve sorgular.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Weaviate hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Weaviate Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nWeaviate dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"WEAVIATE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-77.zip"
+    },
+    {
+      "id": 78,
+      "name": "Must-b Qdrant Vector DB",
+      "version": "v1.3.0",
+      "summary": "Qdrant collection'larına point ekler ve filtered vector search yapar.",
+      "author": "@must-b_core",
+      "stars": "17166",
+      "downloads": "533k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Qdrant Vector DB\n\nQdrant collection'larına point ekler ve filtered vector search yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Qdrant hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Qdrant Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nQdrant dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"QDRANT_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-78.zip"
+    },
+    {
+      "id": 79,
+      "name": "Must-b Chroma DB Manager",
+      "version": "v1.1.0",
+      "summary": "Chroma embeding collection'larını yönetir ve similarity search çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "7339",
+      "downloads": "696k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Chroma DB Manager\n\nChroma embeding collection'larını yönetir ve similarity search çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Chroma hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Chroma Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nChroma dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"CHROMA_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-79.zip"
+    },
+    {
+      "id": 80,
+      "name": "Must-b LangChain Bridge",
+      "version": "v2.1.0",
+      "summary": "LangChain chain ve agent'larını Must-b görev sistemiyle entegre eder.",
+      "author": "@must-b_core",
+      "stars": "11545",
+      "downloads": "2.0m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b LangChain Bridge\n\nLangChain chain ve agent'larını Must-b görev sistemiyle entegre eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- LangChain hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### LangChain Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nLangChain dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"LANGCHAIN_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-80.zip"
+    },
+    {
+      "id": 81,
+      "name": "Must-b LlamaIndex RAG Engine",
+      "version": "v1.6.0",
+      "summary": "LlamaIndex pipeline'larını Must-b memory katmanına bağlar.",
+      "author": "@must-b_core",
+      "stars": "20451",
+      "downloads": "9.0m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b LlamaIndex RAG Engine\n\nLlamaIndex pipeline'larını Must-b memory katmanına bağlar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- LlamaIndex hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### LlamaIndex Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nLlamaIndex dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"LLAMAINDEX_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-81.zip"
+    },
+    {
+      "id": 82,
+      "name": "Must-b Hugging Face Hub",
+      "version": "v1.4.0",
+      "summary": "Hugging Face model ve dataset'lerini indirir ve inference çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "5k",
+      "downloads": "834k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Hugging Face Hub\n\nHugging Face model ve dataset'lerini indirir ve inference çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- HuggingFace hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### HuggingFace Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nHuggingFace dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"HUGGINGFACE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-82.zip"
+    },
+    {
+      "id": 83,
+      "name": "Must-b Replicate AI Runner",
+      "version": "v1.2.0",
+      "summary": "Replicate model'larını API üzerinden çalıştırır ve output'larını işler.",
+      "author": "@must-b_core",
+      "stars": "7791k",
+      "downloads": "2.4m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Replicate AI Runner\n\nReplicate model'larını API üzerinden çalıştırır ve output'larını işler.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Replicate hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Replicate Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nReplicate dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"REPLICATE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-83.zip"
+    },
+    {
+      "id": 84,
+      "name": "Must-b Together AI Gateway",
+      "version": "v1.1.0",
+      "summary": "Together AI üzerindeki açık kaynak LLM'lere inference gönderir.",
+      "author": "@must-b_core",
+      "stars": "7k",
+      "downloads": "297k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Together AI Gateway\n\nTogether AI üzerindeki açık kaynak LLM'lere inference gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Together AI hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Together AI Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nTogether AI dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"TOGETHER_AI_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-84.zip"
+    },
+    {
+      "id": 85,
+      "name": "Must-b Groq LLM Inference",
+      "version": "v1.3.0",
+      "summary": "Groq'un ultra-hızlı inference API'sini Must-b pipeline'ına bağlar.",
+      "author": "@must-b_core",
+      "stars": "7751k",
+      "downloads": "1.6m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Groq LLM Inference\n\nGroq'un ultra-hızlı inference API'sini Must-b pipeline'ına bağlar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Groq hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Groq Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nGroq dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"GROQ_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-85.zip"
+    },
+    {
+      "id": 86,
+      "name": "Must-b Mistral AI Connector",
+      "version": "v1.2.0",
+      "summary": "Mistral Large ve Codestral modellerini Must-b görev akışına entegre eder.",
+      "author": "@must-b_core",
+      "stars": "12302",
+      "downloads": "277k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Mistral AI Connector\n\nMistral Large ve Codestral modellerini Must-b görev akışına entegre eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Mistral hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Mistral Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nMistral dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"MISTRAL_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-86.zip"
+    },
+    {
+      "id": 87,
+      "name": "Must-b Cohere NLP Engine",
+      "version": "v1.4.0",
+      "summary": "Cohere Command ve Embed modellerini anlama ve sınıflandırma görevleri için kullanır.",
+      "author": "@must-b_core",
+      "stars": "13k",
+      "downloads": "4.0m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Cohere NLP Engine\n\nCohere Command ve Embed modellerini anlama ve sınıflandırma görevleri için kullanır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Cohere hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Cohere Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nCohere dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"COHERE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-87.zip"
+    },
+    {
+      "id": 88,
+      "name": "Must-b ElevenLabs Voice AI",
+      "version": "v1.5.0",
+      "summary": "ElevenLabs text-to-speech API ile ses sentezler ve klonlama yapar.",
+      "author": "@must-b_core",
+      "stars": "14120",
+      "downloads": "7.0m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b ElevenLabs Voice AI\n\nElevenLabs text-to-speech API ile ses sentezler ve klonlama yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- ElevenLabs hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### ElevenLabs Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nElevenLabs dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ELEVENLABS_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-88.zip"
+    },
+    {
+      "id": 89,
+      "name": "Must-b Deepgram Transcription",
+      "version": "v1.3.0",
+      "summary": "Deepgram Nova-2 ile ses dosyalarını ve canlı stream'leri metne çevirir.",
+      "author": "@must-b_core",
+      "stars": "6k",
+      "downloads": "7.3m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Deepgram Transcription\n\nDeepgram Nova-2 ile ses dosyalarını ve canlı stream'leri metne çevirir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Deepgram hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Deepgram Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nDeepgram dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"DEEPGRAM_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-89.zip"
+    },
+    {
+      "id": 90,
+      "name": "Must-b AssemblyAI Audio Analysis",
+      "version": "v1.2.0",
+      "summary": "AssemblyAI ile ses transkripsiyon, özetleme ve duygu analizi yapar.",
+      "author": "@must-b_core",
+      "stars": "4126k",
+      "downloads": "9.5m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b AssemblyAI Audio Analysis\n\nAssemblyAI ile ses transkripsiyon, özetleme ve duygu analizi yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- AssemblyAI hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### AssemblyAI Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nAssemblyAI dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"ASSEMBLYAI_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-90.zip"
+    },
+    {
+      "id": 91,
+      "name": "Must-b Browserless API Bridge",
+      "version": "v1.1.0",
+      "summary": "Browserless.io headless Chrome API'sine bağlanarak web automation ve screenshot alır.",
+      "author": "@must-b_core",
+      "stars": "14214",
+      "downloads": "604k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Browserless API Bridge\n\nBrowserless.io headless Chrome API'sine bağlanarak web automation ve screenshot alır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Browserless hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Browserless Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nBrowserless dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"BROWSERLESS_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-91.zip"
+    },
+    {
+      "id": 92,
+      "name": "Must-b ScrapingBee Crawler",
+      "version": "v1.0.0",
+      "summary": "ScrapingBee proxy rotasyonu ile JS-render web scraping yapar.",
+      "author": "@must-b_core",
+      "stars": "8391k",
+      "downloads": "5.8m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b ScrapingBee Crawler\n\nScrapingBee proxy rotasyonu ile JS-render web scraping yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- ScrapingBee hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### ScrapingBee Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nScrapingBee dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SCRAPINGBEE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-92.zip"
+    },
+    {
+      "id": 93,
+      "name": "Must-b Apify Scraper Platform",
+      "version": "v1.1.0",
+      "summary": "Apify Actor'larını çalıştırır ve dataset'lere veri çeker.",
+      "author": "@must-b_core",
+      "stars": "10k",
+      "downloads": "1.6m",
+      "os": [
+        "Cloud",
+        "Linux"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Apify Scraper Platform\n\nApify Actor'larını çalıştırır ve dataset'lere veri çeker.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Apify hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Apify Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nApify dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"APIFY_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-93.zip"
+    },
+    {
+      "id": 94,
+      "name": "Must-b Firecrawl Web Reader",
+      "version": "v1.2.0",
+      "summary": "Firecrawl ile web sitelerini Markdown'a dönüştürür ve crawl eder.",
+      "author": "@must-b_core",
+      "stars": "20277",
+      "downloads": "949k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Firecrawl Web Reader\n\nFirecrawl ile web sitelerini Markdown'a dönüştürür ve crawl eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Firecrawl hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Firecrawl Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nFirecrawl dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"FIRECRAWL_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-94.zip"
+    },
+    {
+      "id": 95,
+      "name": "Must-b Exa Neural Search",
+      "version": "v1.1.0",
+      "summary": "Exa semantic web arama API'si ile içerik keşfeder.",
+      "author": "@must-b_core",
+      "stars": "17188",
+      "downloads": "909k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Exa Neural Search\n\nExa semantic web arama API'si ile içerik keşfeder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Exa hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Exa Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nExa dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"EXA_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-95.zip"
+    },
+    {
+      "id": 96,
+      "name": "Must-b Tavily Research Agent",
+      "version": "v1.3.0",
+      "summary": "Tavily AI araştırma API'siyle derinlemesine web araştırması yapar.",
+      "author": "@must-b_core",
+      "stars": "15514",
+      "downloads": "641k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Tavily Research Agent\n\nTavily AI araştırma API'siyle derinlemesine web araştırması yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Tavily hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Tavily Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nTavily dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"TAVILY_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-96.zip"
+    },
+    {
+      "id": 97,
+      "name": "Must-b Perplexity AI Query",
+      "version": "v1.2.0",
+      "summary": "Perplexity sonar modelini kullanarak gerçek zamanlı kaynaklı cevaplar üretir.",
+      "author": "@must-b_core",
+      "stars": "8k",
+      "downloads": "935k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Perplexity AI Query\n\nPerplexity sonar modelini kullanarak gerçek zamanlı kaynaklı cevaplar üretir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Perplexity hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Perplexity Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nPerplexity dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"PERPLEXITY_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-97.zip"
+    },
+    {
+      "id": 98,
+      "name": "Must-b SerpAPI Search Engine",
+      "version": "v1.4.0",
+      "summary": "Google, Bing ve diğer arama motorlarından yapılandırılmış sonuç çeker.",
+      "author": "@must-b_core",
+      "stars": "7744",
+      "downloads": "7.3m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b SerpAPI Search Engine\n\nGoogle, Bing ve diğer arama motorlarından yapılandırılmış sonuç çeker.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- SerpAPI hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### SerpAPI Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSerpAPI dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SERPAPI_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-98.zip"
+    },
+    {
+      "id": 99,
+      "name": "Must-b Brave Search API",
+      "version": "v1.0.0",
+      "summary": "Brave Search bağımsız index'inden gizlilik odaklı web araması yapar.",
+      "author": "@must-b_core",
+      "stars": "4k",
+      "downloads": "5.3m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Brave Search API\n\nBrave Search bağımsız index'inden gizlilik odaklı web araması yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Brave hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Brave Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nBrave dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"BRAVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/skill-99.zip"
+    },
+    {
+      "id": 100,
+      "name": "Must-b Linear Dev Tracker",
+      "version": "v1.1.0",
+      "summary": "Linear issue ve sprint yonetimini otomasyon ile entegre eder.",
+      "author": "@must-b_core",
+      "stars": "4.5k",
+      "downloads": "50k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Linear Dev Tracker\n\nLinear GraphQL API entegrasyonu.",
+      "integration_guide": "### Linear Config\n`json\n{\" LINEAR_API_KEY:lin_api_...}\n`",
+      "download_url": "/downloads/skill-100.zip"
     }
   ],
   "plugins": [
@@ -271,10 +1770,15 @@
       "author": "@must-b_core",
       "stars": "25k",
       "downloads": "2.4m",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b Terminal Stream & Control\n\nSistem terminaline düşük seviyeli erişim sağlayan temel Must-b plugin'i.\n\n### Özellikler\n- PTY (Pseudo-Terminal) desteği: vim, htop gibi interaktif programlar çalışır\n- Streaming stdout/stderr: Uzun işlemlerde gerçek zamanlı çıktı\n- Session management: Birden fazla terminal oturumu paralel yönetilir\n- Signal control: SIGINT, SIGTERM, SIGKILL desteği",
-      "integration_guide": "### Terminal Plugin Kurulum Kılavuzu\n\nBu plugin, Must-b gateway ile birlikte otomatik yüklenir.\n\n**Config (Opsiyonel)**\n```json\n{\n  \"TERMINAL_MAX_SESSIONS\": 10,\n  \"TERMINAL_SESSION_TIMEOUT_MS\": 300000\n}\n```\n\nHerhangi bir ek konfigürasyon gerekmez. Gateway başlatıldığında plugin otomatik aktif olur."
+      "integration_guide": "### Terminal Plugin Kurulum Kılavuzu\n\nBu plugin, Must-b gateway ile birlikte otomatik yüklenir.\n\n**Config (Opsiyonel)**\n```json\n{\n  \"TERMINAL_MAX_SESSIONS\": 10,\n  \"TERMINAL_SESSION_TIMEOUT_MS\": 300000\n}\n```\n\nHerhangi bir ek konfigürasyon gerekmez. Gateway başlatıldığında plugin otomatik aktif olur.",
+      "download_url": "/downloads/plugin-1.zip"
     },
     {
       "id": 2,
@@ -284,10 +1788,14 @@
       "author": "@must-b_core",
       "stars": "19.5k",
       "downloads": "900k",
-      "os": ["Linux", "macOS"],
+      "os": [
+        "Linux",
+        "macOS"
+      ],
       "is_certified": true,
       "readme": "## Must-b Browser Automation (Playwright)\n\nMicrosoft Playwright üzerinde çalışan headless ve headed browser otomasyonu.\n\n### Özellikler\n- Chromium, Firefox, WebKit desteği\n- Network interception (mock API responses)\n- Cookie ve local storage yönetimi\n- PDF snapshot ve full-page screenshot\n- Paralel browser context'leri",
-      "integration_guide": "### Playwright Plugin Kurulum Kılavuzu\n\n**Adım 1 — Browser Binary**\nMust-b gateway, Playwright'ı otomatik kurar. Manuel kurulum için:\n```bash\nnpx playwright install chromium\n```\n\n**Adım 2 — Config**\n```json\n{\n  \"PLAYWRIGHT_BROWSER\": \"chromium\",\n  \"PLAYWRIGHT_HEADLESS\": true,\n  \"PLAYWRIGHT_TIMEOUT_MS\": 30000\n}\n```"
+      "integration_guide": "### Playwright Plugin Kurulum Kılavuzu\n\n**Adım 1 — Browser Binary**\nMust-b gateway, Playwright'ı otomatik kurar. Manuel kurulum için:\n```bash\nnpx playwright install chromium\n```\n\n**Adım 2 — Config**\n```json\n{\n  \"PLAYWRIGHT_BROWSER\": \"chromium\",\n  \"PLAYWRIGHT_HEADLESS\": true,\n  \"PLAYWRIGHT_TIMEOUT_MS\": 30000\n}\n```",
+      "download_url": "/downloads/plugin-2.zip"
     },
     {
       "id": 3,
@@ -297,10 +1805,15 @@
       "author": "@must-b_core",
       "stars": "30k",
       "downloads": "3.5m",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b Long-Term Memory (LTM)\n\nMust-b'nin en kritik plugin'i. Tüm ajan konuşmalarını ve edinilen bilgileri yapılandırılmış hafızaya alır.\n\n### Özellikler\n- Otomatik memory consolidation (önemli bilgileri uzun süreli hafızaya taşır)\n- Semantic retrieval (bağlamla en alakalı memories'i çeker)\n- Memory decay: Uzun süre kullanılmayan kayıtlar önem skoru düşer\n- Privacy: Tüm memories şifreli saklı (AES-256)\n- Export/import: Hafıza transferi desteklenir",
-      "integration_guide": "### LTM Plugin Kurulum Kılavuzu\n\nBu plugin sıfır config ile çalışır. Veriler varsayılan olarak `~/.mustb/memory/` dizininde saklanır.\n\n**Özel Depolama (Opsiyonel)**\n```json\n{\n  \"LTM_STORAGE_PATH\": \"/data/mustb/memory\",\n  \"LTM_ENCRYPTION_KEY\": \"32-char-secret-key\"\n}\n```\n\n**Vector Backend**\n```json\n{\n  \"LTM_VECTOR_DB\": \"pgvector\",\n  \"LTM_DATABASE_URL\": \"postgresql://...\"\n}\n```"
+      "integration_guide": "### LTM Plugin Kurulum Kılavuzu\n\nBu plugin sıfır config ile çalışır. Veriler varsayılan olarak `~/.mustb/memory/` dizininde saklanır.\n\n**Özel Depolama (Opsiyonel)**\n```json\n{\n  \"LTM_STORAGE_PATH\": \"/data/mustb/memory\",\n  \"LTM_ENCRYPTION_KEY\": \"32-char-secret-key\"\n}\n```\n\n**Vector Backend**\n```json\n{\n  \"LTM_VECTOR_DB\": \"pgvector\",\n  \"LTM_DATABASE_URL\": \"postgresql://...\"\n}\n```",
+      "download_url": "/downloads/plugin-3.zip"
     },
     {
       "id": 4,
@@ -310,10 +1823,14 @@
       "author": "@must-b_core",
       "stars": "14.2k",
       "downloads": "450k",
-      "os": ["Windows", "Linux"],
+      "os": [
+        "Windows",
+        "Linux"
+      ],
       "is_certified": false,
       "readme": "## Must-b VRAM Dynamic Optimizer\n\nMulti-model çalışma senaryoları için GPU bellek yönetim katmanı.\n\n### Özellikler\n- VRAM kullanımını gerçek zamanlı izler (nvidia-smi)\n- Kritik eşikte aktif olmayan modeli CPU'ya offload eder\n- GGUF ve GPTQ quantization ile daha küçük VRAM footprint\n- Multi-GPU: Model katmanlarını birden fazla GPU'ya dağıtır",
-      "integration_guide": "### VRAM Optimizer Kurulum Kılavuzu\n\n**Gereksinim**: NVIDIA GPU (CUDA 12+) veya AMD GPU (ROCm 5+).\n\n**Adım 1 — Eşik Değerleri**\n```json\n{\n  \"VRAM_OFFLOAD_THRESHOLD_GB\": 2,\n  \"VRAM_RELOAD_THRESHOLD_GB\": 4\n}\n```\n\n**Adım 2 — Tercih Edilen Modeller**\nYüksek öncelikli modeller tanımlayarak bunların her zaman VRAM'de kalmasını sağlayabilirsiniz."
+      "integration_guide": "### VRAM Optimizer Kurulum Kılavuzu\n\n**Gereksinim**: NVIDIA GPU (CUDA 12+) veya AMD GPU (ROCm 5+).\n\n**Adım 1 — Eşik Değerleri**\n```json\n{\n  \"VRAM_OFFLOAD_THRESHOLD_GB\": 2,\n  \"VRAM_RELOAD_THRESHOLD_GB\": 4\n}\n```\n\n**Adım 2 — Tercih Edilen Modeller**\nYüksek öncelikli modeller tanımlayarak bunların her zaman VRAM'de kalmasını sağlayabilirsiniz.",
+      "download_url": "/downloads/plugin-4.zip"
     },
     {
       "id": 5,
@@ -323,10 +1840,813 @@
       "author": "@must-b_core",
       "stars": "45k",
       "downloads": "5.2m",
-      "os": ["Linux", "macOS", "Windows"],
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
       "is_certified": true,
       "readme": "## Must-b VS Code Bridge\n\nMust-b'nin en çok indirilen plugin'i. VS Code Language Server Protocol (LSP) ve Extension API üzerinden derin IDE entegrasyonu.\n\n### Özellikler\n- Dosya açma, düzenleme, kaydetme\n- Diagnostics (lint hatalarını okur ve düzeltir)\n- Terminal entegrasyonu (VS Code integrated terminal)\n- Extension çalıştırma (Prettier, ESLint otomatik format)\n- Diff görüntüleme ve merge conflict çözümü\n- Multi-root workspace desteği",
-      "integration_guide": "### VS Code Bridge Kurulum Kılavuzu\n\n**Adım 1 — VS Code Extension**\nVS Code Marketplace'den `Must-b Bridge` extension'ını kurun (ID: `mustb.vscode-bridge`).\n\n**Adım 2 — Extension Aktifleştirilmesi**\nExtension yüklendikten sonra VS Code status bar'da `Must-b: Connected` görünür.\n\n**Adım 3 — Must-b Config**\n```json\n{\n  \"VSCODE_EXTENSION_PORT\": 3333,\n  \"VSCODE_WORKSPACE_PATH\": \"/Users/you/projects/my-app\"\n}\n```\n\n**Adım 4 — Kullanım**\nMust-b'ye `Open App.tsx and fix the TypeScript error on line 42` yazın. Ajan VS Code'u kontrol eder."
+      "integration_guide": "### VS Code Bridge Kurulum Kılavuzu\n\n**Adım 1 — VS Code Extension**\nVS Code Marketplace'den `Must-b Bridge` extension'ını kurun (ID: `mustb.vscode-bridge`).\n\n**Adım 2 — Extension Aktifleştirilmesi**\nExtension yüklendikten sonra VS Code status bar'da `Must-b: Connected` görünür.\n\n**Adım 3 — Must-b Config**\n```json\n{\n  \"VSCODE_EXTENSION_PORT\": 3333,\n  \"VSCODE_WORKSPACE_PATH\": \"/Users/you/projects/my-app\"\n}\n```\n\n**Adım 4 — Kullanım**\nMust-b'ye `Open App.tsx and fix the TypeScript error on line 42` yazın. Ajan VS Code'u kontrol eder.",
+      "download_url": "/downloads/plugin-5.zip"
+    },
+    {
+      "id": 6,
+      "name": "Must-b Python Code Executor",
+      "version": "v2.0.0",
+      "summary": "Sandbox Python ortamında kod çalıştırır, paket kurar ve sonuç döndürür.",
+      "author": "@must-b_core",
+      "stars": "19829",
+      "downloads": "9.5m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Python Code Executor\n\nSandbox Python ortamında kod çalıştırır, paket kurar ve sonuç döndürür.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Python hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Python Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nPython dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"PYTHON_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-6.zip"
+    },
+    {
+      "id": 7,
+      "name": "Must-b Image Generation Engine",
+      "version": "v1.4.0",
+      "summary": "DALL-E 3 ve Stable Diffusion ile görev bazlı görsel üretir.",
+      "author": "@must-b_core",
+      "stars": "7605k",
+      "downloads": "4.7m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Image Generation Engine\n\nDALL-E 3 ve Stable Diffusion ile görev bazlı görsel üretir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- OpenAI hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### OpenAI Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nOpenAI dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"OPENAI_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-7.zip"
+    },
+    {
+      "id": 8,
+      "name": "Must-b Audio Transcription Core",
+      "version": "v1.3.0",
+      "summary": "OpenAI Whisper ile yerel ses dosyalarını metne dönüştürür.",
+      "author": "@must-b_core",
+      "stars": "6767k",
+      "downloads": "6.2m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Audio Transcription Core\n\nOpenAI Whisper ile yerel ses dosyalarını metne dönüştürür.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Whisper hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Whisper Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nWhisper dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"WHISPER_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-8.zip"
+    },
+    {
+      "id": 9,
+      "name": "Must-b File System Explorer",
+      "version": "v2.1.0",
+      "summary": "Dosya sistemi üzerinde okuma, yazma, taşıma ve arama işlemleri yapar.",
+      "author": "@must-b_core",
+      "stars": "571k",
+      "downloads": "262k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b File System Explorer\n\nDosya sistemi üzerinde okuma, yazma, taşıma ve arama işlemleri yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-9.zip"
+    },
+    {
+      "id": 10,
+      "name": "Must-b HTTP API Request Maker",
+      "version": "v1.5.0",
+      "summary": "REST ve GraphQL API'lere kimlik doğrulama ile istek gönderir.",
+      "author": "@must-b_core",
+      "stars": "13787",
+      "downloads": "717k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b HTTP API Request Maker\n\nREST ve GraphQL API'lere kimlik doğrulama ile istek gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-10.zip"
+    },
+    {
+      "id": 11,
+      "name": "Must-b Email Composer & Sender",
+      "version": "v1.2.0",
+      "summary": "SMTP veya API üzerinden zengin HTML e-posta taslaklar ve gönderir.",
+      "author": "@must-b_core",
+      "stars": "6797k",
+      "downloads": "9.3m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Email Composer & Sender\n\nSMTP veya API üzerinden zengin HTML e-posta taslaklar ve gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- SMTP hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### SMTP Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSMTP dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SMTP_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-11.zip"
+    },
+    {
+      "id": 12,
+      "name": "Must-b Google Calendar Manager",
+      "version": "v1.3.0",
+      "summary": "Google Calendar üzerinde etkinlik oluşturur, günceller ve davet gönderir.",
+      "author": "@must-b_core",
+      "stars": "1652k",
+      "downloads": "5.4m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Google Calendar Manager\n\nGoogle Calendar üzerinde etkinlik oluşturur, günceller ve davet gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Google hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Google Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nGoogle dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"GOOGLE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-12.zip"
+    },
+    {
+      "id": 13,
+      "name": "Must-b PDF Generator & Parser",
+      "version": "v1.6.0",
+      "summary": "PDF dosyaları oluşturur, sayfa çıkarır ve metin parse eder.",
+      "author": "@must-b_core",
+      "stars": "11k",
+      "downloads": "645k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b PDF Generator & Parser\n\nPDF dosyaları oluşturur, sayfa çıkarır ve metin parse eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-13.zip"
+    },
+    {
+      "id": 14,
+      "name": "Must-b Data Visualizer",
+      "version": "v1.1.0",
+      "summary": "Veri tablolarından otomatik grafik ve özet rapor üretir.",
+      "author": "@must-b_core",
+      "stars": "4k",
+      "downloads": "3.5m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Data Visualizer\n\nVeri tablolarından otomatik grafik ve özet rapor üretir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-14.zip"
+    },
+    {
+      "id": 15,
+      "name": "Must-b Report Generator",
+      "version": "v1.2.0",
+      "summary": "Ajan çalışma sonuçlarından şablonlu PDF/HTML raporlar oluşturur.",
+      "author": "@must-b_core",
+      "stars": "9635",
+      "downloads": "274k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Report Generator\n\nAjan çalışma sonuçlarından şablonlu PDF/HTML raporlar oluşturur.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-15.zip"
+    },
+    {
+      "id": 16,
+      "name": "Must-b Cron Task Scheduler",
+      "version": "v1.4.0",
+      "summary": "Cron ifadeleriyle görevleri zamanlı çalıştırır ve log tutar.",
+      "author": "@must-b_core",
+      "stars": "2671",
+      "downloads": "537k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Cron Task Scheduler\n\nCron ifadeleriyle görevleri zamanlı çalıştırır ve log tutar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-16.zip"
+    },
+    {
+      "id": 17,
+      "name": "Must-b Web Scraper Core",
+      "version": "v2.0.0",
+      "summary": "Cheerio ve Puppeteer ile web sayfalarından yapılandırılmış veri çeker.",
+      "author": "@must-b_core",
+      "stars": "999",
+      "downloads": "346k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Web Scraper Core\n\nCheerio ve Puppeteer ile web sayfalarından yapılandırılmış veri çeker.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-17.zip"
+    },
+    {
+      "id": 18,
+      "name": "Must-b Multi-Language Translator",
+      "version": "v1.3.0",
+      "summary": "Google Translate ve DeepL API ile metni 100+ dile çevirir.",
+      "author": "@must-b_core",
+      "stars": "17945",
+      "downloads": "1.3m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Multi-Language Translator\n\nGoogle Translate ve DeepL API ile metni 100+ dile çevirir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Google hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Google Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nGoogle dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"GOOGLE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-18.zip"
+    },
+    {
+      "id": 19,
+      "name": "Must-b Math & Statistics Engine",
+      "version": "v1.1.0",
+      "summary": "İstatistiksel analiz, regresyon ve sayısal hesaplama araçları.",
+      "author": "@must-b_core",
+      "stars": "15140",
+      "downloads": "463k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Math & Statistics Engine\n\nİstatistiksel analiz, regresyon ve sayısal hesaplama araçları.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-19.zip"
+    },
+    {
+      "id": 20,
+      "name": "Must-b SQL Database Explorer",
+      "version": "v1.5.0",
+      "summary": "SQLite, MySQL ve PostgreSQL üzerinde natural language SQL sorgular.",
+      "author": "@must-b_core",
+      "stars": "15k",
+      "downloads": "933k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b SQL Database Explorer\n\nSQLite, MySQL ve PostgreSQL üzerinde natural language SQL sorgular.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-20.zip"
+    },
+    {
+      "id": 21,
+      "name": "Must-b Git Operations Manager",
+      "version": "v1.6.0",
+      "summary": "Git add, commit, push, merge ve rebase işlemlerini otomatikleştirir.",
+      "author": "@must-b_core",
+      "stars": "6873k",
+      "downloads": "6.6m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Git Operations Manager\n\nGit add, commit, push, merge ve rebase işlemlerini otomatikleştirir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Git hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Git Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nGit dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"GIT_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-21.zip"
+    },
+    {
+      "id": 22,
+      "name": "Must-b Docker Build & Push",
+      "version": "v1.4.0",
+      "summary": "Docker image build eder, tag'ler ve registry'ye push eder.",
+      "author": "@must-b_core",
+      "stars": "12k",
+      "downloads": "194k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Docker Build & Push\n\nDocker image build eder, tag'ler ve registry'ye push eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Docker hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Docker Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nDocker dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"DOCKER_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-22.zip"
+    },
+    {
+      "id": 23,
+      "name": "Must-b SSH Remote Connector",
+      "version": "v1.2.0",
+      "summary": "Uzak sunuculara SSH bağlanır, komut çalıştırır ve dosya transfer eder.",
+      "author": "@must-b_core",
+      "stars": "15k",
+      "downloads": "5.2m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b SSH Remote Connector\n\nUzak sunuculara SSH bağlanır, komut çalıştırır ve dosya transfer eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- SSH hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### SSH Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSSH dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SSH_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-23.zip"
+    },
+    {
+      "id": 24,
+      "name": "Must-b SFTP File Transfer",
+      "version": "v1.1.0",
+      "summary": "SFTP üzerinden dosya yükleme, indirme ve dizin listeleme yapar.",
+      "author": "@must-b_core",
+      "stars": "8799k",
+      "downloads": "9.0m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b SFTP File Transfer\n\nSFTP üzerinden dosya yükleme, indirme ve dizin listeleme yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- SFTP hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### SFTP Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSFTP dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SFTP_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-24.zip"
+    },
+    {
+      "id": 25,
+      "name": "Must-b Regex Pattern Processor",
+      "version": "v1.0.0",
+      "summary": "Gelişmiş regex desenleriyle metin ayıklar, doğrular ve dönüştürür.",
+      "author": "@must-b_core",
+      "stars": "1921k",
+      "downloads": "6.2m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Regex Pattern Processor\n\nGelişmiş regex desenleriyle metin ayıklar, doğrular ve dönüştürür.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-25.zip"
+    },
+    {
+      "id": 26,
+      "name": "Must-b JSON & YAML Transformer",
+      "version": "v1.2.0",
+      "summary": "JSON/YAML verisini dönüştürür, doğrular ve şema karşılaştırır.",
+      "author": "@must-b_core",
+      "stars": "9801k",
+      "downloads": "4.3m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b JSON & YAML Transformer\n\nJSON/YAML verisini dönüştürür, doğrular ve şema karşılaştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-26.zip"
+    },
+    {
+      "id": 27,
+      "name": "Must-b CSV & Excel Parser",
+      "version": "v1.3.0",
+      "summary": "CSV ve Excel dosyalarını okur, yazar ve veri temizleme yapar.",
+      "author": "@must-b_core",
+      "stars": "12544",
+      "downloads": "3.5m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b CSV & Excel Parser\n\nCSV ve Excel dosyalarını okur, yazar ve veri temizleme yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-27.zip"
+    },
+    {
+      "id": 28,
+      "name": "Must-b QR Code Generator",
+      "version": "v1.0.0",
+      "summary": "URL, metin veya vCard içerikli QR kod üretir ve PNG olarak kaydeder.",
+      "author": "@must-b_core",
+      "stars": "758",
+      "downloads": "393k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b QR Code Generator\n\nURL, metin veya vCard içerikli QR kod üretir ve PNG olarak kaydeder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-28.zip"
+    },
+    {
+      "id": 29,
+      "name": "Must-b Chart & Graph Maker",
+      "version": "v1.2.0",
+      "summary": "Chart.js tabanlı çizgi, çubuk ve pasta grafiklerini SVG/PNG olarak üretir.",
+      "author": "@must-b_core",
+      "stars": "18210",
+      "downloads": "4.2m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Chart & Graph Maker\n\nChart.js tabanlı çizgi, çubuk ve pasta grafiklerini SVG/PNG olarak üretir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-29.zip"
+    },
+    {
+      "id": 30,
+      "name": "Must-b Map & Geo Plotter",
+      "version": "v1.1.0",
+      "summary": "Koordinat verilerini harita üzerine işaretler ve statik harita görüntüsü üretir.",
+      "author": "@must-b_core",
+      "stars": "2689k",
+      "downloads": "871k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Map & Geo Plotter\n\nKoordinat verilerini harita üzerine işaretler ve statik harita görüntüsü üretir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Geo hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Geo Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nGeo dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"GEO_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-30.zip"
+    },
+    {
+      "id": 31,
+      "name": "Must-b Push Notification Sender",
+      "version": "v1.2.0",
+      "summary": "FCM ve APNs üzerinden mobil push bildirimleri gönderir.",
+      "author": "@must-b_core",
+      "stars": "7560",
+      "downloads": "173k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Push Notification Sender\n\nFCM ve APNs üzerinden mobil push bildirimleri gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- FCM hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### FCM Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nFCM dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"FCM_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-31.zip"
+    },
+    {
+      "id": 32,
+      "name": "Must-b Webhook Dispatcher",
+      "version": "v1.4.0",
+      "summary": "Tanımlı endpoint'lere olay tetiklendiğinde signed webhook gönderir.",
+      "author": "@must-b_core",
+      "stars": "8k",
+      "downloads": "480k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Webhook Dispatcher\n\nTanımlı endpoint'lere olay tetiklendiğinde signed webhook gönderir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-32.zip"
+    },
+    {
+      "id": 33,
+      "name": "Must-b Secret & Password Vault",
+      "version": "v1.5.0",
+      "summary": "AES-256 şifreli yerel secret kasası yönetir ve key rotasyonu uygular.",
+      "author": "@must-b_core",
+      "stars": "7k",
+      "downloads": "5.2m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Secret & Password Vault\n\nAES-256 şifreli yerel secret kasası yönetir ve key rotasyonu uygular.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-33.zip"
+    },
+    {
+      "id": 34,
+      "name": "Must-b Rate Limiter & Throttle",
+      "version": "v1.1.0",
+      "summary": "API çağrılarına token bucket ve sliding window rate limiting uygular.",
+      "author": "@must-b_core",
+      "stars": "2833k",
+      "downloads": "860k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Rate Limiter & Throttle\n\nAPI çağrılarına token bucket ve sliding window rate limiting uygular.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-34.zip"
+    },
+    {
+      "id": 35,
+      "name": "Must-b Redis Cache Plugin",
+      "version": "v2.0.0",
+      "summary": "Must-b sonuçlarını Redis'e cache'ler, TTL ve invalidation yönetir.",
+      "author": "@must-b_core",
+      "stars": "2796",
+      "downloads": "113k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Redis Cache Plugin\n\nMust-b sonuçlarını Redis'e cache'ler, TTL ve invalidation yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Redis hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Redis Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nRedis dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"REDIS_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-35.zip"
+    },
+    {
+      "id": 36,
+      "name": "Must-b Queue Manager (BullMQ)",
+      "version": "v1.4.0",
+      "summary": "BullMQ ile görev kuyruğu oluşturur, priority ve retry yönetir.",
+      "author": "@must-b_core",
+      "stars": "6k",
+      "downloads": "8.6m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Queue Manager (BullMQ)\n\nBullMQ ile görev kuyruğu oluşturur, priority ve retry yönetir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- BullMQ hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### BullMQ Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nBullMQ dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"BULLMQ_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-36.zip"
+    },
+    {
+      "id": 37,
+      "name": "Must-b Event Bus",
+      "version": "v1.1.0",
+      "summary": "Ajan içi EventEmitter tabanlı asenkron olay sistemi.",
+      "author": "@must-b_core",
+      "stars": "2044k",
+      "downloads": "895k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Event Bus\n\nAjan içi EventEmitter tabanlı asenkron olay sistemi.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-37.zip"
+    },
+    {
+      "id": 38,
+      "name": "Must-b Structured Logger",
+      "version": "v1.3.0",
+      "summary": "JSON formatlı, seviye bazlı log üretir; dosya ve stream'e yazar.",
+      "author": "@must-b_core",
+      "stars": "3331k",
+      "downloads": "1.8m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Structured Logger\n\nJSON formatlı, seviye bazlı log üretir; dosya ve stream'e yazar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-38.zip"
+    },
+    {
+      "id": 39,
+      "name": "Must-b Database Backup Manager",
+      "version": "v1.2.0",
+      "summary": "PostgreSQL ve MySQL veritabanlarını otomatik dump alır ve S3'e yükler.",
+      "author": "@must-b_core",
+      "stars": "13337",
+      "downloads": "786k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Database Backup Manager\n\nPostgreSQL ve MySQL veritabanlarını otomatik dump alır ve S3'e yükler.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-39.zip"
+    },
+    {
+      "id": 40,
+      "name": "Must-b File Sync Engine",
+      "version": "v1.0.0",
+      "summary": "İki dizin veya uzak storage arasında dosya değişikliklerini senkronize eder.",
+      "author": "@must-b_core",
+      "stars": "3574k",
+      "downloads": "398k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b File Sync Engine\n\nİki dizin veya uzak storage arasında dosya değişikliklerini senkronize eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-40.zip"
+    },
+    {
+      "id": 41,
+      "name": "Must-b Schema Migration Tool",
+      "version": "v1.2.0",
+      "summary": "Veritabanı migration'larını sürümler, uygular ve geri alır.",
+      "author": "@must-b_core",
+      "stars": "3472k",
+      "downloads": "334k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Schema Migration Tool\n\nVeritabanı migration'larını sürümler, uygular ve geri alır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-41.zip"
+    },
+    {
+      "id": 42,
+      "name": "Must-b Automated Test Runner",
+      "version": "v1.4.0",
+      "summary": "Jest ve Vitest test suite'lerini çalıştırır, sonuçları raporlar.",
+      "author": "@must-b_core",
+      "stars": "12k",
+      "downloads": "618k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Automated Test Runner\n\nJest ve Vitest test suite'lerini çalıştırır, sonuçları raporlar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Jest hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Jest Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nJest dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"JEST_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-42.zip"
+    },
+    {
+      "id": 43,
+      "name": "Must-b Load & Stress Tester",
+      "version": "v1.1.0",
+      "summary": "k6 tabanlı HTTP yük testi senaryoları yazar ve çalıştırır.",
+      "author": "@must-b_core",
+      "stars": "15569",
+      "downloads": "9.8m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Load & Stress Tester\n\nk6 tabanlı HTTP yük testi senaryoları yazar ve çalıştırır.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- k6 hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### k6 Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nk6 dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"K6_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-43.zip"
+    },
+    {
+      "id": 44,
+      "name": "Must-b Security Vulnerability Scanner",
+      "version": "v1.3.0",
+      "summary": "npm audit ve OWASP ZAP ile bağımlılık ve web güvenlik açıklarını tarar.",
+      "author": "@must-b_core",
+      "stars": "15814",
+      "downloads": "4.6m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Security Vulnerability Scanner\n\nnpm audit ve OWASP ZAP ile bağımlılık ve web güvenlik açıklarını tarar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Security hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Security Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nSecurity dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"SECURITY_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-44.zip"
+    },
+    {
+      "id": 45,
+      "name": "Must-b GDPR Compliance Checker",
+      "version": "v1.1.0",
+      "summary": "Kodbase ve config'i GDPR uyumluluk açısından tarar ve rapor üretir.",
+      "author": "@must-b_core",
+      "stars": "5740",
+      "downloads": "4.7m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b GDPR Compliance Checker\n\nKodbase ve config'i GDPR uyumluluk açısından tarar ve rapor üretir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Compliance hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Compliance Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nCompliance dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"COMPLIANCE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-45.zip"
+    },
+    {
+      "id": 46,
+      "name": "Must-b Cloud Cost Optimizer",
+      "version": "v1.2.0",
+      "summary": "AWS ve GCP kaynaklarının maliyet analizini yapar ve tasarruf önerir.",
+      "author": "@must-b_core",
+      "stars": "4899k",
+      "downloads": "449k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Cloud Cost Optimizer\n\nAWS ve GCP kaynaklarının maliyet analizini yapar ve tasarruf önerir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Cloud hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Cloud Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nCloud dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"CLOUD_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-46.zip"
+    },
+    {
+      "id": 47,
+      "name": "Must-b API Usage Analytics",
+      "version": "v1.0.0",
+      "summary": "Ajan API çağrı geçmişini özetler, anomali ve maliyet spike'ı tespit eder.",
+      "author": "@must-b_core",
+      "stars": "4k",
+      "downloads": "286k",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b API Usage Analytics\n\nAjan API çağrı geçmişini özetler, anomali ve maliyet spike'ı tespit eder.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-47.zip"
+    },
+    {
+      "id": 48,
+      "name": "Must-b Token Usage Tracker",
+      "version": "v1.1.0",
+      "summary": "LLM token tüketimini takip eder, bütçe aşımında uyarı verir.",
+      "author": "@must-b_core",
+      "stars": "6297k",
+      "downloads": "8.8m",
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Token Usage Tracker\n\nLLM token tüketimini takip eder, bütçe aşımında uyarı verir.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Native hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Native Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNative dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NATIVE_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-48.zip"
+    },
+    {
+      "id": 49,
+      "name": "Must-b Proxy & VPN Manager",
+      "version": "v1.0.0",
+      "summary": "HTTP/SOCKS5 proxy rotasyonu ve VPN bağlantı yönetimi yapar.",
+      "author": "@must-b_core",
+      "stars": "7k",
+      "downloads": "712k",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": false,
+      "readme": "## Must-b Proxy & VPN Manager\n\nHTTP/SOCKS5 proxy rotasyonu ve VPN bağlantı yönetimi yapar.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Network hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Network Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nNetwork dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"NETWORK_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-49.zip"
+    },
+    {
+      "id": 50,
+      "name": "Must-b Multi-Cloud Storage Bridge",
+      "version": "v1.2.0",
+      "summary": "S3, GCS ve Azure Blob arasında dosya kopyalama ve senkronizasyon.",
+      "author": "@must-b_core",
+      "stars": "1270k",
+      "downloads": "4.4m",
+      "os": [
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Must-b Multi-Cloud Storage Bridge\n\nS3, GCS ve Azure Blob arasında dosya kopyalama ve senkronizasyon.\n\n### Özellikler\n- Tam Must-b Core entegrasyonu\n- Otomatik yeniden bağlanma ve hata yönetimi\n- Yapılandırılmış JSON loglama\n- Async/await tabanlı non-blocking API\n\n### Gereksinimler\n- Node.js 18+\n- Cloud hesabı ve API erişimi\n- Must-b Core v1.2+",
+      "integration_guide": "### Cloud Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nCloud dashboard'undan API key alın.\n\n**Adım 2 — Must-b Config**\n```json\n{ \"CLOUD_API_KEY\": \"your-key-here\" }\n```\n\n**Adım 3 — Aktivasyon**\nMust-b gateway'i yeniden başlatın. Skill otomatik yüklenir ve hazır hale gelir.",
+      "download_url": "/downloads/plugin-50.zip"
     }
   ]
 }

@@ -91,33 +91,166 @@ function ListRow({ item, type, index }: { item: Item; type: "skills" | "plugins"
 // ── Hakkında Tab ──────────────────────────────────────────────────────────
 
 function AboutTab() {
+  const pillars = [
+    {
+      icon: "⚡",
+      title: "Yerel Yürütme",
+      desc: "Model ağırlıkları doğrudan senin donanımında çalışır. Hiçbir veri, işlem sonucu veya komut buluta gitmez. Sıfır gecikme, tam gizlilik.",
+    },
+    {
+      icon: "🧠",
+      title: "Swarm Zekası",
+      desc: "Bir üst seviye ajan, görevi alt ajanlara parçalar. Her alt ajan bağımsız uzmanlık alanında çalışır; sonuçlar birleştirilir ve tek bir tutarlı çıktı üretilir.",
+    },
+    {
+      icon: "🔐",
+      title: "Ed25519 Kimlik Katmanı",
+      desc: "Kurulum sırasında yerel olarak oluşturulan anahtar çifti, ajanın dünya kimliğini tanımlar. Bulut senkronizasyonu opt-in'dir ve uçtan uca imzalıdır.",
+    },
+    {
+      icon: "🔌",
+      title: "Modüler Ekosistem",
+      desc: "Must-b Hub üzerindeki her Skill ve Plugin, sisteme plug-and-play olarak eklenir. API anahtarı — config — çalıştır; bu kadar.",
+    },
+    {
+      icon: "📡",
+      title: "CloudAuth & World Sync",
+      desc: "Birden fazla yerel ajan, CloudAuth protokolü aracılığıyla tek bir bulut kimliğine bağlanır. World modu sayesinde ajanlar birbirinden öğrenir.",
+    },
+    {
+      icon: "🏗️",
+      title: "Araç Zinciri (Tool Chain)",
+      desc: "Must-b, bir görevi tamamlamak için sıralı araç çağrıları zinciri kurar: web arama → dosya yazma → git commit → PR açma — hepsi tek komutla.",
+    },
+  ];
+
+  const timeline = [
+    { year: "2023 Q4", label: "Proje başlatıldı", desc: "Must-b'nin ilk prototipi, Ed25519 kimlik katmanıyla birlikte hayata geçirildi." },
+    { year: "2024 Q2", label: "İlk public beta", desc: "Terminal Executor ve VS Code Bridge plugin'leri yayınlandı. 10.000+ ilk kullanıcı." },
+    { year: "2024 Q4", label: "Swarm motoru", desc: "Çok katmanlı ajan swarm mimarisi tamamlandı. Paralel görev dağıtımı aktif." },
+    { year: "2025 Q1", label: "Must-b Hub açıldı", desc: "Ekosistem pazar yeri: 500+ entegrasyon, topluluk katkıları ve sertifika programı." },
+    { year: "2025 Q3", label: "World Sync v2", desc: "Ajanlar arası öğrenme ve hafıza transferi protokolü yayınlandı." },
+    { year: "2026", label: "Must-b Core 3.0", desc: "Şu an buradayız. 1.422 skill, 948 plugin, küresel swarm ağı." },
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-2xl mx-auto py-16 px-6 text-center space-y-6"
+      className="max-w-3xl mx-auto py-12 px-6 space-y-16"
     >
-      <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/20
-                      flex items-center justify-center mx-auto">
-        <Cpu className="w-7 h-7 text-cyan-400" />
+      {/* Hero */}
+      <div className="text-center space-y-5">
+        <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/20
+                        flex items-center justify-center mx-auto text-2xl">
+          🦊
+        </div>
+        <h2 className="text-3xl font-bold text-white">Must-b Core Nedir?</h2>
+        <p className="text-white/50 leading-relaxed text-sm max-w-xl mx-auto">
+          Must-b, yerel donanımında çalışan, buluttan senkronize olan ve görevleri
+          otonom ajan sürülerine dağıtan bir <strong className="text-white/80">next-generation AI agent framework</strong>'tür.
+          Bir komut yaz — Must-b planlar, parçalar, çalıştırır ve teslim eder.
+        </p>
       </div>
-      <h2 className="text-2xl font-bold text-white">Must-b Hub Nedir?</h2>
-      <p className="text-white/50 leading-relaxed text-sm">
-        Must-b Hub, otonom yapay zeka ajanlarını gerçek dünya servisleriyle buluşturan
-        açık bir ekosistem pazar yeridir. Stripe'tan AWS'ye, OpenAI'dan Datadog'a kadar
-        yüzlerce profesyonel entegrasyon, tek bir merkezden yönetilir.
-      </p>
-      <div className="grid grid-cols-3 gap-4 pt-4">
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: "Skill", value: hubData.counts.skills },
-          { label: "Plugin", value: hubData.counts.plugins },
-          { label: "Yazar", value: "1,200+" },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-4">
-            <div className="text-2xl font-bold text-cyan-400">{value}</div>
+          { value: "1,422", label: "Skill" },
+          { value: "948",   label: "Plugin" },
+          { value: "3.5M+", label: "İndirme" },
+          { value: "50K+",  label: "Aktif Ajan" },
+        ].map(({ value, label }) => (
+          <div key={label} className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-4 text-center">
+            <div className="text-xl font-bold text-cyan-400">{value}</div>
             <div className="text-xs text-white/40 mt-1">{label}</div>
           </div>
         ))}
+      </div>
+
+      {/* Nasıl çalışır */}
+      <div className="space-y-6">
+        <h3 className="text-lg font-bold text-white border-b border-white/[0.07] pb-3">
+          Otonom Ajan Ekosistemi Nasıl Çalışır?
+        </h3>
+        <div className="space-y-4 text-sm text-white/55 leading-relaxed">
+          <p>
+            Geleneksel yazılım araçları, bir görevi yerine getirmek için insan müdahalesi gerektirir.
+            Must-b bunun tam tersini yapar: <strong className="text-white/75">doğal dil komutunu</strong> alır,
+            internal LLM (GPT-4o veya Claude) ile bir görev grafiği çizer ve her düğüm için
+            özelleşmiş bir alt ajan atar.
+          </p>
+          <p>
+            Her Must-b ajana ajan, bir <strong className="text-white/75">Skill</strong> veya
+            <strong className="text-white/75"> Plugin</strong> ile genişletilebilir.
+            Skill'ler belirli bir dış servisle konuşan adaptor katmanıdır — Stripe ödemelerini
+            dinlemek, AWS'ye deploy yapmak, GitHub PR açmak gibi. Plugin'ler ise ajanın temel
+            yeteneklerini artıran, sisteme yerleşik modüllerdir: terminal erişimi, tarayıcı
+            otomasyonu, uzun süreli hafıza.
+          </p>
+          <p>
+            Sonuçlar, üst seviye koordinatör ajan tarafından birleştirilir ve kullanıcıya
+            tek bir tutarlı çıktı olarak sunulur. Tüm süreç boyunca hiçbir veri yerel makinenin
+            dışına çıkmaz — model, araç çağrıları ve dosya sistemi tamamen lokaldedir.
+          </p>
+        </div>
+      </div>
+
+      {/* Dört temel sütun */}
+      <div className="space-y-6">
+        <h3 className="text-lg font-bold text-white border-b border-white/[0.07] pb-3">
+          Temel Mimari Sütunlar
+        </h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          {pillars.map(({ icon, title, desc }) => (
+            <div key={title}
+              className="bg-white/[0.025] border border-white/[0.07] rounded-2xl p-5 space-y-2
+                         hover:border-cyan-500/20 hover:bg-white/[0.04] transition-all duration-200">
+              <div className="flex items-center gap-3">
+                <span className="text-lg">{icon}</span>
+                <span className="text-sm font-semibold text-white">{title}</span>
+              </div>
+              <p className="text-xs text-white/50 leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Zaman çizelgesi */}
+      <div className="space-y-6">
+        <h3 className="text-lg font-bold text-white border-b border-white/[0.07] pb-3">
+          Yol Haritası & Tarihçe
+        </h3>
+        <div className="relative space-y-6 ml-4">
+          <div className="absolute left-0 top-2 bottom-2 w-px bg-white/[0.08]" />
+          {timeline.map(({ year, label, desc }, i) => (
+            <div key={i} className="relative flex gap-5">
+              <div className="absolute -left-[17px] w-3 h-3 rounded-full bg-cyan-500/30 border border-cyan-500/50 mt-0.5" />
+              <div className="pl-4 space-y-1">
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] font-mono text-cyan-400/70">{year}</span>
+                  <span className="text-sm font-semibold text-white">{label}</span>
+                </div>
+                <p className="text-xs text-white/45 leading-relaxed">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="bg-cyan-500/[0.07] border border-cyan-500/20 rounded-2xl p-6 text-center space-y-4">
+        <p className="text-sm text-white/60 leading-relaxed max-w-md mx-auto">
+          Must-b'yi yerel makinende çalıştırmak için tek satır yeterli.
+          Kurulum &lt; 90 saniye, sıfır konfigürasyon.
+        </p>
+        <a href="/"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full
+                     bg-cyan-500 text-black font-semibold text-sm
+                     hover:bg-cyan-400 transition-all
+                     shadow-[0_0_24px_hsl(192_91%_43%/0.35)]">
+          Başlamak için Ana Sayfaya Git →
+        </a>
       </div>
     </motion.div>
   );

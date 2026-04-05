@@ -119,7 +119,7 @@ export default function HubDetail() {
     );
   }
 
-  const downloadUrl = "#";
+  const downloadUrl = (item as any).download_url ?? "#";
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
