@@ -7,50 +7,51 @@
 :root {
   --radius-outer: 24px;
   --radius-inner: calc(var(--radius-outer) - 8px);
-  
-  --background: 222 47% 3%;
-  --foreground: 210 40% 92%;
-  
-  --card: 222 30% 6%;
-  --card-foreground: 210 40% 92%;
-  
-  --popover: 222 30% 6%;
-  --popover-foreground: 210 40% 92%;
-  
-  --primary: 239 84% 67%;
-  --primary-foreground: 0 0% 100%;
-  
-  --secondary: 217 33% 12%;
-  --secondary-foreground: 210 40% 92%;
-  
-  --muted: 217 33% 12%;
-  --muted-foreground: 215 20% 55%;
-  
-  --accent: 239 84% 67%;
-  --accent-foreground: 0 0% 100%;
-  
+
+  /* ── Must-b Hub: #050505 bg + Cyan #06b6d4 accent ── */
+  --background: 0 0% 2%;           /* #050505 */
+  --foreground: 210 20% 92%;
+
+  --card: 0 0% 4%;
+  --card-foreground: 210 20% 92%;
+
+  --popover: 0 0% 4%;
+  --popover-foreground: 210 20% 92%;
+
+  --primary: 192 91% 43%;          /* #06b6d4 Cyan */
+  --primary-foreground: 0 0% 5%;
+
+  --secondary: 0 0% 8%;
+  --secondary-foreground: 210 20% 92%;
+
+  --muted: 0 0% 8%;
+  --muted-foreground: 215 15% 52%;
+
+  --accent: 192 91% 43%;           /* #06b6d4 Cyan */
+  --accent-foreground: 0 0% 5%;
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  
-  --border: 217 33% 12%;
-  --input: 217 33% 15%;
-  --ring: 239 84% 67%;
+
+  --border: 0 0% 10%;
+  --input: 0 0% 12%;
+  --ring: 192 91% 43%;
   --radius: 0.75rem;
 
-  --sidebar-background: 222 47% 4%;
-  --sidebar-foreground: 215 20% 65%;
-  --sidebar-primary: 239 84% 67%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 217 33% 10%;
-  --sidebar-accent-foreground: 210 40% 92%;
-  --sidebar-border: 217 33% 12%;
-  --sidebar-ring: 239 84% 67%;
-  
-  --indigo: 239 84% 67%;
+  --sidebar-background: 0 0% 3%;
+  --sidebar-foreground: 215 15% 62%;
+  --sidebar-primary: 192 91% 43%;
+  --sidebar-primary-foreground: 0 0% 5%;
+  --sidebar-accent: 0 0% 6%;
+  --sidebar-accent-foreground: 210 20% 92%;
+  --sidebar-border: 0 0% 10%;
+  --sidebar-ring: 192 91% 43%;
+
+  --cyan: 192 91% 43%;
   --emerald: 160 84% 39%;
   --amber: 38 92% 50%;
-  
-  --glow-color: 239 84% 67%;
+
+  --glow-color: 192 91% 43%;       /* Cyan glow */
 }
 
 @layer base {
@@ -62,7 +63,8 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
   ::selection {
-    background: hsl(239 84% 67% / 0.3);
+    background: hsl(192 91% 43% / 0.25);
+    color: hsl(0 0% 100%);
   }
 }
 
@@ -129,7 +131,7 @@
     content: "";
     position: absolute;
     inset: -2px;
-    background: conic-gradient(from 0deg, transparent 0%, hsl(var(--indigo)) 25%, transparent 50%, hsl(280 60% 50%) 75%, transparent 100%);
+    background: conic-gradient(from 0deg, transparent 0%, hsl(var(--cyan)) 25%, transparent 50%, hsl(180 60% 40%) 75%, transparent 100%);
     border-radius: inherit;
     animation: glow-rotate 4s linear infinite;
     z-index: -1;
@@ -152,11 +154,11 @@
   /* ===== Buttons ===== */
   .btn-primary-glow {
     @apply relative px-8 py-4 bg-primary text-primary-foreground rounded-xl font-semibold transition-all duration-300;
-    box-shadow: 0 0 20px hsl(239 84% 67% / 0.3), 0 0 0 1px hsl(239 84% 67% / 0.2);
+    box-shadow: 0 0 20px hsl(192 91% 43% / 0.35), 0 0 0 1px hsl(192 91% 43% / 0.25);
   }
   .btn-primary-glow:hover {
     @apply bg-primary/90;
-    box-shadow: 0 0 40px hsl(239 84% 67% / 0.5), 0 0 80px hsl(239 84% 67% / 0.2), 0 0 0 1px hsl(239 84% 67% / 0.4);
+    box-shadow: 0 0 40px hsl(192 91% 43% / 0.55), 0 0 80px hsl(192 91% 43% / 0.25), 0 0 0 1px hsl(192 91% 43% / 0.45);
   }
 
   .btn-glass {
