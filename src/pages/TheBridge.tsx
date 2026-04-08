@@ -253,6 +253,11 @@ const TheBridge = () => {
                 )}
               </div>
 
+              <div className="flex flex-col gap-3 p-3 mb-4 rounded-xl bg-[#1f2937]/50 border border-[#1f2937]">
+                <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Webhook URL</span>
+                <span className="text-xs font-mono text-cyan-400 select-all">https://must-b.com/api/webhook/whatsapp</span>
+              </div>
+
               <div className="flex items-start gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
                 <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                 <p className="text-[10px] text-amber-500 leading-tight">
