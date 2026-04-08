@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2 } from "lucide-react";
+import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
@@ -11,35 +11,57 @@ const navItems = [
   { icon: Settings, label: "Settings" },
 ];
 
-const liveTasks = [
-  { id: 1, name: "Stripe Billing", status: "Syncing Customers", time: "2 min ago", state: "active" },
-  { id: 2, name: "WhatsApp Bridge", status: "Listening", time: "Just now", state: "listening" },
-  { id: 3, name: "Vector Indexer", status: "Optimizing Embeddings", time: "5 min ago", state: "processing" },
-];
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Overview");
   const [loading, setLoading] = useState(true);
+  
+  const [agents, setAgents] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuthAndFetchData = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { 
         navigate("/login", { replace: true }); 
         return; 
       }
+      
+      const [{ data: agentsData }, { data: tasksData }] = await Promise.all([
+        supabase.from('agents').select('*').order('created_at', { ascending: false }),
+        supabase.from('tasks').select('*').order('created_at', { ascending: false })
+      ]);
+      
+      setAgents(agentsData || []);
+      setTasks(tasksData || []);
       setLoading(false);
     };
-    checkAuth();
+    checkAuthAndFetchData();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Setup realtime listeners for automatic UI updates
+    const agentSubscription = supabase.channel('agents-channel')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'agents' }, () => {
+        checkAuthAndFetchData();
+      })
+      .subscribe();
+
+    const taskSubscription = supabase.channel('tasks-channel')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
+        checkAuthAndFetchData();
+      })
+      .subscribe();
+
+    const authSub = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
         navigate("/login", { replace: true });
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      supabase.removeChannel(agentSubscription);
+      supabase.removeChannel(taskSubscription);
+      authSub.data.subscription.unsubscribe();
+    };
   }, [navigate]);
 
   if (loading) {
@@ -49,6 +71,10 @@ const Dashboard = () => {
       </div>
     );
   }
+
+  const activeAgentsCount = agents.filter(a => a.status && a.status.toLowerCase() !== 'offline').length;
+  const totalMemoryRaw = agents.reduce((acc, agent) => acc + (parseFloat(agent.memory_usage) || 0), 0);
+  const totalMemory = totalMemoryRaw > 0 ? totalMemoryRaw.toFixed(1) : "0.0";
 
   return (
     <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans">
@@ -139,7 +165,7 @@ const Dashboard = () => {
                 <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Active Agents</span>
               </div>
               <div className="flex items-end gap-2">
-                <span className="text-3xl font-bold text-white tracking-tight">3</span>
+                <span className="text-3xl font-bold text-white tracking-tight">{activeAgentsCount}</span>
                 <span className="text-gray-500 mb-1 font-medium">Deployed</span>
               </div>
             </div>
@@ -154,7 +180,7 @@ const Dashboard = () => {
                 <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Memory Vault</span>
               </div>
               <div className="flex items-end gap-2">
-                <span className="text-3xl font-bold text-white tracking-tight">1.2</span>
+                <span className="text-3xl font-bold text-white tracking-tight">{totalMemory}</span>
                 <span className="text-gray-500 mb-1 font-medium">GB Indexed</span>
               </div>
             </div>
@@ -174,34 +200,70 @@ const Dashboard = () => {
             </div>
 
             <div className="space-y-4">
-              {liveTasks.map((task, i) => (
-                <motion.div 
-                  key={task.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + (i * 0.1) }}
-                  className="flex items-center justify-between p-5 rounded-xl border border-[#1f2937] bg-black/40 hover:bg-[#1f2937]/30 hover:border-[#06b6d4]/30 transition-all duration-300 group"
-                >
-                  <div className="flex items-center gap-5">
-                    <div className="w-10 h-10 rounded-lg bg-[#06b6d4]/10 border border-[#06b6d4]/20 flex items-center justify-center text-[#06b6d4] shadow-[0_0_10px_rgba(6,182,212,0.1)]">
-                      <Activity className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-semibold mb-1 group-hover:text-[#06b6d4] transition-colors">{task.name}</h3>
-                      <div className="flex items-center gap-2">
-                        <span className="relative flex h-2 w-2">
-                          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${task.state === 'active' ? 'bg-[#06b6d4]' : 'bg-amber-400'}`}></span>
-                          <span className={`relative inline-flex rounded-full h-2 w-2 ${task.state === 'active' ? 'bg-[#06b6d4]' : 'bg-amber-500'}`}></span>
-                        </span>
-                        <span className="text-xs text-gray-400">{task.status}</span>
+              {tasks.length === 0 && agents.length === 0 ? (
+                <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl border border-dashed border-[#1f2937] bg-black/40">
+                  <div className="w-16 h-16 rounded-2xl bg-[#06b6d4]/10 border border-[#06b6d4]/20 flex items-center justify-center mb-6 text-[#06b6d4]">
+                    <Activity className="w-8 h-8 opacity-75" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">No agents deployed yet</h3>
+                  <p className="text-gray-500 text-sm max-w-md mx-auto mb-6">
+                    Activate your first autonomous agent into the Omni-Context system. The swarm awaits your command.
+                  </p>
+                  <button className="text-[#06b6d4] hover:text-[#0891b2] text-sm font-semibold transition-colors">
+                    Initialize your first agent →
+                  </button>
+                </div>
+              ) : tasks.length === 0 && agents.length > 0 ? (
+                <div className="flex flex-col items-center justify-center p-10 text-center rounded-xl bg-black/40 border border-[#1f2937]">
+                   <Info className="w-8 h-8 text-gray-600 mb-3" />
+                   <p className="text-gray-500 text-sm">Agents are deployed but currently idle. No active tasks.</p>
+                </div>
+              ) : tasks.map((task, i) => {
+                const agent = agents.find(a => a.id === task.agent_id);
+                const isActive = task.status && task.status.toLowerCase() !== 'completed' && task.status.toLowerCase() !== 'failed';
+                
+                return (
+                  <motion.div 
+                    key={task.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + (i * 0.1) }}
+                    className="flex flex-col md:flex-row md:items-center justify-between p-5 rounded-xl border border-[#1f2937] bg-black/40 hover:bg-[#1f2937]/30 hover:border-[#06b6d4]/30 transition-all duration-300 group"
+                  >
+                    <div className="flex items-center gap-5">
+                      <div className="w-10 h-10 rounded-lg bg-[#06b6d4]/10 border border-[#06b6d4]/20 flex items-center justify-center text-[#06b6d4] shadow-[0_0_10px_rgba(6,182,212,0.1)]">
+                        <Activity className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-1 group-hover:text-[#06b6d4] transition-colors">
+                          {agent ? agent.name : "Unknown Agent"}
+                        </h3>
+                        <div className="flex items-center gap-2">
+                          {isActive ? (
+                            <span className="relative flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#06b6d4]"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#06b6d4]"></span>
+                            </span>
+                          ) : (
+                            <span className="relative flex h-2 w-2">
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
+                            </span>
+                          )}
+                          <span className="text-xs text-gray-400 capitalize">{task.description}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="text-xs font-mono text-gray-500">
-                    {task.time}
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="mt-4 md:mt-0 flex items-center gap-4">
+                      <span className={`text-xs px-2.5 py-1 rounded-md border ${isActive ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-green-500/10 text-green-400 border-green-500/20'}`}>
+                        {task.status}
+                      </span>
+                      <div className="text-xs font-mono text-gray-500">
+                        {new Date(task.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
