@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Download, CheckCircle2, ChevronRight, Cpu, Package } from "lucide-react";
@@ -24,12 +24,12 @@ function CertifiedBadge() {
 
 // ── List Row ──────────────────────────────────────────────────────────────
 
-function ListRow({ item, type, index }: { item: Item; type: "skills" | "plugins"; index: number }) {
+const ListRow = memo(function ListRow({ item, type, index }: { item: Item; type: "skills" | "plugins"; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: index * 0.04, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{ duration: 0.25, delay: Math.min(index, 15) * 0.02, ease: [0.25, 0.1, 0.25, 1] }}
     >
       <Link
         to={`/ecosystem/${type}/${item.id}`}
@@ -86,7 +86,7 @@ function ListRow({ item, type, index }: { item: Item; type: "skills" | "plugins"
       </Link>
     </motion.div>
   );
-}
+});
 
 // ── Hakkında Tab ──────────────────────────────────────────────────────────
 
@@ -257,14 +257,20 @@ function AboutTab() {
 
 // ── Main Page ─────────────────────────────────────────────────────────────
 
+const PAGE_SIZE = 30;
+
 export default function MustbHub() {
   const [activeTab, setActiveTab] = useState<Tab>("skills");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const items = activeTab === "skills"
+  const allItems = activeTab === "skills"
     ? hubData.skills
     : activeTab === "plugins"
     ? hubData.plugins
     : [];
+
+  const items = allItems.slice(0, visibleCount);
+  const hasMore = visibleCount < allItems.length;
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
@@ -315,7 +321,7 @@ export default function MustbHub() {
           {(["skills", "plugins", "hakkinda"] as Tab[]).map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => { setActiveTab(tab); setVisibleCount(PAGE_SIZE); }}
               className={`relative px-4 py-2.5 rounded-lg text-xs font-semibold uppercase tracking-widest transition-all duration-200 ${
                 activeTab === tab
                   ? "text-white"
@@ -367,6 +373,20 @@ export default function MustbHub() {
               {items.map((item, i) => (
                 <ListRow key={item.id} item={item} type={activeTab as "skills" | "plugins"} index={i} />
               ))}
+
+              {/* Load More */}
+              {hasMore && (
+                <div className="flex justify-center py-6">
+                  <button
+                    onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
+                    className="px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest
+                               border border-white/10 text-white/50 hover:text-white hover:border-cyan-500/40
+                               hover:bg-cyan-500/5 transition-all duration-200"
+                  >
+                    Load More ({allItems.length - visibleCount} remaining)
+                  </button>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

@@ -18,25 +18,20 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [session, setSession] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // 1. Mevcut session'ı kontrol et
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      setLoading(false);
     });
 
     // 2. Auth değişimlerini dinle
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
-
-  if (loading) return <div className="h-screen bg-black flex items-center justify-center text-white">must-b OS Loading...</div>;
 
   return (
     <QueryClientProvider client={queryClient}>

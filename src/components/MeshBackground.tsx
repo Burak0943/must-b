@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 
 // Mobilde daha az parçacık kullanarak işlemciyi kurtarıyoruz
 const IS_MOBILE = typeof window !== "undefined" && window.innerWidth < 768;
-const PARTICLE_COUNT = IS_MOBILE ? 20 : 45; 
+const PARTICLE_COUNT = IS_MOBILE ? 12 : 25;
 
 interface Particle {
   id: number;
@@ -62,7 +62,7 @@ const MeshBackground = () => {
           y: [0, -30, 20, 0],
           scale: [1, 1.1, 0.9, 1],
         }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* Purple blob */}
@@ -74,7 +74,7 @@ const MeshBackground = () => {
           y: [0, 30, -20, 0],
           scale: [1, 0.95, 1.05, 1],
         }}
-        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 38, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* Floating particles */}
