@@ -14,6 +14,7 @@ import MustbHub from "./components/MustbHub";
 import HubDetail from "./pages/HubDetail";
 import DocsPage from "./pages/DocsPage";
 import VectorVault from "./pages/VectorVault";
+import TheBridge from "./pages/TheBridge";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,11 @@ const App = () => {
             <Route 
               path="/vector-vault" 
               element={session ? <VectorVault /> : <Navigate to="/login" replace />} 
+            />
+
+            <Route 
+              path="/the-bridge" 
+              element={session ? <TheBridge /> : <Navigate to="/login" replace />} 
             />
 
             <Route path="/setup" element={session ? <LocalSetup /> : <Navigate to="/login" />} />

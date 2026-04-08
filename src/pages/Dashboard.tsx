@@ -7,7 +7,7 @@ import { supabase } from "../lib/supabase";
 const navItems = [
   { icon: Activity, label: "Overview", href: "/dashboard" },
   { icon: Database, label: "Vector Vault", href: "/vector-vault" },
-  { icon: Cable, label: "The Bridge", href: "#" },
+  { icon: Cable, label: "The Bridge", href: "/the-bridge" },
   { icon: Settings, label: "Settings", href: "#" },
 ];
 
