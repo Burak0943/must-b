@@ -38,7 +38,7 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     content: (
       <>
         <p>
-          Must-b is NOT a standard artificial intelligence assistant. Founded by Mustafa Aytaç ÖZTAN (Main Founder) and Burak (Co-Founder), Must-b is a proprietary, elite, and autonomous <strong>Cognitive Operating System (Cognitive OS)</strong>.
+          Must-b is NOT a standard artificial intelligence assistant. Founded by Mustafa Aytaç ÖZTAN (Co-Founder) and Muhammed Burak CANSU (Co-Founder), Must-b is a proprietary, elite, and autonomous <strong>Cognitive Operating System (Cognitive OS)</strong>.
         </p>
         <p className="mt-4">
           It bridges the gap between digital intent and physical execution, acting as an omnipresent layer over your existing infrastructure.
