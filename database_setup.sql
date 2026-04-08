@@ -57,3 +57,22 @@ CREATE POLICY "Users can update their own tasks"
 CREATE POLICY "Users can delete their own tasks" 
   ON tasks FOR DELETE 
   USING (auth.uid() = user_id);
+
+-- CREATE STORAGE BUCKET FOR VECTOR VAULT
+INSERT INTO storage.buckets (id, name, public) VALUES ('vault_files', 'vault_files', false) ON CONFLICT DO NOTHING;
+
+-- ENABLE RLS ON STORAGE
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+-- CREATE POLICIES FOR VAULT FILES (Sızdırmazlık Kalkanları)
+CREATE POLICY "Users can upload their own vault files" 
+  ON storage.objects FOR INSERT 
+  WITH CHECK (bucket_id = 'vault_files' AND auth.uid() = owner);
+
+CREATE POLICY "Users can view their own vault files" 
+  ON storage.objects FOR SELECT 
+  USING (bucket_id = 'vault_files' AND auth.uid() = owner);
+
+CREATE POLICY "Users can delete their own vault files" 
+  ON storage.objects FOR DELETE 
+  USING (bucket_id = 'vault_files' AND auth.uid() = owner);

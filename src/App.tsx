@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import MustbHub from "./components/MustbHub";
 import HubDetail from "./pages/HubDetail";
 import DocsPage from "./pages/DocsPage";
+import VectorVault from "./pages/VectorVault";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,11 @@ const App = () => {
             <Route 
               path="/dashboard" 
               element={session ? <Dashboard /> : <Navigate to="/login" replace />} 
+            />
+
+            <Route 
+              path="/vector-vault" 
+              element={session ? <VectorVault /> : <Navigate to="/login" replace />} 
             />
 
             <Route path="/setup" element={session ? <LocalSetup /> : <Navigate to="/login" />} />

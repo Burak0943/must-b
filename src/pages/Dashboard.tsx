@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
 const navItems = [
-  { icon: Activity, label: "Overview" },
-  { icon: Database, label: "Vector Vault" },
-  { icon: Cable, label: "The Bridge" },
-  { icon: Settings, label: "Settings" },
+  { icon: Activity, label: "Overview", href: "/dashboard" },
+  { icon: Database, label: "Vector Vault", href: "/vector-vault" },
+  { icon: Cable, label: "The Bridge", href: "#" },
+  { icon: Settings, label: "Settings", href: "#" },
 ];
 
 const Dashboard = () => {
@@ -89,20 +89,26 @@ const Dashboard = () => {
         </div>
 
         <nav className="space-y-2 flex-1">
-          {navItems.map((item) => (
-            <button 
-              key={item.label} 
-              onClick={() => setActiveTab(item.label)} 
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
-                activeTab === item.label 
-                  ? "bg-[#06b6d4]/10 text-[#06b6d4] border border-[#06b6d4]/20 shadow-[0_0_15px_rgba(6,182,212,0.15)]" 
-                  : "text-gray-400 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 hover:border-[#06b6d4]/10 border border-transparent"
-              }`}
-            >
-              <item.icon className="w-4 h-4" /> 
-              {item.label}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = activeTab === item.label || window.location.pathname === item.href;
+            return (
+              <button 
+                key={item.label} 
+                onClick={() => {
+                  if (item.href !== "#" && window.location.pathname !== item.href) navigate(item.href);
+                  else setActiveTab(item.label);
+                }} 
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                  isActive 
+                    ? "bg-[#06b6d4]/10 text-[#06b6d4] border border-[#06b6d4]/20 shadow-[0_0_15px_rgba(6,182,212,0.15)]" 
+                    : "text-gray-400 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 hover:border-[#06b6d4]/10 border border-transparent"
+                }`}
+              >
+                <item.icon className="w-4 h-4" /> 
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
       </aside>
 
