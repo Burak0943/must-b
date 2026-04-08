@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, Shield, Cpu, Terminal, Layers, Globe, Scale } from "lucide-react";
+import { BookOpen, Shield, Cpu, Terminal, Layers, Globe, Scale, Database } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
