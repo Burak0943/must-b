@@ -37,11 +37,35 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     icon: BookOpen,
     content: (
       <>
+        <blockquote className="text-xl italic text-white/50 border-l-2 border-cyan-500/50 pl-4 py-2 mb-8">
+          "Zero latency in thought, absolute sovereignty in execution."
+        </blockquote>
         <p>
-          Must-b is a proprietary, elite, and autonomous <strong>Cognitive Operating System (Cognitive OS)</strong>, founded by Mustafa Aytaç ÖZTAN (Co-Founder) and Muhammed Burak CANSU (Co-Founder). Unlike conventional LLM wrappers or standard AI assistants that operate within sandboxed browser environments, Must-b acts as an omnipresent layer over your entire local and cloud infrastructure.
+          Must-b is a proprietary, elite, and self-hosted <strong>Cognitive Operating System (Cognitive OS)</strong>, architected and founded by Mustafa Aytaç ÖZTAN (Co-Founder) and Muhammed Burak CANSU (Co-Founder). The current landscape of Artificial Intelligence is plagued by fragmented "assistants" trapped within browser tabs, entirely dependent on sandboxed environments and rigid, rate-limited API endpoints. Must-b shatters this paradigm by acting as an omnipresent, bidirectional orchestration layer that directly bridges cloud-based neural synthesis with bare-metal local hardware execution.
         </p>
-        <p className="mt-4">
-          It bridges the gap between digital intent and physical execution. By integrating a multi-tier neural processing pipeline with raw, system-level execution privileges, Must-b fundamentally redefines human-computer interaction. It does not just suggest code; it commands your terminal. It does not just summarize web pages; it physically drives a native browser instance to extract DOM data. Must-b is the ultimate convergence of advanced machine learning and unconstrained systems engineering.
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">What is Must-b?</h3>
+        <p>
+          Must-b is not a chatbot; it is a decentralized orchestration gateway. It runs a highly privileged local daemon on your operating system that listens to secure, cryptographically signed Webhooks (The Bridge) from external channels such as WhatsApp, Discord, or our encrypted Web Control UI. When a natural language command is received, the <strong>Cloud Brain</strong> (powered by state-of-the-art LLMs) synthesizes the intent into deterministic sub-tasks. The <strong>Local Muscle</strong> (via Ghost Mode or Terminal Supremacy) then executes these tasks directly on your machine—compiling source code, manipulating legacy GUI software, managing file systems, or spawning browser instances.
+        </p>
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Who is it for?</h3>
+        <p>
+          This architecture is engineered exclusively for elite developers, enterprise systems architects, and power users who demand a sovereign AI entity capable of autonomous system administration, devoid of third-party API dependencies or data scraping vulnerabilities.
+        </p>
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">The Architectural Blueprint</h3>
+        <p className="mb-4">The system operates on an Asynchronous Event Loop designed for zero-cold start deployments.</p>
+        <div className="p-6 bg-[#0a0a0a] rounded-xl border border-[#1f2937] font-mono text-sm text-cyan-400 overflow-x-auto shadow-[0_0_15px_rgba(6,182,212,0.1)] mb-6 whitespace-pre">
+{`[ External Node: WhatsApp / Discord ] -> (Encrypted E2E Payload)
+                     ⬇
+[ Vercel Edge Webhook ] -> [ Supabase RLS / PostgreSQL Task Queue ]
+                     ⬇
+[ Must-b Cloud Brain (LLM Orchestrator + Vector Vault HNSW Index) ]
+                     ⬇
+[ Local Must-b Daemon (Zero-Latency WebSocket Polling) ]
+                     ⬇
+[ Ghost Mode (Mouse/Key) | Terminal Supremacy (Bash) | API-less Browser (DOM) ]`}
+        </div>
+        <p>
+          The Cloud Brain serves as the immutable single source of truth for global sessions, memory state, and semantic context, while the Local Daemon serves as the physical actuator, bringing thought into reality on your host machine.
         </p>
       </>
     )
@@ -52,15 +76,24 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     content: (
       <>
         <p>
-          Built upon the <strong className="text-cyan-400">"Cloud Brain, Local Muscle"</strong> paradigm, the architecture strictly separates cognitive synthesis from physical execution.
+          The fundamental architecture of Must-b is strictly governed by the <strong className="text-cyan-400">"Cloud Brain, Local Muscle"</strong> paradigm. This design philosophy isolates heavy cognitive synthesis from raw physical execution, optimizing for both computational efficiency and absolute data sovereignty.
         </p>
-        <ol className="mt-5 list-decimal list-inside space-y-4 text-white/80 ml-2">
-          <li><strong>Cloud Brain:</strong> Complex reasoning, token processing, and Omni-Context memory retrieval are handled via secure, encrypted channels to state-of-the-art LLMs. This ensures zero load on local hardware for cognitive tasks.</li>
-          <li><strong>Local Muscle:</strong> Action execution (mouse events, keystrokes, process management, DOM manipulation) occurs strictly locally on the host machine.</li>
-        </ol>
-        <p className="mt-5">
-          This hybrid architecture guarantees Zero-Latency in physical execution while maintaining absolute data sovereignty. The cognitive engine "thinks" globally but "acts" locally, ensuring that sensitive environment variables and root directories never leave your local machine without explicit cryptographic authorization.
+        
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">1. The Cloud Brain (Cognitive Offloading)</h3>
+        <p>
+          Complex reasoning, multi-step execution planning, high-dimensional token processing, and Omni-Context memory retrieval are entirely offloaded to our secure cloud infrastructure. By leveraging advanced LLM orchestration via Vercel Edge functions, we ensure zero computational drag (CPU/GPU monopolization) on your local hardware. The cognitive engine "thinks" globally, evaluating millions of parameters in milliseconds.
         </p>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">2. The Local Muscle (Sovereign Execution)</h3>
+        <p>
+          The actual physical manifestation of tasks—hardware-level mouse event simulation via Win32/Quartz APIs, keystroke injection, binary execution, background process management, and local file system mutations—occurs strictly on the host machine via the Must-b Daemon.
+        </p>
+
+        <div className="mt-6 p-4 rounded-xl bg-cyan-950/20 border-l-4 border-cyan-500">
+          <p>
+            <strong className="text-white">The Security Air-Gap:</strong> Most critically, this hybrid architecture guarantees that sensitive local environment variables (<code>.env</code> files), proprietary source code directories, and system-level authentication tokens never leave the physical boundaries of your machine without explicit cryptographic authorization. Must-b acts as an impenetrable air-gap, translating high-level cloud directives into secure, low-level OS API calls locally.
+          </p>
+        </div>
       </>
     )
   },
@@ -70,11 +103,11 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     content: (
       <>
         <p>
-          Must-b is engineered to be OS-agnostic (Windows, macOS, Linux). The only requirement to tether your machine to the Cognitive OS is Node.js infrastructure.
+          Deploying the Must-b Cognitive OS daemon to your local environment requires establishing a secure, authenticated telemetry link to the Must-b core registry.
         </p>
-        <ul className="mt-4 list-disc list-inside space-y-2 text-white/70">
-          <li>Requirement: <strong>Node.js v20.x or higher.</strong></li>
-        </ul>
+        <p className="mt-4">
+          Ensure <strong>Node.js (v20.x LTS or higher)</strong> is installed to provide the necessary V8 JavaScript engine runtime. This is the only rigid environmental requirement to bridge your local system with the Orchestrator Engine.
+        </p>
       </>
     )
   },
@@ -83,15 +116,49 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     icon: Globe,
     content: (
       <>
+        <h3 className="text-xl font-semibold text-white mb-4">1. Provisioning the Local Muscle</h3>
         <p>
-          Deploying the Must-b Cognitive OS daemon to your local environment establishes a secure, bidirectional telemetry link to the Must-b core registry. Ensure Node.js (v20.x+) is installed, then execute the global installation via npm:
+          Execute the global installation via your native package manager:
         </p>
-        <div className="mt-6 p-4 rounded-xl bg-black border border-white/10 font-mono text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] select-all">
-          npm install -g @must-b/must-b
+        <div className="mt-4 p-4 rounded-xl bg-black border border-white/10 font-mono text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] select-all mb-4">
+          npm install -g @must-b/must-b@latest
         </div>
-        <p className="mt-6 text-sm text-white/40 italic">
-          *(Note for Unix-based systems: Global execution privileges are mandatory. Prepend 'sudo' to grant the daemon the necessary root access to hook into local OS processes).*
+        <p className="text-sm text-white/40 italic">
+          *(Note for Unix-based architectures: Global execution privileges are mandatory for terminal supremacy. Prepend <code>sudo</code> to grant the daemon the necessary root-level access required to hook into local OS processes).*
         </p>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">2. Core Configuration (must-b.json)</h3>
+        <p>
+          Granular control over the Cognitive OS is managed locally via <code>~/.must-b/must-b.json</code>. This JSON schema defines the physical boundaries of your local agent.
+        </p>
+        <div className="mt-4 p-4 rounded-xl bg-[#0a0a0a] border border-[#1f2937] overflow-x-auto">
+          <pre><code className="text-sm text-[#ce9178]">{`{
+  "system": {
+    "orchestrator_model": "gpt-4o",
+    "memory_indexing": "hnsw-local-1536d",
+    "cloud_sync_telemetry": true
+  },
+  "capabilities": {
+    "ghostMode": {
+      "enabled": true,
+      "maxMouseSpeedMultipler": 1.4,
+      "bezierSmoothingAlgorithms": true,
+      "hardwareAcceleration": true
+    },
+    "terminalSupremacy": {
+      "allowRootSudoCommands": false,
+      "autoDebugHealingLoop": true,
+      "maxRecursionDepth": 5
+    }
+  },
+  "bridge": {
+    "whatsapp_webhook": {
+      "endToEndEncryption": true,
+      "allowListPattern": ["+1555*"]
+    }
+  }
+}`}</code></pre>
+        </div>
       </>
     )
   },
@@ -100,15 +167,19 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     icon: Cpu,
     content: (
       <>
+        <h3 className="text-xl font-semibold text-white mb-4">Initialization and Cyber Fortress Pairing</h3>
         <p>
-          Once the local muscle is installed, initialize the Zero-Cold Start sequence by simply typing:
+          Once installed, initialize the Zero-Cold Start sequence. This protocol generates cryptographic session keys, binds to your hardware abstraction layer, and pairs with your Supabase database.
         </p>
-        <div className="mt-6 p-4 rounded-xl bg-black border border-white/10 font-mono text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] select-all">
-          must-b
+        <div className="mt-4 p-4 rounded-xl bg-black border border-white/10 font-mono text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] select-all mb-4">
+          must-b onboard --install-daemon --enable-ghost-mode
         </div>
-        <p className="mt-6">
-          The Cognitive OS will autonomously provision its environment, bind to your system, and redirect you to the Command Center (Dashboard).
-        </p>
+        <p className="mt-6 mb-2 font-semibold">Expected Terminal Output:</p>
+        <div className="p-4 rounded-xl bg-[#0a0a0a] border border-[#1f2937] font-mono text-xs text-white/70 overflow-x-auto whitespace-pre">
+{`[SUCCESS] Daemon installed to system registry.
+[SUCCESS] Ghost Mode enabled (Win32/Quartz bindings active).
+[SUCCESS] Handshake with Supabase RLS verified. Waiting for payload...`}
+        </div>
       </>
     )
   },
@@ -118,13 +189,25 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     content: (
       <>
         <p>
-          <strong className="text-cyan-400">Ghost Mode</strong> represents our pinnacle physical intervention layer. When engaged, Must-b transcends digital APIs and interacts with the host OS at the hardware abstraction layer.
+          <strong className="text-cyan-400">Ghost Mode</strong> represents the absolute pinnacle of our physical intervention layer, distinguishing Must-b from any existing software automation tool on the market. When engaged, Must-b transcends digital REST API limitations and interacts directly with the host operating system at the Hardware Abstraction Layer (HAL).
         </p>
-        <ul className="mt-5 list-none space-y-4 text-white/80">
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Execution Mechanics:</strong> On Windows, it hooks into the Win32 API; on macOS, the Quartz Event Services; and on Linux, the X11/Wayland protocols.</li>
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Autonomous Navigation:</strong> It utilizes advanced computer vision and visual DOM rendering to calculate precise X/Y coordinates on your screen. It injects synthetic hardware-level mouse movements, clicks, and keystrokes.</li>
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Legacy System Mastery:</strong> Ghost Mode allows Must-b to operate outdated, proprietary enterprise software (ERP, SAP) that lacks modern APIs, acting as a digital employee working tirelessly in the background while your primary workspace remains uninterrupted.</li>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Deep Execution Mechanics & OS Hooking</h3>
+        <ul className="list-disc pl-5 space-y-3 mt-4 text-white/80">
+          <li><strong>Windows (NT Kernel):</strong> Must-b interfaces directly with the raw Win32 API (User32.dll and GDI32.dll) to dispatch synthetic input events directly into the message queue of target windows, bypassing higher-level application sandboxes.</li>
+          <li><strong>macOS (Darwin):</strong> Hooks into low-level Quartz Event Services and CoreGraphics frameworks, allowing the daemon to inject HID (Human Interface Device) payloads seamlessly.</li>
+          <li><strong>Linux (Unix-like):</strong> Manipulates X11 display server protocols or Wayland compositors via direct socket communication.</li>
         </ul>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Neuromotor Trajectory Simulation</h3>
+        <p>
+          To bypass advanced heuristic anti-bot detection systems (like Cloudflare Turnstile or Akamai Bot Manager), mouse trajectories are not calculated as linear A-to-B jumps. Must-b dynamically generates complex Bezier curves, perfectly mimicking human neuromotor delays, acceleration/deceleration physics, and micro-jitter during click-hold durations.
+        </p>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Legacy GUI Manipulation</h3>
+        <p>
+          Ghost Mode empowers Must-b to autonomously operate outdated, proprietary enterprise software (e.g., legacy ERPs, customized SAP modules) that lack modern APIs. It utilizes real-time visual DOM rendering and OCR to calculate precise X/Y pixel coordinates on your physical display, acting as a tireless digital operator working in the background.
+        </p>
       </>
     )
   },
@@ -134,13 +217,28 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     content: (
       <>
         <p>
-          Traditional AI models fail when confronted with rate limits, CORS policies, or undocumented APIs. Must-b implements <strong className="text-cyan-400">'API-less Native Browsing'</strong> to bypass these limitations natively.
+          Traditional AI models and scraping scripts inevitably fail when confronted with aggressive rate limits, strict CORS policies, and dynamically rendered Single-Page Applications (SPAs). Must-b implements an aggressive <strong className="text-cyan-400">'API-less Native Browsing'</strong> protocol to natively circumvent these artificial limitations.
         </p>
-        <ul className="mt-5 list-none space-y-4 text-white/80">
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Headless Chromium Spawning:</strong> Must-b autonomously spawns an isolated, stealth-patched Chromium instance directly on your machine.</li>
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">DOM & AST Parsing:</strong> It navigates to the target, executes necessary JavaScript, bypasses CAPTCHAs using behavioral humanization algorithms, and constructs a visual layout tree.</li>
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Extraction & Synthesis:</strong> Instead of parsing raw HTML strings, it reads the rendered DOM, extracts the exact semantic data required, and synthesizes it into structured JSON or Markdown, leaving no server-side footprint.</li>
-        </ul>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">The Stealth Extraction Pipeline</h3>
+        <div className="space-y-6 mt-4">
+          <div className="border-l-2 border-cyan-500/30 pl-4">
+            <h4 className="text-lg font-semibold text-white">Headless Chromium Spawning</h4>
+            <p className="mt-2 text-white/80">Rather than executing HTTP GET requests, Must-b autonomously spawns an isolated, stealth-patched Chromium instance directly on your local machine via the Chrome DevTools Protocol (CDP).</p>
+          </div>
+          <div className="border-l-2 border-cyan-500/30 pl-4">
+            <h4 className="text-lg font-semibold text-white">Deterministic Fingerprint Masking</h4>
+            <p className="mt-2 text-white/80">The engine dynamically strips out predictable browser fingerprints, randomizes User-Agent strings, and masks <code>navigator.webdriver</code> flags to appear entirely as legitimate, organic human traffic.</p>
+          </div>
+          <div className="border-l-2 border-cyan-500/30 pl-4">
+            <h4 className="text-lg font-semibold text-white">Deep DOM & AST Parsing</h4>
+            <p className="mt-2 text-white/80">Must-b navigates to the target, executes necessary client-side JavaScript, patiently waits for asynchronous network requests (XHR/Fetch) to resolve, and constructs a complete visual layout tree.</p>
+          </div>
+          <div className="border-l-2 border-cyan-500/30 pl-4">
+            <h4 className="text-lg font-semibold text-white">Contextual Synthesis</h4>
+            <p className="mt-2 text-white/80">Instead of blindly parsing raw HTML strings via regex, the system traverses the rendered DOM (piercing through Shadow DOM boundaries), extracts the exact semantic data required based on cognitive intent, and synthesizes it into perfectly structured JSON arrays. Zero server-side footprint is left behind.</p>
+          </div>
+        </div>
       </>
     )
   },
@@ -150,13 +248,21 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     content: (
       <>
         <p>
-          Must-b possesses native terminal supremacy. The command line is its primary interface for system-level orchestration.
+          Must-b possesses absolute, <strong className="text-cyan-400">native terminal supremacy</strong>. The command-line interface is not merely a tool; it is the Cognitive OS's primary domain for system-level orchestration.
         </p>
-        <ul className="mt-5 list-none space-y-4 text-white/80">
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Process Management:</strong> It can spawn, kill, and monitor background processes, tail log files in real-time, and dynamically allocate system resources.</li>
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Auto-Debugging Loop:</strong> When an error is encountered during code compilation, Must-b captures the stderr output, feeds it back into its cognitive loop, synthesizes a patch, and re-executes the command. This asynchronous event loop continues until a zero-exit code is achieved.</li>
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Sandbox Escape:</strong> Must-b operates with the permissions of the host user, enabling root-level synchronization, file system restructuring, and environment variable manipulation.</li>
-        </ul>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Advanced Process Management</h3>
+        <p>
+          The local daemon retains the capability to spawn detached background processes, aggressively terminate zombie tasks via PID isolation, monitor system resource allocation (CPU/RAM heap telemetry) in real-time, and dynamically pipe standard input/output streams (stdin/stdout) between disparate system applications.
+        </p>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">The Auto-Debugging Healing Loop</h3>
+        <p>
+          When a fatal error is encountered during complex operations (e.g., compiling a Next.js application or building a Docker container image), Must-b traps the standard error output (stderr) and non-zero exit codes. Instead of halting execution, it feeds this error stack trace back into its cognitive reasoning loop. 
+        </p>
+        <p className="mt-3">
+          The Cloud Brain synthesizes an Abstract Syntax Tree (AST) structural patch, modifies the relevant source files via local File System APIs, and recursively re-executes the command. This deeply integrated, asynchronous auto-healing event loop continues until a zero-exit code is definitively achieved.
+        </p>
       </>
     )
   },
@@ -166,12 +272,29 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     content: (
       <>
         <p>
-          Data sovereignty is the bedrock of the Must-b ecosystem. All telemetry, local cache, and user interactions are encapsulated within our <strong className="text-cyan-400">Cyber Fortress</strong> architecture.
+          Data sovereignty and cryptographic isolation form the uncompromising bedrock of the <strong className="text-cyan-400">Must-b ecosystem</strong>.
         </p>
-        <ul className="mt-5 list-none space-y-4 text-white/80">
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Supabase RLS:</strong> Cloud-synchronized data (such as Task Delegation logs) is secured via strict Row Level Security (RLS) policies. Authentication tokens are verified at the edge, ensuring <code>auth.uid()</code> compliance for every single database transaction.</li>
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Zero-Trust Execution:</strong> The Webhook and API endpoints are fortified with token verification, preventing replay attacks and unauthorized payload injections from external nodes.</li>
-        </ul>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Supabase Row Level Security (RLS) Implementation</h3>
+        <p className="mb-4">
+          Cloud-synchronized operational data, such as Live Task Delegation logs, Agent state management, and Vector Vault payloads, is secured via draconian Row Level Security (RLS) policies within our PostgreSQL infrastructure.
+        </p>
+        <div className="p-4 rounded-xl bg-[#0a0a0a] border border-[#1f2937] overflow-x-auto mb-4">
+          <pre><code className="text-sm font-mono text-blue-400">{`-- Core Security Policy for Sovereign Agent Execution
+ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Strict Isolation: Users can only mutate their own nodes" 
+ON agents FOR ALL 
+USING (auth.uid() = user_id) 
+WITH CHECK (auth.uid() = user_id);`}</code></pre>
+        </div>
+        <p>
+          Authentication JWT tokens are cryptographically verified at the edge. A user can mathematically only access, read, or modify data that is cryptographically bound to their specific session identifier.
+        </p>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Zero-Trust Webhook Execution</h3>
+        <p>
+          The Bridge endpoints connecting the Local Muscle to external channels (WhatsApp/Discord) are fortified with stringent token verification mechanisms (e.g., Meta's verify_token challenge). We utilize HMAC signatures and payload validation to prevent replay attacks, man-in-the-middle (MITM) interception, and unauthorized arbitrary code execution from malicious external nodes.
+        </p>
       </>
     )
   },
@@ -181,12 +304,18 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     content: (
       <>
         <p>
-          Traditional AIs suffer from context amnesia. Must-b leverages an <strong className="text-cyan-400">Omni-Context Memory</strong> architecture, divided into Short-Term (Session) and Long-Term (Vector) Memory.
+          Traditional AI instances suffer from severe context amnesia, "forgetting" instructions as the conversation token window expands. Must-b circumvents this by leveraging a state-of-the-art <strong className="text-cyan-400">Omni-Context Memory</strong> architecture.
         </p>
-        <ul className="mt-5 list-none space-y-4 text-white/80">
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Semantic Chunking:</strong> Documents uploaded to the Vector Vault are not stored as static files. They are semantically chunked, vectorized using advanced embedding models, and indexed locally.</li>
-          <li className="pl-4 border-l border-cyan-500/30"><strong className="text-white">Orchestrator Retrieval:</strong> When a complex task is initiated, the Orchestrator Engine queries this vector database with zero latency, retrieving only the exact fragments of knowledge required for the current execution context, allowing Must-b to manage codebases spanning millions of lines without hallucination.</li>
-        </ul>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Hierarchical Semantic Chunking & Vectorization</h3>
+        <p>
+          Proprietary documents, PDFs, and raw codebases uploaded to the Vector Vault are systematically ingested and subjected to Recursive Character Text Splitting. These semantic chunks are vectorized into high-dimensional space (1536 dimensions) using advanced embedding models.
+        </p>
+
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">HNSW Local Indexing & Zero-Latency Retrieval</h3>
+        <p>
+          These vectors are indexed locally using HNSW (Hierarchical Navigable Small World) algorithms for hyper-fast nearest-neighbor search. When a complex autonomous task is initiated by the Orchestrator Engine, it queries this vector database with near-zero latency, calculating cosine similarity thresholds. It retrieves only the exact, semantically relevant fragments of knowledge required for the current execution context, allowing Must-b to seamlessly modify enterprise codebases spanning millions of lines without hallucination.
+        </p>
       </>
     )
   },
@@ -222,11 +351,19 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     title: "Proprietary License",
     icon: Scale,
     content: (
-      <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-white/80">
-        <p className="font-bold text-white mb-2 tracking-widest uppercase text-sm">Strictly Closed Source</p>
-        <p className="mb-4">Copyright (c) 2026 Mustafa Aytaç ÖZTAN & Muhammed Burak CANSU. All rights reserved.</p>
-        <p className="text-xs leading-relaxed opacity-60">
-          PROPRIETARY AND CLOSED SOURCE. Unauthorized copying, distribution, reverse engineering, or modification of this software is strictly prohibited and subject to legal prosecution.
+      <div className="p-8 rounded-2xl bg-white/5 border border-red-500/20 text-white/80 shadow-[0_0_30px_rgba(239,68,68,0.05)] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[50px] pointer-events-none"></div>
+        <p className="font-black text-red-500 mb-4 tracking-widest uppercase text-lg border-b border-red-500/20 pb-4">
+          Strictly Closed Source And Proprietary
+        </p>
+        <p className="mb-6 font-semibold text-white">
+          Copyright (c) 2026 Mustafa Aytaç ÖZTAN (Co-Founder) & Muhammed Burak CANSU (Co-Founder). All rights reserved worldwide.
+        </p>
+        <p className="text-sm leading-relaxed opacity-80 mb-4">
+          Must-b Cognitive OS is classified as PROPRIETARY AND CLOSED SOURCE software. The intellectual property, bridging algorithms, neuromotor simulation logic, and cloud-to-local telemetry infrastructure contained within this architecture represent significant proprietary engineering.
+        </p>
+        <p className="text-sm leading-relaxed opacity-80">
+          Unauthorized copying, distribution, decompilation, reverse engineering, unauthorized API bridging, or modification of any part of this software—whether in source or compiled binary form—is strictly prohibited. Violations of this proprietary license will be met with immediate and decisive legal prosecution under international intellectual property law.
         </p>
       </div>
     )
