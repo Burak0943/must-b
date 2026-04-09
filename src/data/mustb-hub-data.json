@@ -6,91 +6,93 @@
   "skills": [
     {
       "id": 1,
-      "name": "Must-b Stripe Billing Agent",
-      "version": "v3.1.0",
-      "summary": "Stripe payment events'ı dinler, fatura oluşturur, abonelik geçişlerini ve churn riskini otomatik yönetir.",
+      "name": "👻 GHOST-OPERATOR (Physical Interface Control)",
+      "version": "v1.0.0",
+      "summary": "Sınırları Aşan Fiziksel Otonomi. (Physical Autonomy Beyond Digital Limits.)",
       "author": "@must-b_core",
-      "stars": "15.2k",
-      "downloads": "600k",
+      "stars": "99.9k",
+      "downloads": "5.5m",
       "os": [
+        "Windows",
         "Linux",
-        "macOS",
-        "Windows"
+        "macOS"
       ],
       "is_certified": true,
-      "readme": "## Must-b Stripe Billing Agent\n\nBu skill, Stripe Billing API'yi Must-b ajan çerçevesine tam entegre eder. Ajan, Stripe webhook event'larını (invoice.payment_failed, customer.subscription.updated vb.) gerçek zamanlı olarak dinler ve iş kurallarınıza göre otomatik aksiyon alır.\n\n### Özellikler\n- **Webhook İmzalama**: Tüm Stripe webhook'ları `stripe-signature` header'ı ile doğrulanır.\n- **Otomatik Retry**: Başarısız ödemeler için exponential backoff ile 3 deneme yapılır.\n- **Churn Tahmini**: Son 30 günlük ödeme geçmişine dayanarak churn riski skorlar.\n- **Dashboard**: Stripe Dashboard'a yazılabilir metadata ile zenginleştirilmiş müşteri profilleri.\n\n### Desteklenen Stripe API'ler\n- `stripe.customers.*`\n- `stripe.subscriptions.*`\n- `stripe.invoices.*`\n- `stripe.webhooks.*`\n\n### Gereksinimler\n- Stripe API Key (Secret Key)\n- Webhook Endpoint URL (public)\n- Node.js 18+",
-      "integration_guide": "### Stripe Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nStripe Dashboard → Developers → API Keys → Secret Key'i kopyalayın.\nMust-b agent config'e ekleyin:\n```json\n{ \"STRIPE_SECRET_KEY\": \"sk_live_...\" }\n```\n\n**Adım 2 — Webhook Endpoint**\nStripe Dashboard → Webhooks → Add Endpoint:\n- URL: `https://your-domain.com/webhooks/stripe`\n- Events: `invoice.*`, `customer.subscription.*`\n- Signing Secret'ı `STRIPE_WEBHOOK_SECRET` olarak kaydedin.\n\n**Adım 3 — Aktivasyon**\nMust-b skill registry'den yükleyin ve gateway'i yeniden başlatın. Ajan otomatik olarak Stripe event'larını işlemeye başlar.",
-      "download_url": "/downloads/skill-1.zip"
+      "readme": "## Under the Hood (Nasıl Çalışır)\n\nGeleneksel yapay zeka asistanları API'lere mahkumdur; Must-b ise \"Local Muscle\" (Yerel Kas Gücü) mimarisiyle fiziksel donanıma hükmeder. Ghost-Operator, işletim sisteminizin Donanım Soyutlama Katmanı'na (HAL) doğrudan kanca (hook) atar. Gelişmiş bilgisayar görüşü (Computer Vision) kullanarak ekrandaki pikselleri analiz eder, X/Y koordinatlarını hesaplar ve dinamik Bezier eğrileriyle kusursuz insan hareketleri simüle eder. API desteği olmayan on yıllık legacy kurumsal yazılımları (SAP, eski ERP'ler) bile, tıpkı sizin gibi faresini oynatarak ve klavyesini kullanarak otonom şekilde yönetir.\n\n## Core Capabilities (Temel Yetenekler)\n\n- **Hardware-Level Injection**: İşletim sistemi çekirdeğine doğrudan sentetik fare ve klavye girdisi sağlama.\n- **Legacy System Mastery**: Hiçbir API veya entegrasyon gerektirmeden kapalı kutu yazılımları görsel olarak kullanabilme.\n- **Neuromotor Humanization**: Anti-bot sistemlerini atlatmak için insan reflekslerini ve mikro-titreşimleri (micro-jitter) taklit eden algoritmalar.",
+      "integration_guide": "### Initialization Sequence\n`Ghost-Operator module online. Awaiting physical manifestation...`",
+      "download_url": "/downloads/ghost-operator.zip"
     },
     {
       "id": 2,
-      "name": "Must-b AWS Infrastructure Deployer",
-      "version": "v2.4.0",
-      "summary": "EC2, S3, RDS ve Lambda kaynaklarını Terraform ve AWS CDK üzerinden ajan kontrolüyle provision eder.",
+      "name": "🕸️ NATIVE-SCOUT (API-less Autonomous Browser)",
+      "version": "v1.0.0",
+      "summary": "Web'in Doğal Avcısı. (The Apex Predator of the Web.)",
       "author": "@must-b_core",
-      "stars": "22k",
-      "downloads": "1.1m",
+      "stars": "88.5k",
+      "downloads": "3.2m",
       "os": [
+        "Windows",
         "Linux",
         "macOS"
       ],
       "is_certified": true,
-      "readme": "## Must-b AWS Infrastructure Deployer\n\nAWS kaynaklarını doğal dil komutları ile provision eden, güncelleyen ve teardown eden bir Must-b skill. Terraform state dosyaları S3 backend'de saklanır; ajan her deploy öncesi drift detection uygular.\n\n### Özellikler\n- **Multi-Region Deployment**: us-east-1, eu-west-1, ap-southeast-1 bölgelerinde paralel deployment\n- **Cost Estimation**: Deploy öncesi AWS Pricing API üzerinden maliyet tahmini\n- **Drift Detection**: Mevcut AWS state ile Terraform state karşılaştırması\n- **Rollback**: Başarısız deploy'larda otomatik rollback\n\n### Desteklenen AWS Servisleri\n- EC2 (t3, m5, c6g serisi)\n- S3 (versioning, lifecycle, replication)\n- RDS (PostgreSQL 15, MySQL 8)\n- Lambda (Node.js 20, Python 3.12)\n- VPC, Security Groups, IAM Roles\n\n### Gereksinimler\n- AWS Access Key ID + Secret Access Key\n- Terraform 1.6+\n- AWS CLI v2",
-      "integration_guide": "### AWS Entegrasyon Kılavuzu\n\n**Adım 1 — IAM Kullanıcısı**\nAWS Console → IAM → Users → Create User.\nPolicy olarak `PowerUserAccess` veya özel bir least-privilege policy ekleyin.\nAccess Key oluşturun.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"AWS_ACCESS_KEY_ID\": \"AKIA...\",\n  \"AWS_SECRET_ACCESS_KEY\": \"...\",\n  \"AWS_DEFAULT_REGION\": \"eu-west-1\"\n}\n```\n\n**Adım 3 — Terraform Backend**\nS3 bucket oluşturun (örn: `mustb-tfstate-prod`) ve DynamoDB tablosu ile state locking aktif edin.\n\n**Adım 4 — İlk Deploy**\nAgana `Deploy a t3.medium EC2 on eu-west-1 with Ubuntu 22.04` yazın. Ajan Terraform planını çalıştırır, onayınızı bekler ve uygular.",
-      "download_url": "/downloads/skill-2.zip"
+      "readme": "## Under the Hood (Nasıl Çalışır)\n\nDış API'lere, webhook limitlerine veya kısıtlayıcı CORS politikalarına boyun eğmez. Native-Scout yeteneği tetiklendiğinde, Must-b makinenizde izole ve hayalet bir Chromium oturumu başlatır. Hedef web sitesine kendi başına gider, dinamik JavaScript/SPA mimarilerini bir insan gibi render eder ve bekler. Captcha'ları otonom karar mekanizmalarıyla atlar ve hedef veriyi doğrudan DOM (Document Object Model) ağacından söküp alır. Veriler hiçbir bulut sunucusuna sızmadan, doğrudan Siber Kale'nizde (Cyber Fortress) şifrelenir.\n\n## Core Capabilities (Temel Yetenekler)\n\n- **Zero-Footprint Extraction**: Sunucu tarafında hiçbir kazıma (scraping) izi veya bot logu bırakmayan hayalet tarayıcı.\n- **Dynamic DOM Traversal**: Karmaşık Shadow DOM ağaçlarına sızma ve semantik veri sentezi.\n- **Absolute Evasion**: Cloudflare ve Akamai gibi katı anti-bot güvenlik duvarlarını otonom davranışlarla aşma.",
+      "integration_guide": "### Initialization Sequence\n`Native-Scout module online. Awaiting target URLs...`",
+      "download_url": "/downloads/native-scout.zip"
     },
     {
       "id": 3,
-      "name": "Must-b OpenAI Orchestrator",
-      "version": "v4.0.0",
-      "summary": "GPT-4o, GPT-4o-mini ve Embeddings API'yi Must-b swarm içinde orkestre eder. Token optimizasyonu ve fallback yönetimi dahil.",
+      "name": "💻 DEVOPS-CORE (Terminal & System Orchestration)",
+      "version": "v1.0.0",
+      "summary": "Sistemin Mutlak Hakimi. (Absolute Sovereign of the Local Environment.)",
       "author": "@must-b_core",
-      "stars": "35k",
-      "downloads": "2.2m",
+      "stars": "105k",
+      "downloads": "8.1m",
       "os": [
-        "Linux",
-        "macOS",
-        "Windows"
-      ],
-      "is_certified": true,
-      "readme": "## Must-b OpenAI Orchestrator\n\nMust-b'nin birincil LLM köprüsü. OpenAI API'nin tüm endpoint'lerini Must-b ajan pipeline'ına entegre eder. Akıllı model seçimi, token yönetimi ve multi-turn konuşma hafızası içerir.\n\n### Özellikler\n- **Akıllı Model Seçimi**: Görev karmaşıklığına göre GPT-4o vs GPT-4o-mini otomatik seçimi\n- **Token Optimizasyonu**: Konteks penceresini aşan konuşmalar için akıllı summarization\n- **Rate Limit Yönetimi**: Otomatik retry ve exponential backoff\n- **Streaming**: Real-time token streaming desteği\n- **Embeddings**: text-embedding-3-large ile semantic search\n\n### Desteklenen Modeller\n- gpt-4o, gpt-4o-mini\n- gpt-4-turbo\n- text-embedding-3-large, text-embedding-3-small\n- dall-e-3 (görsel görevler için)\n\n### Gereksinimler\n- OpenAI API Key\n- Organization ID (isteğe bağlı)",
-      "integration_guide": "### OpenAI Entegrasyon Kılavuzu\n\n**Adım 1 — API Anahtarı**\nOpenAI Platform → API Keys → Create new secret key.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"OPENAI_API_KEY\": \"sk-proj-...\",\n  \"OPENAI_ORG_ID\": \"org-...\",\n  \"OPENAI_DEFAULT_MODEL\": \"gpt-4o\"\n}\n```\n\n**Adım 3 — Token Bütçesi**\nConfig'e aylık token limiti ekleyin. Ajan, bu limiti aşmamak için otomatik model degradation uygular:\n```json\n{ \"OPENAI_MONTHLY_TOKEN_BUDGET\": 5000000 }\n```",
-      "download_url": "/downloads/skill-3.zip"
-    },
-    {
-      "id": 4,
-      "name": "Must-b Datadog Observability",
-      "version": "v2.1.0",
-      "summary": "Ajan metriklerini, loglarını ve trace'lerini Datadog'a gönderir. APM ve anomaly detection dahil.",
-      "author": "@must-b_core",
-      "stars": "9.4k",
-      "downloads": "310k",
-      "os": [
-        "Linux",
-        "macOS",
-        "Windows"
-      ],
-      "is_certified": true,
-      "readme": "## Must-b Datadog Observability\n\nMust-b ajanlarının tüm operasyonel metriklerini, yapılandırılmış loglarını ve dağıtık trace'lerini Datadog platformuna aktarır.\n\n### Özellikler\n- **Custom Metrics**: Ajan başarı oranı, görev süreleri, tool call sayıları\n- **Structured Logging**: JSON formatında log shipper (loglar Datadog Log Management'a akar)\n- **APM Tracing**: Her ajan görevini Datadog APM span olarak raporlar\n- **Anomaly Detection**: Hata oranı spike'larında otomatik Datadog Monitor tetiklenebilir\n- **Dashboard Template**: Hazır Must-b Datadog dashboard JSON'u dahil\n\n### Metrik Listesi\n- `mustb.task.duration_ms` (histogram)\n- `mustb.task.success_rate` (gauge)\n- `mustb.llm.token_usage` (counter)\n- `mustb.tool.call_count` (counter)",
-      "integration_guide": "### Datadog Entegrasyon Kılavuzu\n\n**Adım 1 — API & App Key**\nDatadog → Organization Settings → API Keys → New Key.\nApp Key için: Organization Settings → Application Keys.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"DATADOG_API_KEY\": \"...\",\n  \"DATADOG_APP_KEY\": \"...\",\n  \"DATADOG_SITE\": \"datadoghq.eu\"\n}\n```\n\n**Adım 3 — Dashboard Import**\nDatadog → Dashboards → New Dashboard → Import JSON. Skill paketindeki `mustb-datadog-dashboard.json` dosyasını yükleyin.\n\n**Adım 4 — Monitor Kurulumu**\nDatadog Monitors → New Monitor → Metric. `mustb.task.success_rate < 0.95` alertini `@your-team` kanalına bağlayın.",
-      "download_url": "/downloads/skill-4.zip"
-    },
-    {
-      "id": 5,
-      "name": "Must-b GitHub Repo Autopilot",
-      "version": "v1.9.0",
-      "summary": "Repoları klonlar, kod yapısını analiz eder, PR açar, unit testleri tamamlar ve CI/CD pipeline'larını yönetir.",
-      "author": "@must-b_core",
-      "stars": "18k",
-      "downloads": "890k",
-      "os": [
+        "Windows",
         "Linux",
         "macOS"
       ],
       "is_certified": true,
-      "readme": "## Must-b GitHub Repo Autopilot\n\nGitHub API ve git CLI üzerinden tam otonom repo yönetimi.\n\n### Özellikler\n- **Code Review**: PR diff'lerini analiz eder, test coverage raporlar\n- **Auto-PR**: Verilen göreve göre feature branch açar, kod yazar, PR oluşturur\n- **CI Status Monitoring**: GitHub Actions workflow sonuçlarını takip eder\n- **Issue Triaging**: Issue'ları önceliklendirir ve milestone'lara atar\n- **Dependency Audit**: `npm audit` ve `dependabot` çıktılarını işler\n\n### Gereksinimler\n- GitHub Personal Access Token (repo + workflow scopes)\n- Git 2.40+",
-      "integration_guide": "### GitHub Entegrasyon Kılavuzu\n\n**Adım 1 — PAT Oluşturma**\nGitHub → Settings → Developer Settings → Personal Access Tokens → Fine-grained tokens.\nGerekli izinler: `Contents (RW)`, `Pull Requests (RW)`, `Issues (RW)`, `Actions (R)`.\n\n**Adım 2 — Must-b Config**\n```json\n{\n  \"GITHUB_TOKEN\": \"github_pat_...\",\n  \"GITHUB_DEFAULT_ORG\": \"your-org\"\n}\n```\n\n**Adım 3 — Webhook (Opsiyonel)**\nRepo → Settings → Webhooks → Add webhook. `https://your-mustb-gateway/gh-events` adresine `push`, `pull_request`, `issues` event'larını yönlendirin.",
-      "download_url": "/downloads/skill-5.zip"
+      "readme": "## Under the Hood (Nasıl Çalışır)\n\nMust-b sadece kod önermez; o kodu yazar, derler ve çalıştırır. DevOps-Core eklentisi, Cognitive OS'in komut satırındaki mutlak otoritesidir. Sistem hata verdiğinde durmaz; standart hata (stderr) loglarını okur, eksik NPM veya Python bağımlılıklarını anında tespit eder, kendi kendine `install` komutlarını ateşler ve çöken süreçleri yeniden başlatır. O, arka planda çalışan ve işletim sisteminizin kök (root) dizinlerinde gezinen yorulmak bilmez bir DevOps mühendisidir.\n\n## Core Capabilities (Temel Yetenekler)\n\n- **Auto-Healing Event Loop**: Hata loglarını bilişsel döngüye sokup otonom olarak patch (yama) üreten ve sistemi kurtaran mimari.\n- **Background Daemon Management**: Zombi süreçleri tespit etme, öldürme (kill PID) ve sistem kaynaklarını yönetme.\n- **Root-Level Execution**: Güvenli Local Muscle ortamında bash/powershell betiklerini yazma ve icra etme yetkisi.",
+      "integration_guide": "### Initialization Sequence\n`DevOps-Core module online. Root access established...`",
+      "download_url": "/downloads/devops-core.zip"
+    },
+    {
+      "id": 4,
+      "name": "📊 DIAGNOSTICS-OTEL (Deep System Telemetry)",
+      "version": "v1.0.0",
+      "summary": "Bilişsel Süreçlerin Şeffaf Anatomisi. (Transparent Anatomy of Cognitive Processes.)",
+      "author": "@must-b_core",
+      "stars": "64.2k",
+      "downloads": "2.4m",
+      "os": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Under the Hood (Nasıl Çalışır)\n\nMust-b'nin devasa bilişsel işlemlerinin ve sistem çağrılarının anlık röntgenini çeken resmi izleme (monitoring) modülüdür. OpenTelemetry (OTel) standartları üzerine inşa edilen bu eklenti, Cloud Brain ile Local Muscle arasındaki her bir mikro-saniyeyi, RAM tahsislerini, CPU yükünü ve ağ I/O isteklerini milisaniye bazında takip eder. Siber Kale mimarisi gereği, bu teşhis verileri asla dışarıya sızdırılmaz; yalnızca lokal Dashboard'unuzda otonom anomalileri raporlamak için kullanılır.\n\n## Core Capabilities (Temel Yetenekler)\n\n- **Millisecond-Level Tracing**: Otonom görevlerin her bir mantıksal adımını ağacın köklerine kadar izleme.\n- **Resource Anomaly Detection**: İşletim sistemindeki aşırı bellek/CPU tüketimini gerçekleşmeden önce tespit eden uyarı mekanizması.\n- **Zero-Trust Local Logging**: Tüm logların bulut yerine lokal şifreli dizinlerde tutulması.",
+      "integration_guide": "### Initialization Sequence\n`Diagnostics-OTel module online. Telemetry stream secured...`",
+      "download_url": "/downloads/diagnostics-otel.zip"
+    },
+    {
+      "id": 5,
+      "name": "🖋️ OPEN-PROSE (Advanced Content Synthesis Engine)",
+      "version": "v1.0.0",
+      "summary": "Düşünceden Egemen Belgeye. (From Raw Thought to Sovereign Document.)",
+      "author": "@must-b_core",
+      "stars": "77.7k",
+      "downloads": "4.9m",
+      "os": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "is_certified": true,
+      "readme": "## Under the Hood (Nasıl Çalışır)\n\nOpen-Prose, sıradan bir metin üreticisinin çok ötesindedir. O, Must-b'nin sentezlediği devasa pazar araştırmalarını, binlerce satırlık kod dokümantasyonlarını veya şirket raporlarını doğrudan işletim sisteminizin dosya hiyerarşisine kaydeder. Bulut tabanlı not defterlerinin karakter sınırlarına takılmaz. Elde ettiği otonom verileri saniyeler içinde kusursuz formatlanmış PDF, Markdown (MD) veya DOCX dosyalarına çevirir ve belirlediğiniz lokal dizine mühürler.\n\n## Core Capabilities (Temel Yetenekler)\n\n- **Autonomous File System Mutability**: Raporları doğrudan disk üzerindeki klasörlere yazma, değiştirme ve arşivleme yetkisi.\n- **Multi-Format Compilation**: Bilişsel verileri anında kurumsal düzeyde PDF ve Markdown belgelerine dönüştürme.\n- **Context-Aware Documentation**: Vector Vault'taki eski belgeleri okuyarak, yeni raporları şirketin kurumsal diline ve şablonlarına göre otomatik hizalama.",
+      "integration_guide": "### Initialization Sequence\n`Open-Prose module online. Synthesis engine ready...`",
+      "download_url": "/downloads/open-prose.zip"
     },
     {
       "id": 6,
