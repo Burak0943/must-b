@@ -20,11 +20,10 @@ export default async function handler(req: any, res: any) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error && data.session) {
-      // 3. İŞTE O AN: Kullanıcıyı Aytaç'ın yerel uygulamasına fırlatıyoruz
-      const localAppUrl = "http://localhost:4309/auth-callback"
-      const { access_token, refresh_token } = data.session
-
-      return res.redirect(`${localAppUrl}?access_token=${access_token}&refresh_token=${refresh_token}`)
+      // Başarılı giriş: `next` adresi veya varsayılan '/dashboard'
+      const redirectUrl = req.query.next || '/dashboard'
+      
+      return res.redirect(redirectUrl)
     }
   }
 

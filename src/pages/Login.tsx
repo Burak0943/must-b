@@ -99,6 +99,8 @@ export default function Login() {
         // GİRİŞ YAP
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        
+        navigate('/dashboard');
       }
     } catch (error: any) {
       toast.error(error.message || "Bir hata oluştu.");
@@ -315,8 +317,6 @@ export default function Login() {
                       {[
                         { id: 'google', icon: <svg className="w-[18px] h-[18px] text-white/80 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg> },
                         { id: 'github', icon: <Github className="w-[18px] h-[18px] text-white/80 group-hover:text-white transition-colors" /> },
-                        { id: 'apple', icon: <svg className="w-[18px] h-[18px] text-white/80 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor"><path d="M16.636 10.957c-.015-3.037 2.502-4.52 2.617-4.593-1.41-2.073-3.606-2.355-4.385-2.395-1.868-.19-3.655 1.106-4.606 1.106-.95 0-2.42-1.077-3.952-1.048-2.008.029-3.864 1.171-4.896 2.975-2.08 3.619-.533 8.983 1.5 11.933 1.002 1.455 2.185 3.078 3.774 3.018 1.529-.06 2.115-.992 3.966-.992 1.836 0 2.38.992 3.966.963 1.631-.029 2.668-1.484 3.654-2.946 1.144-1.68 1.615-3.308 1.644-3.391-.035-.015-3.176-1.222-3.282-4.63zm-2.833-6.52c.84-.999 1.408-2.394 1.254-3.784-1.189.049-2.646.793-3.513 1.821-.692.812-1.371 2.247-1.187 3.608 1.332.102 2.607-.648 3.446-1.645z"/></svg> },
-                        { id: 'facebook', icon: <Facebook className="w-[18px] h-[18px] text-white/80 group-hover:text-white transition-colors" fill="currentColor" stroke="none" /> },
                         { id: 'twitter', icon: <svg className="w-[18px] h-[18px] text-white/80 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 24.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> }
                       ].map((provider) => (
                         <motion.button key={provider.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleOAuth(provider.id as any)} type="button" className="group flex-1 bg-white/5 h-10 rounded-lg border border-white/10 hover:border-white/30 hover:bg-white/10 transition-all flex items-center justify-center">

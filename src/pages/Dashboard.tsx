@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info, Globe } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -81,12 +81,12 @@ const Dashboard = () => {
       
       {/* SIDEBAR */}
       <aside className="w-64 border-r border-[#1f2937] p-6 flex flex-col gap-8 bg-[#050505]">
-        <div className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="w-8 h-8 bg-[#06b6d4]/10 border border-[#06b6d4]/30 rounded-lg flex items-center justify-center text-[#06b6d4] font-black tracking-tighter shadow-[0_0_10px_rgba(6,182,212,0.2)]">
             MB
           </div> 
           <span className="font-bold text-lg tracking-tight">Must-b</span>
-        </div>
+        </Link>
 
         <nav className="space-y-2 flex-1">
           {navItems.map((item) => {
@@ -110,6 +110,16 @@ const Dashboard = () => {
             );
           })}
         </nav>
+
+        <div className="mt-auto">
+          <Link
+            to="/"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 text-gray-400 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 hover:border-[#06b6d4]/10 border border-transparent"
+          >
+            <Globe className="w-4 h-4" />
+            Back to Website
+          </Link>
+        </div>
       </aside>
 
       {/* COMMAND CENTER */}
