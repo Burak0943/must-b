@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info, Globe } from "lucide-react";
+import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info, LogOut } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
@@ -18,6 +18,11 @@ const Dashboard = () => {
   
   const [agents, setAgents] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
+  };
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
@@ -112,13 +117,13 @@ const Dashboard = () => {
         </nav>
 
         <div className="mt-auto">
-          <Link
-            to="/"
+          <button
+            onClick={handleSignOut}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 text-gray-400 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 hover:border-[#06b6d4]/10 border border-transparent"
           >
-            <Globe className="w-4 h-4" />
-            Back to Website
-          </Link>
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
         </div>
       </aside>
 
