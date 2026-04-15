@@ -6,7 +6,7 @@ import InstallPanel from "@/components/InstallPanel";
 import OnboardingTerminal from "@/components/OnboardingTerminal";
 import { Twitter, Youtube, Linkedin, Instagram } from "lucide-react";
 import { useRef, useState } from "react";
-import { IndustrialSwitch } from "@/components/ui/toggle-switch";
+import StressPool from "@/components/layout/StressPool";
 
 // Discord SVG icon
 const DiscordIcon = ({ className }: { className?: string }) => (
@@ -47,16 +47,6 @@ const ScrollReveal = ({
 function SiteFooter() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
-  const [isDark, setIsDark] = useState(true);
-
-  const handleToggle = (dark: boolean) => {
-    setIsDark(dark);
-    if (dark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +100,6 @@ function SiteFooter() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <p className="text-[10px] font-mono text-muted-foreground/50 uppercase tracking-[0.2em]">Resources</p>
-            <IndustrialSwitch initialState={isDark} onToggle={handleToggle} />
           </div>
           <ul className="space-y-2.5 text-sm text-muted-foreground">
             <li>
@@ -177,6 +166,8 @@ function SiteFooter() {
           <p className="text-[11px] text-muted-foreground/40 font-mono">Proprietary Software</p>
         </div>
       </div>
+
+      <StressPool />
     </footer>
   );
 }
