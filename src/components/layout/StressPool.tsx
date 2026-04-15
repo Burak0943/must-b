@@ -3,7 +3,7 @@ import Matter from "matter-js";
 
 const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint } = Matter;
 
-const COLORS = ["#06b6d4", "#f43f5e", "#8b5cf6", "#10b981", "#f59e0b"];
+const COLORS = ["#06b6d4", "#10b981", "#0ea5e9"];
 
 export default function StressPool() {
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -117,7 +117,7 @@ export default function StressPool() {
         const options = {
             restitution: 0.9,
             render: {
-                fillStyle: color,
+                fillStyle: 'transparent',
                 strokeStyle: color,
                 lineWidth: 1
             }
@@ -158,21 +158,21 @@ export default function StressPool() {
   };
 
   return (
-    <div className="relative w-full border-t border-white/[0.04] bg-[#060709] overflow-hidden flex flex-col mt-4">
-       <div className="flex justify-between items-center p-2 px-6 z-10 relative bg-black/20">
-          <p className="text-[10px] text-muted-foreground/50 font-mono tracking-[0.2em] uppercase">Anti-Stress Physics Pool</p>
+    <div className="relative w-full border-t border-gray-800/30 bg-transparent overflow-hidden flex flex-col mt-4">
+       <div className="flex justify-between items-center p-2 px-6 z-10 relative bg-transparent border-b border-gray-800/30">
+          <p className="text-[9px] text-emerald-500/50 font-mono tracking-[0.2em] uppercase">Anti-Stress Physics Pool</p>
           <div className="flex gap-2">
             <button 
               onClick={toggleGravity} 
-              className="text-[10px] bg-white/[0.03] border border-white/10 px-3 py-1.5 rounded-md text-muted-foreground/80 hover:text-white hover:bg-white/[0.06] transition-all font-mono uppercase tracking-wider"
+              className="text-[9px] bg-transparent border border-gray-800/50 px-2 py-1 rounded-sm text-emerald-500/70 hover:text-emerald-400 hover:border-emerald-500/50 transition-all font-mono uppercase tracking-widest"
             >
-                Yerçekimi: {gravityEnabled ? "Aktif" : "Kapalı"}
+                &gt; YERÇEKİMİ: {gravityEnabled ? "1" : "0"}
             </button>
             <button 
               onClick={clearBodies} 
-              className="text-[10px] bg-white/[0.03] border border-white/10 px-3 py-1.5 rounded-md text-muted-foreground/80 hover:text-white hover:bg-white/[0.06] transition-all font-mono uppercase tracking-wider"
+              className="text-[9px] bg-transparent border border-gray-800/50 px-2 py-1 rounded-sm text-emerald-500/70 hover:text-emerald-400 hover:border-emerald-500/50 transition-all font-mono uppercase tracking-widest"
             >
-                Temizle
+                &gt; RM -RF *
             </button>
           </div>
        </div>
@@ -181,9 +181,9 @@ export default function StressPool() {
          onClick={handleCanvasClick}
          className="relative w-full h-[300px] cursor-crosshair group"
        >
-         <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity">
-            <p className="text-3xl md:text-5xl font-black text-white/50 tracking-[0.2em] text-center px-4 uppercase select-none">
-                Stres Atmak İçin Tıkla
+         <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40 group-hover:opacity-70 transition-opacity">
+            <p className="text-xs font-mono text-emerald-500/30 tracking-[0.3em] text-center px-4 select-none">
+                &gt; init_stress_purge.sh <span className="animate-pulse">_</span>
             </p>
          </div>
        </div>
