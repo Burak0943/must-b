@@ -632,29 +632,135 @@ must-b memory-sync    # View and reindex memory statistics`}</code></pre>
     icon: Shield,
     content: (
       <>
-        <p>
-          <strong className="text-cyan-400">Ghost Mode</strong> represents the absolute pinnacle of our physical intervention layer, distinguishing Must-b from any existing software automation tool on the market. When engaged, Must-b transcends digital REST API limitations and interacts directly with the host operating system at the Hardware Abstraction Layer (HAL).
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          <strong className="text-cyan-400">Ghost Mode</strong> is the crowning engineering achievement of the Must-b ecosystem. It represents the absolute pinnacle of physical intervention. Unlike traditional automation tools (like Selenium, Puppeteer, or Playwright) that rely on easily detectable, fragile DOM (Document Object Model) scraping, Ghost Mode transcends software sandboxes.
+        </p>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          When engaged, Must-b does not read HTML; it reads raw pixels. It does not send HTTP requests; it physically commands your mouse and keyboard at the <strong className="text-white">Hardware Abstraction Layer (HAL)</strong>. This grants the AI an unprecedented level of sovereignty over legacy Desktop applications, remote desktop protocols (RDP), video games, and heavily protected web environments.
         </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Deep Execution Mechanics & OS Hooking</h3>
-        <ul className="list-disc pl-5 space-y-3 mt-4 text-white/80">
-          <li><strong>Windows (NT Kernel):</strong> Must-b interfaces directly with the raw Win32 API (User32.dll and GDI32.dll) to dispatch synthetic input events directly into the message queue of target windows, bypassing higher-level application sandboxes.</li>
-          <li><strong>macOS (Darwin):</strong> Hooks into low-level Quartz Event Services and CoreGraphics frameworks, allowing the daemon to inject HID (Human Interface Device) payloads seamlessly.</li>
-          <li><strong>Linux (Unix-like):</strong> Manipulates X11 display server protocols or Wayland compositors via direct socket communication.</li>
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. Vision Pipeline ───────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">👁️ 1. The Cognitive Vision Pipeline (Pixel-Perfect Parsing)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          To interact with a system autonomously, the AI must first construct a spatial understanding of the screen. Must-b achieves this through a multi-layered local inference pipeline.
+        </p>
+        <ol className="list-decimal pl-5 space-y-4 text-gray-300 mb-6">
+          <li className="leading-relaxed">
+            <strong className="text-white">High-Frequency Frame Buffering:</strong> The Must-b daemon hooks directly into the OS display compositor (e.g., DXGI Desktop Duplication on Windows, CGDisplayStream on macOS) to capture uncompressed screen buffers at up to 60 FPS without taxing the CPU.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Omni-Parser &amp; Bounding Box Generation:</strong> Captured frames are routed through a localized, quantized neural network (running efficiently on the CPU or local VRAM). This model detects interactive elements (buttons, inputs, dropdowns) and translates them into a strict spatial matrix of <code className="bg-gray-800 px-1 rounded text-emerald-400">[x, y]</code> coordinates.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">OCR (Optical Character Recognition) Overlay:</strong> Tesseract-based edge-detection runs in parallel to extract text from images, merging semantic meaning with spatial coordinates.
+          </li>
+        </ol>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`# Simplified representation of the Omni-Parser Vision Pipeline
+def process_screen_buffer(frame_buffer):
+    # 1. Edge detection and element segmentation
+    bounding_boxes = vision_model.predict(frame_buffer, threshold=0.85)
+    
+    # 2. Extract semantic context via OCR
+    text_overlay = ocr_engine.extract(frame_buffer)
+    
+    # 3. Map screen space to actionable coordinates
+    spatial_matrix = SpatialMatrix.merge(bounding_boxes, text_overlay)
+    
+    return spatial_matrix.get_coordinates_for_intent("Click the Deploy Button")`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. OS Hooking Table ──────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🦾 2. Deep OS Hooking &amp; Native Execution</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Once the Cloud Brain determines the exact <code className="bg-gray-800 px-1 rounded text-emerald-400">[x, y]</code> coordinates, the local daemon must execute the movement. Must-b utilizes C++ and Rust-based FFI (Foreign Function Interfaces) to bypass application-layer protections and communicate directly with the kernel's peripheral message queues.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Operating System</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Low-Level API Hook</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Execution Mechanism &amp; Evasion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Windows (NT Kernel)</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">User32.dll (SendInput)</td>
+                <td className="border-b border-gray-800/50 py-3 text-gray-300">Dispatches synthetic events directly into the raw message queue. Bypasses higher-level UWP sandboxes and ignores application-level input blockers.</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">macOS (Darwin)</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">Quartz Event Services</td>
+                <td className="border-b border-gray-800/50 py-3 text-gray-300">Injects HID (Human Interface Device) payloads seamlessly into the CoreGraphics pipeline. Requires Accessibility permissions via Gatekeeper.</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Linux (Unix-like)</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">X11 / uinput</td>
+                <td className="border-b border-gray-800/50 py-3 text-gray-300">Manipulates display server protocols via direct socket communication, essentially creating a "virtual physical mouse" in <code className="bg-gray-800 px-1 rounded text-emerald-400">/dev/input/</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. Neuromotor Evasion ────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧠 3. Neuromotor Evasion Tactics (Bypassing Anti-Bot Heuristics)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Modern cybersecurity infrastructure (Cloudflare Turnstile, Datadome, Akamai Bot Manager, ReCAPTCHA v3) uses advanced machine learning to profile mouse movement. They flag linear A-to-B teleportation, constant velocity, and zero-latency clicks as bot activity.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b's Ghost Mode employs <strong className="text-white">Neuromotor Trajectory Simulation</strong> to mathematically emulate the biological imperfections of a human hand.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-6">
+          <li className="leading-relaxed"><strong className="text-white">Fitts's Law Physics:</strong> The acceleration and deceleration of the cursor are dynamically calculated based on the distance to the target and the target's size.</li>
+          <li className="leading-relaxed"><strong className="text-white">Cubic Bezier Curves &amp; Entropy:</strong> The trajectory is never a straight line. Must-b injects mathematical "entropy"—randomized control points that create arcs, micro-hesitations, and overshoots/corrections before clicking.</li>
+          <li className="leading-relaxed"><strong className="text-white">Variable Dwell Time:</strong> The time between a <code className="bg-gray-800 px-1 rounded text-emerald-400">mousedown</code> and <code className="bg-gray-800 px-1 rounded text-emerald-400">mouseup</code> event is randomized within human biological limits (e.g., 40ms to 120ms).</li>
         </ul>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`// The Physics of Ghost Mode: Emulating Human Imperfection
+function executeGhostTrajectory(startX, startY, targetX, targetY) {
+  const distance = Math.hypot(targetX - startX, targetY - startY);
+  
+  // 1. Calculate base velocity using Fitts's Law
+  const targetWidth = 120; // Estimated button width
+  const indexDifficulty = Math.log2((2 * distance) / targetWidth);
+  const baseDuration = 100 + (indexDifficulty * 80); 
+  
+  // 2. Inject Biological Entropy (Bezier Control Points)
+  const arcDeviation = Math.random() * 40 - 20; 
+  const curve = new Bezier(startX, startY, startX + arcDeviation, startY + arcDeviation, targetX, targetY);
+  
+  // 3. Execute with micro-jitters
+  return NativeMouse.trace(curve, { duration: baseDuration, jitter: 0.15 });
+}`}</code></pre>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Neuromotor Trajectory Simulation</h3>
-        <p>
-          To bypass advanced heuristic anti-bot detection systems (like Cloudflare Turnstile or Akamai Bot Manager), mouse trajectories are not calculated as linear A-to-B jumps. Must-b dynamically generates complex Bezier curves, perfectly mimicking human neuromotor delays, acceleration/deceleration physics, and micro-jitter during click-hold durations.
-        </p>
+        <hr className="border-gray-800 my-8" />
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Legacy GUI Manipulation</h3>
-        <p>
-          Ghost Mode empowers Must-b to autonomously operate outdated, proprietary enterprise software (e.g., legacy ERPs, customized SAP modules) that lack modern APIs. It utilizes real-time visual DOM rendering and OCR to calculate precise X/Y pixel coordinates on your physical display, acting as a tireless digital operator working in the background.
+        {/* ── 4. Hardware Failsafe ─────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛡️ 4. The Hardware Failsafe (Priority Kernel Interrupts)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Granting an autonomous system absolute control over your cursor introduces severe existential risks to your local environment. If an agent hallucinates, enters an infinite loop, or misinterprets the UI, it could inadvertently click destructive elements.
         </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b is engineered with a <strong className="text-white">Zero-Latency Hardware Failsafe</strong> to protect the host:
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-6">
+          <li className="leading-relaxed">
+            <strong className="text-white">Physical Override Heuristics:</strong> The daemon continuously listens to physical USB/Bluetooth mouse inputs. If the user physically moves the mouse while Ghost Mode is active, the daemon detects the physical-over-synthetic input clash and instantly pauses the agent.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">The SIGKILL Panic Switch:</strong> By pressing <code className="bg-gray-800 px-1 rounded text-emerald-400">CTRL + SHIFT + ESC</code> (Windows/Linux) or <code className="bg-gray-800 px-1 rounded text-emerald-400">CMD + SHIFT + ESC</code> (macOS), the Must-b background daemon receives a highest-priority kernel interrupt. This instantly kills the Node.js execution thread and severs the Cloud Brain connection, returning 100% absolute sovereignty to the human operator.
+          </li>
+        </ul>
       </>
     )
   },
+
   "API-less Native Browsing": {
     title: "API-less Native Browsing",
     icon: Globe,
