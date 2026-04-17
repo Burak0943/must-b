@@ -386,32 +386,57 @@ python3 --version`}</code></pre>
     icon: Globe,
     content: (
       <>
-        <h3 className="text-xl font-semibold text-white mb-4">1. Provisioning the Local Muscle</h3>
-        <p>
-          Execute the global installation via your native package manager:
-        </p>
-        <div className="mt-4 p-4 rounded-xl bg-black border border-white/10 font-mono text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] select-all mb-4">
-          npm install -g @must-b/must-b@latest
-        </div>
-        <p className="text-sm text-white/40 italic">
-          *(Note for Unix-based architectures: Global execution privileges are mandatory for terminal supremacy. Prepend <code>sudo</code> to grant the daemon the necessary root-level access required to hook into local OS processes).*
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Installing Must-b is not like adding a standard dependency to your project. You are injecting a highly privileged, autonomous daemon directly into your host operating system. Proceed with the understanding that Must-b will have bare-metal access to your machine's resources.
         </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">2. Core Configuration (must-b.json)</h3>
-        <p>
-          Granular control over the Cognitive OS is managed locally via <code>~/.must-b/must-b.json</code>. This JSON schema defines the physical boundaries of your local agent.
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. Global Injection ──────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">📦 1. Global OS Injection (Provisioning the Local Muscle)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b must be installed globally to intercept terminal commands, manage parallel agent workflows, and bind to local network ports for The Bridge (Webhook routing).
         </p>
-        <div className="mt-4 p-4 rounded-xl bg-[#0a0a0a] border border-[#1f2937] overflow-x-auto">
-          <pre><code className="text-sm text-[#ce9178]">{`{
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`# Execute the global installation via your native package manager
+npm install -g @must-b/must-b@latest
+
+# Or using pnpm for strictly isolated dependency resolution
+pnpm add -g @must-b/must-b`}</code></pre>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          <strong className="text-white">Security Note for Unix-based architectures (macOS/Linux):</strong> Global execution privileges are mandatory for Terminal Supremacy. Prepend <code className="bg-gray-800 px-1 rounded text-emerald-400">sudo</code> only if your environment requires root-level access to hook into local OS processes.
+        </p>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. Daemon Init ───────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🚀 2. Daemon Initialization &amp; Vault Creation</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Once the binary is injected, you must initialize the local daemon. This command creates the <code className="bg-gray-800 px-1 rounded text-emerald-400">~/.must-b/</code> secure vault in your home directory, which houses your SQLite Vector Databases (Omni-Context Memory) and cryptographic keys.
+        </p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`# Initialize the daemon and generate the secure local vault
+must-b daemon --init
+
+# Verify system hooks and Air-Gap integrity
+must-b doctor`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. Config Engine ─────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚙️ 3. Core Configuration Engine (must-b.json)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Granular control over the Cognitive OS is managed strictly via <code className="bg-gray-800 px-1 rounded text-emerald-400">~/.must-b/must-b.json</code>. This schema defines the physical and psychological boundaries of your local agent swarm.
+        </p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`{
   "system": {
-    "orchestrator_model": "gpt-4o",
-    "memory_indexing": "hnsw-local-1536d",
-    "cloud_sync_telemetry": true
+    "orchestrator_model": "claude-3-5-sonnet",
+    "memory_indexing": "sqlite-fts5-vector",
+    "cloud_sync_telemetry": false
   },
   "capabilities": {
     "ghostMode": {
       "enabled": true,
-      "maxMouseSpeedMultipler": 1.4,
+      "maxMouseSpeedMultiplier": 1.4,
       "bezierSmoothingAlgorithms": true,
       "hardwareAcceleration": true
     },
@@ -428,10 +453,68 @@ python3 --version`}</code></pre>
     }
   }
 }`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. Schema Reference Table ────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛡️ 4. Configuration Schema Reference</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Every parameter in the JSON configuration acts as a strict boundary for the Swarm Coordinator.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Parameter</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Domain</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Technical Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono whitespace-nowrap">orchestrator_model</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">System</td>
+                <td className="border-b border-gray-800/50 py-3 text-gray-300">Defines the primary Cloud Brain. Models like <code className="bg-gray-800 px-1 rounded text-emerald-400">claude-3-5-sonnet</code> are highly recommended for complex DAG code generation workflows.</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono whitespace-nowrap">maxMouseSpeedMultiplier</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">Ghost Mode</td>
+                <td className="border-b border-gray-800/50 py-3 text-gray-300">Dictates the velocity of autonomous UI manipulation. Values above <code className="bg-gray-800 px-1 rounded text-emerald-400">2.0</code> may trigger OS-level anti-cheat or bot-detection heuristics in certain software.</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono whitespace-nowrap">bezierSmoothing</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">Ghost Mode</td>
+                <td className="border-b border-gray-800/50 py-3 text-gray-300">Injects human-like Bezier curves into autonomous cursor movements, preventing rigid, linear robotic traces.</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono whitespace-nowrap">allowRootSudoCommands</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">Terminal</td>
+                <td className="border-b border-gray-800/50 py-3 text-gray-300"><strong className="text-red-400">CRITICAL:</strong> If <code className="bg-gray-800 px-1 rounded text-emerald-400">true</code>, Must-b can autonomously execute <code className="bg-gray-800 px-1 rounded text-emerald-400">sudo</code> commands. This effectively grants the Cloud Brain root access to your machine.</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono whitespace-nowrap">autoDebugHealingLoop</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">Terminal</td>
+                <td className="border-b border-gray-800/50 py-3 text-gray-300">Allows Must-b to read terminal STDERR outputs, automatically rewrite failed code, and re-execute until tests pass (capped by <code className="bg-gray-800 px-1 rounded text-emerald-400">maxRecursionDepth</code>).</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 5. Environment Variables ─────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🔑 5. Environment Variable Linking</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Authentication tokens for your chosen Cloud Brain (LLM Providers) must never be hardcoded. Store them securely in your <code className="bg-gray-800 px-1 rounded text-emerald-400">~/.must-b/.env</code> file.
+        </p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`# Example ~/.must-b/.env configuration
+OPENAI_API_KEY=sk-proj-...
+ANTHROPIC_API_KEY=sk-ant-...
+SLACK_BOT_TOKEN=xoxb-...`}</code></pre>
       </>
     )
   },
+
   "First Boot": {
     title: "First Boot",
     icon: Cpu,
