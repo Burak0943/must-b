@@ -158,28 +158,93 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     icon: Layers,
     content: (
       <>
-        <p>
-          The fundamental architecture of Must-b is strictly governed by the <strong className="text-cyan-400">"Cloud Brain, Local Muscle"</strong> paradigm. This design philosophy isolates heavy cognitive synthesis from raw physical execution, optimizing for both computational efficiency and absolute data sovereignty.
+        {/* ── Opening premise ──────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b is built on a singular, uncompromising premise: <strong className="text-white">Artificial Intelligence should not be a passive conversational partner trapped in a browser tab; it must be a sovereign digital workforce integrated directly into your operating system.</strong>
         </p>
-        
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">1. The Cloud Brain (Cognitive Offloading)</h3>
-        <p>
-          Complex reasoning, multi-step execution planning, high-dimensional token processing, and Omni-Context memory retrieval are entirely offloaded to our secure cloud infrastructure. By leveraging advanced LLM orchestration via Vercel Edge functions, we ensure zero computational drag (CPU/GPU monopolization) on your local hardware. The cognitive engine "thinks" globally, evaluating millions of parameters in milliseconds.
-        </p>
-
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">2. The Local Muscle (Sovereign Execution)</h3>
-        <p>
-          The actual physical manifestation of tasks—hardware-level mouse event simulation via Win32/Quartz APIs, keystroke injection, binary execution, background process management, and local file system mutations—occurs strictly on the host machine via the Must-b Daemon.
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          To achieve zero latency in thought and absolute sovereignty in execution, Must-b employs a strict <strong className="text-cyan-400">"Cloud Brain, Local Muscle"</strong> architectural paradigm.
         </p>
 
-        <div className="mt-6 p-4 rounded-xl bg-cyan-950/20 border-l-4 border-cyan-500">
-          <p>
-            <strong className="text-white">The Security Air-Gap:</strong> Most critically, this hybrid architecture guarantees that sensitive local environment variables (<code>.env</code> files), proprietary source code directories, and system-level authentication tokens never leave the physical boundaries of your machine without explicit cryptographic authorization. Must-b acts as an impenetrable air-gap, translating high-level cloud directives into secure, low-level OS API calls locally.
-          </p>
+        {/* ── Cloud Brain ──────────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧠 1. The Cloud Brain (Cognitive Offloading)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Complex reasoning, multi-step execution planning, high-dimensional token processing, and Omni-Context memory retrieval are entirely offloaded to decentralized LLM infrastructures.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">Dynamic Neural Routing:</strong> Must-b automatically routes tasks to the most capable model based on the context (e.g., Claude 3.5 Sonnet for deep code synthesis, Groq for rapid, low-latency decision trees).</li>
+          <li className="leading-relaxed"><strong className="text-white">DAG Generation:</strong> A high-level human intent is mathematically broken down into a <strong className="text-white">Directed Acyclic Graph (DAG)</strong> of parallel sub-tasks, ensuring fault-tolerant, concurrent execution.</li>
+        </ul>
+
+        {/* ── Local Muscle ─────────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🦾 2. The Local Muscle (Bare-Metal Execution)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The physical manifestation of tasks occurs strictly on the host machine via the highly privileged Must-b Daemon.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">OS-Level Domination:</strong> Hardware-level mouse event simulation via Win32/Quartz APIs, keystroke injection, and background binary execution.</li>
+          <li className="leading-relaxed"><strong className="text-white">Stateful Manipulation:</strong> Direct read/write access to local file systems, Git repositories, terminal sessions, and legacy GUI software without requiring restrictive APIs.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── Comparison Table ─────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚖️ The Paradigm Shift: Traditional AI vs. Must-b OS</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Capability</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Traditional AI (ChatGPT/Claude)</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Must-b Operating System</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Execution Environment</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Sandboxed Browser Tab</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Bare-Metal Operating System</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Action Capability</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Text/Code Generation</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Direct File, Terminal &amp; GUI Manipulation</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Workflow Orchestration</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Manual Copy-Pasting</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Autonomous Multi-Agent DAG Execution</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">System Awareness</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Blind to Local Context</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Deep Codebase &amp; OS Telemetry (Ghost Guard)</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── Security Air-Gap ─────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛡️ The Security Air-Gap (Zero-Trust)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Bridging cloud intelligence with local execution introduces extreme vectors of vulnerability. Must-b acts as an impenetrable air-gap between the two.
+        </p>
+        <p className="text-gray-300 mb-6 leading-relaxed">
+          Sensitive local environment variables (<code className="bg-gray-800 px-1 rounded text-emerald-400">.env</code>), proprietary source code directories, and system-level authentication tokens <strong className="text-white">never leave the physical boundaries of your machine</strong> without explicit cryptographic authorization. The Cloud Brain sends high-level directives; the Local Muscle enforces security before executing low-level OS API calls.
+        </p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`// Example: The Shield Protocol (Hookify) evaluating a Cloud Brain directive
+function evaluateIntent(cloudPayload, localContext) {
+  if (cloudPayload.action === "DELETE_TABLE" && localContext.isProductionDB) {
+     throw new SecurityError("Must-b Hookify: Unauthorized critical system mutation blocked.");
+  }
+  return executeLocally(cloudPayload);
+}`}</code></pre>
       </>
     )
   },
+
   "Prerequisites": {
     title: "Prerequisites",
     icon: Terminal,
