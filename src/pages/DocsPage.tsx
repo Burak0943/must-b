@@ -250,15 +250,137 @@ function evaluateIntent(cloudPayload, localContext) {
     icon: Terminal,
     content: (
       <>
-        <p>
-          Deploying the Must-b Cognitive OS daemon to your local environment requires establishing a secure, authenticated telemetry link to the Must-b core registry.
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b is not a standard web application; it is an <strong className="text-white">Autonomous AI Operating System</strong> that operates directly on your hardware. Because it assumes total sovereignty over your local environment to execute complex DAG (Directed Acyclic Graph) workflows, your system must meet strict infrastructure, networking, and security prerequisites before initialization.
         </p>
-        <p className="mt-4">
-          Ensure <strong>Node.js (v20.x LTS or higher)</strong> is installed to provide the necessary V8 JavaScript engine runtime. This is the only rigid environmental requirement to bridge your local system with the Orchestrator Engine.
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. OS Support ────────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">💻 1. Kernel &amp; Operating System Support</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b interacts directly with native OS APIs for background binary execution, filesystem tracking, and peripheral simulation.
         </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">macOS:</strong> macOS 12 (Monterey) or higher. Apple Silicon (M1/M2/M3) is heavily optimized for local vector embedding generation. Must-b will require <code className="bg-gray-800 px-1 rounded text-emerald-400">Accessibility</code> and <code className="bg-gray-800 px-1 rounded text-emerald-400">Automation</code> permissions via Gatekeeper for UI manipulation.</li>
+          <li className="leading-relaxed"><strong className="text-white">Windows:</strong> Windows 10 / 11. Full integration requires PowerShell 5.1+ or Windows Terminal. <strong className="text-white">WSL2 (Windows Subsystem for Linux)</strong> is highly recommended for containerized developer skills.</li>
+          <li className="leading-relaxed"><strong className="text-white">Linux:</strong> Ubuntu 20.04+, Debian, Arch. Requires standard <code className="bg-gray-800 px-1 rounded text-emerald-400">systemd</code> and <code className="bg-gray-800 px-1 rounded text-emerald-400">bash</code>/<code className="bg-gray-800 px-1 rounded text-emerald-400">zsh</code> environments for background daemonization.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. Node.js ───────────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚙️ 2. Core Execution Engine (V8 I/O)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The Swarm Coordinator and Local Muscle rely on high-frequency asynchronous I/O to manage parallel agent communication.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-4">
+          <li className="leading-relaxed"><strong className="text-white">Required:</strong> Node.js v20.x LTS or strictly higher.</li>
+          <li className="leading-relaxed"><strong className="text-white">Package Manager:</strong> <code className="bg-gray-800 px-1 rounded text-emerald-400">npm</code> (bundled with Node) or <code className="bg-gray-800 px-1 rounded text-emerald-400">pnpm</code> (recommended for faster dependency resolution).</li>
+        </ul>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`# Verify your execution environment
+node -v && npm -v
+# Ensure you are on v20+ to support native structured cloning and fetch APIs`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. Privileges ────────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🔐 3. Bare-Metal Privileges &amp; Access Control</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          To allow Must-b to act as a true digital workforce, it must be granted sufficient escalation rights depending on the tasks you assign it.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">Sudo / Administrator Rights:</strong> If Must-b is tasked with global package installation, system port binding, or modifying firewall rules, it will request elevation. On Windows, running your terminal as Administrator is recommended for global dev-ops workflows.</li>
+          <li className="leading-relaxed"><strong className="text-white">Security Air-Gap:</strong> Even with elevation, Must-b's internal Hookify engine prevents destructive commands (e.g., <code className="bg-gray-800 px-1 rounded text-emerald-400">rm -rf /</code>) unless explicitly overridden by the user.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. Networking ────────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🌐 4. Network Topology &amp; Webhooks</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b operates a local gateway server to communicate between the Web Dashboard, the CLI, and external integrations (like Slack or GitHub).
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">Local Port Binding:</strong> Must-b requires port <code className="bg-gray-800 px-1 rounded text-emerald-400">4309</code> to be available on localhost.</li>
+          <li className="leading-relaxed"><strong className="text-white">Firewall Rules:</strong> Your local firewall must allow outbound HTTPS connections to reach LLM endpoints (OpenRouter, Anthropic, etc.).</li>
+          <li className="leading-relaxed"><strong className="text-white">Webhooks (For Slack/GitHub):</strong> To receive inbound events from the outside world, you will need a secure tunnel (like <code className="bg-gray-800 px-1 rounded text-emerald-400">ngrok</code> or Cloudflare Tunnels) pointing to <code className="bg-gray-800 px-1 rounded text-emerald-400">http://localhost:4309</code>.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 5. Cloud Brain ───────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧠 5. Cognitive Endpoints (The Cloud Brain)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b offloads abstract reasoning to LLMs. You must provide access to an external cognitive engine with sufficient API limits.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">API Key Required:</strong> You need a funded API key from OpenRouter, Anthropic, OpenAI, or Google. Free-tier keys with heavy rate-limits (e.g., 3 requests/min) will cause multi-agent DAG workflows to crash.</li>
+          <li className="leading-relaxed"><strong className="text-white">Local Fallback:</strong> For 100% offline environments, a local <code className="bg-gray-800 px-1 rounded text-emerald-400">Ollama</code> instance can be linked. This shifts the cognitive load back to your machine.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 6. Hardware Thresholds ───────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛡️ 6. Hardware Thresholds (Ghost Guard Telemetry)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          While the Cloud Brain handles the thinking, your machine handles the memory and execution. Must-b's Ghost Guard continuously profiles your RAM and CPU.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Telemetry</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Minimum (Lite Mode)</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Recommended (Full Autonomy)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">CPU Architecture</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">2 Cores (x64 / ARM64)</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">8+ Cores (For Swarm parallelization)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">System RAM</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">4 GB</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">16 GB+ (Required for deep Omni-Context memory caching)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Disk Storage</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">1 GB Free Space</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">10 GB+ SSD (For SQLite Vector FTS5 databases)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">GPU / VRAM</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Not required</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">8GB+ VRAM (Strictly if using local Ollama models)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 7. Optional Toolchains ───────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛠️ 7. Extended Developer Toolchains (Optional but Recommended)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          To unlock the absolute maximum potential of Must-b's 200+ Skills Catalog, the following toolchains should be present in your system's <code className="bg-gray-800 px-1 rounded text-emerald-400">PATH</code>:
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-6">
+          <li className="leading-relaxed"><strong className="text-white">Git:</strong> Mandatory for autonomous repository management, PR generation, and branch switching.</li>
+          <li className="leading-relaxed"><strong className="text-white">Docker Engine:</strong> Required if you want Must-b to sandbox unstable code testing or spin up local databases for backend architecture generation.</li>
+          <li className="leading-relaxed"><strong className="text-white">Python 3.10+:</strong> Required for specific Agent SDK verifiers and data-science execution skills.</li>
+        </ul>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`# Recommended quick-check for full autonomy readiness
+git --version
+docker --version
+python3 --version`}</code></pre>
       </>
     )
   },
+
   "Installation": {
     title: "Installation",
     icon: Globe,
