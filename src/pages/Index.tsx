@@ -303,7 +303,13 @@ const Index = () => {
           
           <div className="relative max-w-4xl mx-auto py-8">
             {/* The Central Line */}
-            <div className="absolute left-[39px] md:left-1/2 top-0 bottom-0 w-0.5 bg-cyan-600/50 md:-translate-x-1/2" />
+            <motion.div 
+              className="absolute left-[39px] md:left-1/2 top-0 bottom-0 w-0.5 bg-cyan-600/50 md:-translate-x-1/2 origin-top"
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              viewport={{ once: true }}
+            />
             
             <div className="space-y-16 md:space-y-32 relative z-10">
               {roadmapSteps.map((step, i) => {
