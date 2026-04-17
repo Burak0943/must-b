@@ -766,32 +766,175 @@ function executeGhostTrajectory(startX, startY, targetX, targetY) {
     icon: Globe,
     content: (
       <>
-        <p>
-          Traditional AI models and scraping scripts inevitably fail when confronted with aggressive rate limits, strict CORS policies, and dynamically rendered Single-Page Applications (SPAs). Must-b implements an aggressive <strong className="text-cyan-400">'API-less Native Browsing'</strong> protocol to natively circumvent these artificial limitations.
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The modern internet is a hostile, fragmented landscape. Corporate walled gardens, draconian CORS policies, heavily rate-limited GraphQL endpoints, and aggressive Web Application Firewalls (WAFs) like Cloudflare, Datadome, and Akamai have effectively killed the open web for traditional AI agents. Relying on official REST APIs means accepting artificial limitations, delayed data, and exorbitant paywalls.
+        </p>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          Must-b fundamentally rejects these constraints. Through <strong className="text-cyan-400">API-less Native Browsing</strong>, the Must-b daemon assumes the cryptographic and behavioral identity of a legitimate human user. It does not politely ask for data via APIs; it physically renders the target application, infiltrates the Virtual DOM, and extracts the intelligence directly from the structural layout.
         </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">The Stealth Extraction Pipeline</h3>
-        <div className="space-y-6 mt-4">
-          <div className="border-l-2 border-cyan-500/30 pl-4">
-            <h4 className="text-lg font-semibold text-white">Headless Chromium Spawning</h4>
-            <p className="mt-2 text-white/80">Rather than executing HTTP GET requests, Must-b autonomously spawns an isolated, stealth-patched Chromium instance directly on your local machine via the Chrome DevTools Protocol (CDP).</p>
-          </div>
-          <div className="border-l-2 border-cyan-500/30 pl-4">
-            <h4 className="text-lg font-semibold text-white">Deterministic Fingerprint Masking</h4>
-            <p className="mt-2 text-white/80">The engine dynamically strips out predictable browser fingerprints, randomizes User-Agent strings, and masks <code>navigator.webdriver</code> flags to appear entirely as legitimate, organic human traffic.</p>
-          </div>
-          <div className="border-l-2 border-cyan-500/30 pl-4">
-            <h4 className="text-lg font-semibold text-white">Deep DOM & AST Parsing</h4>
-            <p className="mt-2 text-white/80">Must-b navigates to the target, executes necessary client-side JavaScript, patiently waits for asynchronous network requests (XHR/Fetch) to resolve, and constructs a complete visual layout tree.</p>
-          </div>
-          <div className="border-l-2 border-cyan-500/30 pl-4">
-            <h4 className="text-lg font-semibold text-white">Contextual Synthesis</h4>
-            <p className="mt-2 text-white/80">Instead of blindly parsing raw HTML strings via regex, the system traverses the rendered DOM (piercing through Shadow DOM boundaries), extracts the exact semantic data required based on cognitive intent, and synthesizes it into perfectly structured JSON arrays. Zero server-side footprint is left behind.</p>
-          </div>
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. CDP Revolution ────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🕸️ 1. The Death of the WebDriver &amp; The CDP Revolution</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Traditional automation tools (Selenium, Playwright, Puppeteer) are functionally obsolete against modern security. The moment a script launches, the browser leaks a <code className="bg-gray-800 px-1 rounded text-emerald-400">navigator.webdriver = true</code> flag, instantly triggering CAPTCHAs and IP bans.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b operates at a fundamentally deeper level. Instead of wrapping the browser in a detectable automation layer, Must-b spawns a completely isolated, headless Chromium process and assumes control exclusively via raw <strong className="text-white">Chrome DevTools Protocol (CDP) Websockets</strong>. By directly manipulating the V8 JavaScript engine and the Blink rendering pipeline, Must-b acts as an invisible puppeteer.
+        </p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`// Must-b CDP Injection Engine: Bypassing Automation Tripwires
+async function spawnCryptographicBrowserContext(targetUrl: string) {
+  const browser = await CDPEngine.launch({
+    headless: "new",
+    args: [
+      '--disable-blink-features=AutomationControlled',
+      '--disable-web-security',           // Annihilate CORS restrictions
+      '--disable-site-isolation-trials',  // Bypass out-of-process iframes (OOPIF)
+      '--no-sandbox',
+      '--disable-gpu-sandbox'
+    ]
+  });
+  
+  const cdpSession = await browser.target().createCDPSession();
+  
+  // Strip out webdriver signatures at the V8 engine level before the first page load
+  await cdpSession.send('Page.addScriptToEvaluateOnNewDocument', {
+    source: \`
+      Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+      window.chrome = { runtime: {} };
+      Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3] });
+    \`
+  });
+  
+  return cdpSession;
+}`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. Fingerprint Masking ───────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🎭 2. Multi-Layer Cryptographic Fingerprint Masking</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          WAFs do not just check for webdriver flags; they cryptographically fingerprint your machine. To survive, Must-b employs a dynamic spoofing engine that synthesizes organic hardware signatures on the fly, making the daemon indistinguishable from a high-end consumer laptop.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">TLS/JA3 Signature Spoofing:</strong> Standard Node.js HTTP clients have predictable TLS Hello packets (JA3 fingerprints) that are instantly blocked. Must-b routes requests through a custom HTTP/3 QUIC layer, perfectly mimicking the TLS signature of a standard Chrome browser.</li>
+          <li className="leading-relaxed"><strong className="text-white">WebGL &amp; Canvas Noise Injection:</strong> Security scripts render hidden 3D shapes on a <code className="bg-gray-800 px-1 rounded text-emerald-400">&lt;canvas&gt;</code> to fingerprint your specific GPU. Must-b intercepts the <code className="bg-gray-800 px-1 rounded text-emerald-400">getContext('webgl')</code> API, injecting algorithmic micro-noise into the rendering buffer, effectively creating a new, untraceable virtual GPU for every session.</li>
+          <li className="leading-relaxed"><strong className="text-white">AudioContext Masking:</strong> Must-b alters the oscillator dynamics and compressor signatures at the OS audio-stack level to bypass audio-fingerprinting heuristics.</li>
+          <li className="leading-relaxed"><strong className="text-white">Hardware Profile Generation:</strong> Dynamically randomizes <code className="bg-gray-800 px-1 rounded text-emerald-400">navigator.deviceMemory</code>, <code className="bg-gray-800 px-1 rounded text-emerald-400">navigator.hardwareConcurrency</code>, and screen resolution metrics to simulate realistic consumer hardware entropy.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. Async Rendering ───────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⏳ 3. Asynchronous Rendering &amp; The Event Loop</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Legacy AI scrapers fail spectacularly on Single-Page Applications (React, Vue, Angular) because they parse the initial HTML payload, which is usually just an empty <code className="bg-gray-800 px-1 rounded text-emerald-400">&lt;div id="root"&gt;&lt;/div&gt;</code>. The actual data is fetched asynchronously via JavaScript.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b's Native Browsing engine does not care about static HTML. It waits for the <strong className="text-white">Network Idle State</strong>.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">Request Interception:</strong> Must-b hooks into the CDP Network domain, monitoring every outbound XHR/Fetch request and WebSocket frame.</li>
+          <li className="leading-relaxed"><strong className="text-white">JIT Compilation Monitoring:</strong> It waits until the V8 Just-In-Time compiler has executed the client-side JavaScript.</li>
+          <li className="leading-relaxed"><strong className="text-white">Visual Paint Confirmation:</strong> The engine verifies that the GraphQL/REST payloads have resolved and the browser has painted the final visual layout tree onto the screen before extraction begins.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. Shadow DOM Piercing ───────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🗡️ 4. Piercing the Shadow DOM &amp; Nested Iframes</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Modern web components utilize the <code className="bg-gray-800 px-1 rounded text-emerald-400">ShadowRoot</code> API to encapsulate styling and markup, completely hiding crucial data from standard <code className="bg-gray-800 px-1 rounded text-emerald-400">document.querySelector</code> operations. Financial dashboards and secure payment gateways often bury data inside nested, cross-origin iframes.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b recursively traverses the DOM tree. When it encounters a <code className="bg-gray-800 px-1 rounded text-emerald-400">shadowRoot</code> (even if it is set to <code className="bg-gray-800 px-1 rounded text-emerald-400">mode: 'closed'</code>), Must-b uses its elevated CDP privileges to pierce the boundary, unpack the hidden nodes, and flatten the entire application state into a single, analyzable Abstract Syntax Tree (AST).
+        </p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`// Shadow DOM Piercing via Recursive AST Flattening
+function extractDeepNodes(rootElement) {
+  let nodes = [];
+  const walker = document.createTreeWalker(rootElement, NodeFilter.SHOW_ELEMENT);
+  
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    nodes.push(node);
+    
+    // Pierce Shadow DOM boundaries
+    if (node.shadowRoot) {
+      nodes.push(...extractDeepNodes(node.shadowRoot));
+    }
+    
+    // Pierce Same-Origin Iframes
+    if (node.tagName === 'IFRAME' && node.contentDocument) {
+      nodes.push(...extractDeepNodes(node.contentDocument.body));
+    }
+  }
+  return nodes;
+}`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 5. Semantic Extraction ───────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧠 5. Semantic Extraction (The Omni-Parser)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Once the WAF is bypassed and the page is fully rendered, Must-b does not rely on brittle CSS selectors that break the moment a website updates its UI.
+        </p>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          Instead, Must-b serializes the flattened DOM into a compressed semantic tree and feeds it to the Cloud Brain. The Orchestrator LLM looks at the structural relationships (e.g., <em>"This text is visually adjacent to an input field labeled 'Email'"</em>) and deduces the context autonomously. It extracts the data based on visual and semantic meaning, not hardcoded class names.
+        </p>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 6. Anti-Bot Matrix ───────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚖️ Anti-Bot &amp; Browsing Supremacy Matrix</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Evasion / Execution Layer</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Legacy Tools (Puppeteer/BeautifulSoup)</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Must-b Native Browsing Engine</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">JavaScript Execution</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Fails on SPAs (Reads raw HTML)</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Executes full V8 engine &amp; waits for visual paint</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Automation Flags</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Leaks <code className="bg-gray-900 px-1 rounded">webdriver: true</code></td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">CDP manipulation strips all automation flags</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">TLS Identity</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Predictable Node.js / Python JA3</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Spoofed HTTP/3 QUIC matching Chrome exactly</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">CAPTCHA Handling</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Blocked indefinitely</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Failsafes to Ghost Mode for physical interaction</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Dynamic Content</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Blind to closed Shadow DOMs</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Deep AST traversal &amp; CDP Shadow Root piercing</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Hardware Tracking</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Easily fingerprinted by GPU</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Injects cryptographic noise into WebGL/Canvas APIs</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </>
     )
   },
+
   "Terminal Supremacy": {
     title: "Terminal Supremacy",
     icon: Terminal,
