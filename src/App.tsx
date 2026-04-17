@@ -48,6 +48,8 @@ const App = () => {
             <Route path="/ecosystem" element={<MustbHub />} />
             <Route path="/ecosystem/:type/:id" element={<HubDetail />} />
             <Route path="/docs" element={<DocsPage />} />
+            <Route path="/docs/skills" element={<Navigate to="/ecosystem" replace />} />
+            <Route path="/docs/setup" element={<Navigate to="/docs" replace />} />
             
             {/* Giriş yapmışsa Login'e gidemez, Dashboard'a fırlatılır */}
             <Route 
