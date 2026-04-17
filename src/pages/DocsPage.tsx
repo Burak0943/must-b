@@ -250,22 +250,113 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     icon: Cpu,
     content: (
       <>
-        <h3 className="text-xl font-semibold text-white mb-4">Initialization and Cyber Fortress Pairing</h3>
-        <p>
-          Once installed, initialize the Zero-Cold Start sequence. This protocol generates cryptographic session keys, binds to your hardware abstraction layer, and pairs with your Supabase database.
-        </p>
-        <div className="mt-4 p-4 rounded-xl bg-black border border-white/10 font-mono text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] select-all mb-4">
-          must-b onboard --install-daemon --enable-ghost-mode
+        {/* ── Slack Integration ───────────────────────────── */}
+        <h2 className="text-2xl font-semibold text-white mb-4">Slack Integration</h2>
+
+        <h3 className="text-lg font-semibold text-white mb-3">Step 1 — Create a Slack App</h3>
+        <ol className="list-decimal pl-5 space-y-2 text-gray-300 mb-6">
+          <li>Go to <a href="https://api.slack.com/apps" className="text-cyan-400 hover:underline" target="_blank" rel="noreferrer">api.slack.com/apps</a> → Create New App → From Scratch</li>
+          <li>Under <strong className="text-white">OAuth &amp; Permissions</strong> → add scopes: <code className="bg-gray-800 px-1 rounded text-emerald-400">chat:write</code>, <code className="bg-gray-800 px-1 rounded text-emerald-400">im:history</code>, <code className="bg-gray-800 px-1 rounded text-emerald-400">im:read</code></li>
+          <li>Under <strong className="text-white">Event Subscriptions</strong> → enable and set Request URL: <code className="bg-gray-800 px-1 rounded text-emerald-400">https://your-domain.com/webhook/slack</code></li>
+          <li>Subscribe to bot event: <code className="bg-gray-800 px-1 rounded text-emerald-400">message.im</code></li>
+        </ol>
+
+        <h3 className="text-lg font-semibold text-white mb-3">Step 2 — Install App to Workspace</h3>
+        <p className="text-gray-300 mb-3">Copy the Bot User OAuth Token and add to your <code className="bg-gray-800 px-1 rounded text-emerald-400">.env</code>:</p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-4 overflow-x-auto"><code>{`SLACK_BOT_TOKEN=xoxb-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxxxxxxxxx
+SLACK_SIGNING_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── Skills Catalog ───────────────────────────────── */}
+        <h2 className="text-2xl font-semibold text-white mb-2">Features Reference — 200+ Skills Catalog</h2>
+        <p className="text-gray-300 mb-4">Must-b ships with a native skills library (<code className="bg-gray-800 px-1 rounded text-emerald-400">must-b-skills/</code>) covering:</p>
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Category</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Skills</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Code Intelligence</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Codebase indexing, architecture blueprint generation, PR review (6 specialized reviewers), code simplifier, type design analyzer</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">GitHub Integration</td><td className="border-b border-gray-800/50 py-3 text-gray-300">PR creation, branch management, issue triage, commit message generation, automated review workflows</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Web &amp; Browser</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Playwright scraping (text, links, images), live screenshot capture with UI element detection, web search</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Terminal &amp; System</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Shell execution, filesystem CRUD, process management, environment inspection</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Security</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Hookify rule engine, OWASP pattern detection, dangerous command blocking, authorization context enforcement</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Frontend Design</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Design-system-aware UI agent, accessibility checks, component pattern reuse rules</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Agent SDK</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Python + TypeScript verifier agents for SDK usage, caching pattern checks, model compatibility</td></tr>
+            </tbody>
+          </table>
         </div>
-        <p className="mt-6 mb-2 font-semibold">Expected Terminal Output:</p>
-        <div className="p-4 rounded-xl bg-[#0a0a0a] border border-[#1f2937] font-mono text-xs text-white/70 overflow-x-auto whitespace-pre">
-{`[SUCCESS] Daemon installed to system registry.
-[SUCCESS] Ghost Mode enabled (Win32/Quartz bindings active).
-[SUCCESS] Handshake with Supabase RLS verified. Waiting for payload...`}
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── Long-Term Memory ─────────────────────────────── */}
+        <h2 className="text-2xl font-semibold text-white mb-3">Long-Term Memory (LTM)</h2>
+        <p className="text-gray-300 mb-4">Must-b maintains two memory layers:</p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-4">
+          <li><strong className="text-white">Conversation Memory</strong> (<code className="bg-gray-800 px-1 rounded text-emerald-400">memory/user.json</code>): Last 200 conversation entries + user profile. Persisted across sessions.</li>
+          <li><strong className="text-white">Semantic Memory</strong> (SQLite FTS5 + vector embeddings): Full-text search with 30-day temporal decay. Queries return ranked results by recency and relevance.</li>
+        </ul>
+        <p className="text-gray-300 mb-3">Memory is searchable via REST endpoints:</p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-4 overflow-x-auto"><code>{`GET  /api/memory/search?q=your+query
+POST /api/memory/import    # Import external memory entries
+GET  /api/memory/export    # Export full memory as JSON`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── Ghost Guard ──────────────────────────────────── */}
+        <h2 className="text-2xl font-semibold text-white mb-3">Ghost Guard</h2>
+        <p className="text-gray-300 mb-6">Ghost Guard monitors system resources in real time. When RAM or CPU usage exceeds configured thresholds, Must-b automatically switches to <strong className="text-white">Lite Mode</strong> — using a lighter LLM model and disabling background indexing. Thresholds are configurable in <strong className="text-white">Settings → System</strong>.</p>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── Night Owl ────────────────────────────────────── */}
+        <h2 className="text-2xl font-semibold text-white mb-3">Night Owl Mode</h2>
+        <p className="text-gray-300 mb-6">Night Owl allows Must-b to execute queued tasks autonomously while the user is away. Tasks added to the queue before the user steps away are processed in order overnight. Results are available in the Dashboard on next login.</p>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── CLI Reference ────────────────────────────────── */}
+        <h2 className="text-2xl font-semibold text-white mb-3">CLI Reference</h2>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-4 overflow-x-auto"><code>{`must-b                # Start Web Dashboard (port 4309)
+must-b gateway        # Same as above — explicit gateway mode
+must-b cli            # Terminal-only REPL chat mode
+must-b doctor         # System health check and auto-repair
+must-b onboard        # Re-run interactive setup wizard
+must-b memory-sync    # View and reindex memory statistics`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── LLM Provider Config ──────────────────────────── */}
+        <h2 className="text-2xl font-semibold text-white mb-3">LLM Provider Configuration</h2>
+        <p className="text-gray-300 mb-4">Must-b supports 20+ LLM backends. Switch providers at runtime from the Settings page or by editing <code className="bg-gray-800 px-1 rounded text-emerald-400">.env</code>.</p>
+        <div className="overflow-x-auto mb-4">
+          <table className="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Provider</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">LLM_PROVIDER value</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">OpenRouter</td><td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">openrouter</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Access to 100+ models; recommended for flexibility</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">Anthropic</td><td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">anthropic</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Claude 3.5 Sonnet / Opus — best for code tasks</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">OpenAI</td><td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">openai</td><td className="border-b border-gray-800/50 py-3 text-gray-300">GPT-4o, o1, o3-mini</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">Google</td><td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">gemini</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Gemini 1.5 Pro / Flash</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">Groq</td><td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">groq</td><td className="border-b border-gray-800/50 py-3 text-gray-300">Fastest inference for Llama/Mixtral</td></tr>
+              <tr><td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium">Ollama</td><td className="border-b border-gray-800/50 py-3 pr-6 text-emerald-400 font-mono">ollama</td><td className="border-b border-gray-800/50 py-3 text-gray-300">100% local/offline — no data leaves your machine</td></tr>
+            </tbody>
+          </table>
         </div>
+        <p className="text-gray-300 text-sm">Per-provider API key rotation is supported — add multiple keys separated by commas for automatic failover.</p>
       </>
     )
   },
+
   "Ghost Mode": {
     title: "Ghost Mode",
     icon: Shield,
