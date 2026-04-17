@@ -4,10 +4,9 @@ import MeshBackground from "@/components/MeshBackground";
 import FeaturesSection from "@/components/FeaturesSection";
 import InstallPanel from "@/components/InstallPanel";
 import OnboardingTerminal from "@/components/OnboardingTerminal";
-import { Twitter, Youtube, Linkedin, Instagram, Workflow, Network, Building2, Rocket, Lightbulb } from "lucide-react";
+import { Twitter, Youtube, Linkedin, Instagram, Workflow, Network, Building2, Rocket } from "lucide-react";
 import { useRef, useState } from "react";
 import { IndustrialSwitch } from "@/components/ui/toggle-switch";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
 
 // Discord SVG icon
 const DiscordIcon = ({ className }: { className?: string }) => (
@@ -207,25 +206,6 @@ const roadmapSteps = [
   }
 ];
 
-const barData = [
-  { name: 'Y1', EnterpriseARR: 2, 'AaaS Subscriptions': 1, 'Marketplace Commission': 0.5, Expenses: 3 },
-  { name: 'Y2', EnterpriseARR: 5, 'AaaS Subscriptions': 3, 'Marketplace Commission': 1.5, Expenses: 4 },
-  { name: 'Y3', EnterpriseARR: 12, 'AaaS Subscriptions': 7, 'Marketplace Commission': 4, Expenses: 5 },
-  { name: 'Y4', EnterpriseARR: 25, 'AaaS Subscriptions': 15, 'Marketplace Commission': 10, Expenses: 7 },
-  { name: 'Y5', EnterpriseARR: 50, 'AaaS Subscriptions': 30, 'Marketplace Commission': 22, Expenses: 10 },
-];
-
-const lineData = [
-  { name: 'Q1', 'Active Agents': 100, 'Developer Community': 50 },
-  { name: 'Q2', 'Active Agents': 300, 'Developer Community': 150 },
-  { name: 'Q3', 'Active Agents': 800, 'Developer Community': 400 },
-  { name: 'Q4', 'Active Agents': 2000, 'Developer Community': 1000 },
-  { name: 'Q5', 'Active Agents': 5000, 'Developer Community': 2500 },
-  { name: 'Q6', 'Active Agents': 12000, 'Developer Community': 6000 },
-  { name: 'Q7', 'Active Agents': 28000, 'Developer Community': 14000 },
-  { name: 'Q8', 'Active Agents': 60000, 'Developer Community': 30000 },
-];
-
 // ── Page ──────────────────────────────────────────────────────────────────
 
 const Index = () => {
@@ -305,31 +285,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ── 2. Onboarding Terminal ─────────────────────────────────── */}
-      <section className="py-24 md:py-32 px-6 relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-        <div className="max-w-5xl mx-auto">
-          <ScrollReveal className="text-center mb-12">
-            <span className="inline-block text-xs font-mono text-primary uppercase tracking-[0.2em] mb-4">
-              Live Demo
-            </span>
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-              See it in action.
-            </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              The real must-b onboarding — from install to a live local agent in under 30 seconds.
-            </p>
-          </ScrollReveal>
-          <ScrollReveal delay={0.1}>
-            <OnboardingTerminal />
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* ── 3. Features ────────────────────────────────────────────── */}
-      <FeaturesSection />
-
-      {/* ── 4. Roadmap / Process ────────────────────────────────────────────── */}
+      {/* ── 1.5 Roadmap / Process ────────────────────────────────────────────── */}
       <section className="py-24 md:py-32 px-6 relative border-t border-white/[0.04]">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
         <div className="max-w-4xl mx-auto">
@@ -373,82 +329,29 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ── 5. Scaling Trajectory ────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 px-6 relative border-t border-white/[0.04] bg-[#020408]">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
-        <div className="max-w-6xl mx-auto">
-          <ScrollReveal className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-6 mb-16 text-center md:text-left">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-              <Lightbulb className="w-8 h-8 text-emerald-400" />
-            </div>
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-2">
-                The Scaling Trajectory: Projected Growth
-              </h2>
-              <p className="text-muted-foreground">
-                Revenue streams and community expansion metrics.
-              </p>
-            </div>
+      {/* ── 2. Onboarding Terminal ─────────────────────────────────── */}
+      <section className="py-24 md:py-32 px-6 relative">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="max-w-5xl mx-auto">
+          <ScrollReveal className="text-center mb-12">
+            <span className="inline-block text-xs font-mono text-primary uppercase tracking-[0.2em] mb-4">
+              Live Demo
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
+              See it in action.
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              The real must-b onboarding — from install to a live local agent in under 30 seconds.
+            </p>
           </ScrollReveal>
-
-          <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
-            {/* Bar Chart */}
-            <ScrollReveal delay={0.2} className="relative group h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="bg-[#0a0c10] border border-white/5 rounded-3xl p-6 md:p-8 hover:border-emerald-500/20 transition-colors h-full flex flex-col">
-                <h3 className="text-lg font-semibold text-white mb-6 font-mono text-center shrink-0">
-                  Total Revenue and Expenses (Projected Millions)
-                </h3>
-                <div className="h-[300px] w-full min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={barData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                      <XAxis dataKey="name" stroke="#ffffff50" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#ffffff50" fontSize={12} tickLine={false} axisLine={false} />
-                      <RechartsTooltip 
-                        contentStyle={{ backgroundColor: '#0a0c10', borderColor: '#10b98130', borderRadius: '8px', color: '#fff' }}
-                        itemStyle={{ color: '#e5e7eb' }}
-                        cursor={{fill: '#ffffff05'}}
-                      />
-                      <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
-                      <Bar dataKey="EnterpriseARR" stackId="a" fill="#10b981" />
-                      <Bar dataKey="AaaS Subscriptions" stackId="a" fill="#34d399" />
-                      <Bar dataKey="Marketplace Commission" stackId="a" fill="#6ee7b7" />
-                      <Bar dataKey="Expenses" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Line Chart */}
-            <ScrollReveal delay={0.4} className="relative group h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="bg-[#0a0c10] border border-white/5 rounded-3xl p-6 md:p-8 hover:border-cyan-500/20 transition-colors h-full flex flex-col">
-                <h3 className="text-lg font-semibold text-white mb-6 font-mono text-center shrink-0">
-                  Active Agents and Developer Community
-                </h3>
-                <div className="h-[300px] w-full min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={lineData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                      <XAxis dataKey="name" stroke="#ffffff50" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#ffffff50" fontSize={12} tickLine={false} axisLine={false} />
-                      <RechartsTooltip 
-                        contentStyle={{ backgroundColor: '#0a0c10', borderColor: '#22d3ee30', borderRadius: '8px', color: '#fff' }}
-                        itemStyle={{ color: '#e5e7eb' }}
-                      />
-                      <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
-                      <Line type="monotone" dataKey="Active Agents" stroke="#22d3ee" strokeWidth={3} dot={{ fill: '#0a0c10', strokeWidth: 2 }} activeDot={{ r: 6, strokeWidth: 0 }} />
-                      <Line type="monotone" dataKey="Developer Community" stroke="#818cf8" strokeWidth={3} dot={{ fill: '#0a0c10', strokeWidth: 2 }} activeDot={{ r: 6, strokeWidth: 0 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
+          <ScrollReveal delay={0.1}>
+            <OnboardingTerminal />
+          </ScrollReveal>
         </div>
       </section>
+
+      {/* ── 3. Features ────────────────────────────────────────────── */}
+      <FeaturesSection />
 
       {/* ── Footer ────────────────────────────────────────────────── */}
       <ScrollReveal>
