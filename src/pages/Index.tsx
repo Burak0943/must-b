@@ -288,8 +288,8 @@ const Index = () => {
       {/* ── 1.5 Roadmap / Process ────────────────────────────────────────────── */}
       <section className="py-24 md:py-32 px-6 relative border-t border-white/[0.04]">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
-        <div className="max-w-4xl mx-auto">
-          <ScrollReveal className="text-center mb-20">
+        <div className="max-w-6xl mx-auto">
+          <ScrollReveal className="text-center mb-24">
             <span className="inline-block text-xs font-mono text-cyan-400 uppercase tracking-[0.2em] mb-4">
               B2B Roadmap
             </span>
@@ -301,29 +301,52 @@ const Index = () => {
             </p>
           </ScrollReveal>
           
-          <div className="relative">
-            {/* Glowing vertical connecting line */}
-            <div className="absolute left-[39px] md:left-[47px] top-6 bottom-6 w-0.5 bg-gradient-to-b from-cyan-500/50 via-emerald-500/50 to-primary/50" />
+          <div className="relative max-w-4xl mx-auto py-8">
+            {/* The Central Line */}
+            <div className="absolute left-[39px] md:left-1/2 top-0 bottom-0 w-0.5 bg-cyan-600/50 md:-translate-x-1/2" />
             
-            <div className="space-y-12 relative z-10">
-              {roadmapSteps.map((step, i) => (
-                <ScrollReveal key={i} delay={i * 0.15}>
-                  <div className="flex gap-6 md:gap-8 items-start group">
-                    <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-2xl border border-white/10 bg-[#0a0c10] flex items-center justify-center shadow-lg shadow-cyan-900/20 group-hover:border-cyan-500/50 group-hover:shadow-cyan-500/20 transition-all duration-500 relative overflow-hidden">
-                       <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                       <step.icon className="w-8 h-8 md:w-10 md:h-10 text-cyan-400" />
+            <div className="space-y-16 md:space-y-32 relative z-10">
+              {roadmapSteps.map((step, i) => {
+                const isLeft = i % 2 === 0;
+                
+                return (
+                  <motion.div 
+                    key={i}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    className={`w-full flex flex-col md:flex-row ${isLeft ? 'md:justify-start' : 'md:justify-end'} relative`}
+                  >
+                    {/* Visual Node */}
+                    <div className="absolute left-[39px] md:left-1/2 w-4 h-4 rounded-full bg-cyan-400 border-[3px] border-[#060709] shadow-[0_0_20px_rgba(34,211,238,0.8)] transform -translate-x-1/2 top-0 md:top-2 z-20" />
+
+                    {/* Card Content */}
+                    <div className={`w-full md:w-1/2 pl-[80px] md:pl-0 ${isLeft ? 'md:pr-16 lg:pr-24' : 'md:pl-16 lg:pl-24'}`}>
+                      <div className="flex flex-col items-start text-left">
+                        <span className="text-xs font-mono text-cyan-400 mb-4 tracking-[0.2em] uppercase font-semibold">
+                          Step {i + 1}
+                        </span>
+                        
+                        <div className="flex flex-col md:flex-row gap-6 items-start">
+                          <div className="w-16 h-16 md:w-20 md:h-20 shrink-0 rounded-2xl border border-white/10 bg-[#0a0c10] flex items-center justify-center shadow-lg shadow-cyan-900/20 relative overflow-hidden group">
+                             <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                             <step.icon className="w-8 h-8 md:w-10 md:h-10 text-cyan-400 relative z-10" />
+                          </div>
+                          <div className="pt-1 md:pt-3">
+                            <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white mb-2">
+                              {step.phase}
+                            </h3>
+                            <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+                              {step.text}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="pt-2 md:pt-4">
-                      <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white mb-2 group-hover:text-cyan-400 transition-colors">
-                        {step.phase}
-                      </h3>
-                      <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                        {step.text}
-                      </p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </div>
