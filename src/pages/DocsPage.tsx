@@ -1640,21 +1640,87 @@ async function executeAgnosticIntent(intent: SystemIntent) {
     title: "Proprietary License",
     icon: Scale,
     content: (
-      <div className="p-8 rounded-2xl bg-white/5 border border-red-500/20 text-white/80 shadow-[0_0_30px_rgba(239,68,68,0.05)] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[50px] pointer-events-none"></div>
-        <p className="font-black text-red-500 mb-4 tracking-widest uppercase text-lg border-b border-red-500/20 pb-4">
-          Strictly Closed Source And Proprietary
+      <>
+        {/* ── 0. Warning Box ───────────────────────────────── */}
+        <div className="border border-red-900/50 bg-red-950/20 p-6 rounded-lg mb-8">
+          <h3 className="text-red-500 font-bold text-lg mb-4 tracking-widest uppercase">Strictly Closed Source &amp; Proprietary</h3>
+          <p className="text-gray-200 font-mono text-sm">
+            Copyright (c) 2026 Mustafa Aytaç ÖZTAN (Co-Founder) &amp; Muhammed Burak CANSU (Co-Founder).<br/>
+            All rights reserved worldwide.
+          </p>
+        </div>
+
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b Cognitive OS is classified as strictly <strong className="text-white">PROPRIETARY AND CLOSED SOURCE</strong> software. The architectural paradigms, cognitive routing algorithms, Ghost Mode neuromotor simulations, and OS-level telemetry infrastructures contained within this ecosystem represent significant, highly sensitive proprietary engineering.
         </p>
-        <p className="mb-6 font-semibold text-white">
-          Copyright (c) 2026 Mustafa Aytaç ÖZTAN (Co-Founder) & Muhammed Burak CANSU (Co-Founder). All rights reserved worldwide.
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          Because Must-b operates with bare-metal System Supremacy, open-sourcing the core daemon would introduce unacceptable global cybersecurity risks. The source code is classified as corporate intellectual property.
         </p>
-        <p className="text-sm leading-relaxed opacity-80 mb-4">
-          Must-b Cognitive OS is classified as PROPRIETARY AND CLOSED SOURCE software. The intellectual property, bridging algorithms, neuromotor simulation logic, and cloud-to-local telemetry infrastructure contained within this architecture represent significant proprietary engineering.
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. Prohibitions ──────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🚫 1. Explicit Prohibitions (Zero-Tolerance Policy)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          By installing, downloading, or interacting with the Must-b daemon or its cloud infrastructure, you are legally bound by this agreement. The following actions are strictly prohibited and will trigger immediate legal prosecution under international intellectual property law:
         </p>
-        <p className="text-sm leading-relaxed opacity-80">
-          Unauthorized copying, distribution, decompilation, reverse engineering, unauthorized API bridging, or modification of any part of this software—whether in source or compiled binary form—is strictly prohibited. Violations of this proprietary license will be met with immediate and decisive legal prosecution under international intellectual property law.
+        <ul className="text-gray-300 mb-8 leading-relaxed list-disc list-inside space-y-3">
+          <li>
+            <strong className="text-white">Decompilation &amp; Reverse Engineering:</strong> You may not disassemble, decompile, or attempt to extract the source code of the Must-b local binaries, the Ghost Mode Vision Pipeline, or the Omni-Parser neural networks.
+          </li>
+          <li>
+            <strong className="text-white">Algorithm Harvesting:</strong> You may not analyze the network traffic, CDP (Chrome DevTools Protocol) socket injections, or HAL (Hardware Abstraction Layer) hooks to replicate our API-less Native Browsing or Anti-Bot evasion methodologies.
+          </li>
+          <li>
+            <strong className="text-white">Unauthorized SaaS Bridging:</strong> You may not wrap the Must-b ecosystem (or its agents) behind a commercial API, interface, or web application and offer its autonomous capabilities as a "Service" to third parties without an explicit Enterprise License.
+          </li>
+          <li>
+            <strong className="text-white">License Bypassing:</strong> Modifying the compiled binaries to bypass Ghost Guard hardware checks, API authentication, or cloud-telemetry requirements is a direct violation of the DMCA and equivalent international treaties.
+          </li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. Data Sovereignty ──────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚖️ 2. Data Sovereignty &amp; User Ownership</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          While the Must-b engine and its algorithms are exclusively owned by the Founders, <strong className="text-white">you maintain 100% absolute sovereignty over your personal data.</strong>
         </p>
-      </div>
+        <ul className="text-gray-300 mb-8 leading-relaxed list-disc list-inside space-y-3">
+          <li>Any code written, files modified, or applications generated by the Must-b Swarm on your local machine belong entirely to you.</li>
+          <li>The contents of your local Omni-Context Memory vault (<code className="bg-gray-800 px-1 rounded text-emerald-400">~/.must-b/vault.db</code>) are encrypted and inaccessible to Must-b Inc. We do not claim ownership of the semantic vectors generated from your proprietary codebases.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. Enterprise Licensing ──────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🏢 3. Enterprise &amp; Commercial Licensing</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The standard deployment of Must-b is intended for individual developers, researchers, and small tactical teams under the terms of the End User License Agreement (EULA).
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Corporations, sovereign entities, or organizations seeking to:
+        </p>
+        <ol className="text-gray-300 mb-4 leading-relaxed list-decimal list-inside space-y-3 pl-2">
+          <li>Deploy Must-b across massive internal hardware fleets (100+ seats).</li>
+          <li>Integrate Must-b into their own commercial product offerings (White-labeling).</li>
+          <li>Require offline, entirely air-gapped Cloud Brain deployments on custom sovereign hardware.</li>
+        </ol>
+        <p className="text-gray-300 mb-8 leading-relaxed mt-4">
+          Must contact the Founders directly for a tailored <strong className="text-white">Enterprise Commercial License</strong>.
+        </p>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. Responsible Disclosure ────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛡️ 4. Responsible Disclosure (Bug Bounty)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          We treat the security of the Cyber Fortress with absolute seriousness. If you are a security researcher who has discovered a vulnerability in the Hookify Engine, the Local Vault encryption, or our Cloud Telemetry endpoints, do not disclose it publicly.
+        </p>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          Contact our security team directly. Validated zero-day vulnerabilities or significant isolation bypasses will be rewarded via our private bug bounty program.
+        </p>
+      </>
     )
   },
 };
