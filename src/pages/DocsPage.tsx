@@ -1236,22 +1236,129 @@ function verifyZeroTrustPayload(req, rawBody, secret) {
     icon: Database,
     content: (
       <>
-        <p>
-          Traditional AI instances suffer from severe context amnesia, "forgetting" instructions as the conversation token window expands. Must-b circumvents this by leveraging a state-of-the-art <strong className="text-cyan-400">Omni-Context Memory</strong> architecture.
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The fatal flaw of modern Large Language Models (LLMs) is <strong className="text-white">Context Amnesia</strong>. As a conversation token window expands, the AI begins to "forget" earlier instructions, loses track of file structures, and inevitably hallucinates. Traditional AI relies on a static, linear context window.
+        </p>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          Must-b fundamentally eradicates Context Amnesia by decentralizing its memory architecture. Through <strong className="text-cyan-400">Omni-Context Memory</strong>, Must-b operates a dual-layer, infinite-horizon storage mechanism that ensures zero degradation in cognitive recall, whether it is managing a 10-line script or a 5-million-line enterprise monorepo.
         </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Hierarchical Semantic Chunking & Vectorization</h3>
-        <p>
-          Proprietary documents, PDFs, and raw codebases uploaded to the Vector Vault are systematically ingested and subjected to Recursive Character Text Splitting. These semantic chunks are vectorized into high-dimensional space (1536 dimensions) using advanced embedding models.
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. Dual-Layer Architecture ───────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧠 1. The Dual-Layer Memory Architecture</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b does not shove your entire codebase into the LLM prompt. That is inefficient and mathematically impossible for massive repositories. Instead, it maintains two distinct memory layers:
+        </p>
+        <ol className="list-decimal pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">Short-Term Conversational Memory (<code className="bg-gray-800 px-1 rounded text-emerald-400">user.json</code>):</strong> A rapid-access cache of the last 200 interaction turns, active environment variables, and immediate task context.</li>
+          <li className="leading-relaxed"><strong className="text-white">Long-Term Semantic Vector Vault (SQLite FTS5 + PgVector):</strong> An encrypted, local database where millions of lines of code, PDFs, and documentation are mathematically compressed into high-dimensional space.</li>
+        </ol>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. AST-Aware Chunking ────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🔪 2. AST-Aware Semantic Chunking</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Traditional RAG (Retrieval-Augmented Generation) systems use naive "Recursive Character Text Splitting" (e.g., cutting a file every 1000 characters). This breaks code blocks in half, destroying the logic.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b's ingestion engine is <strong className="text-white">AST-Aware (Abstract Syntax Tree)</strong>.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed">When Must-b ingests a Python or TypeScript file, it parses the actual syntax tree.</li>
+          <li className="leading-relaxed">It chunks the data semantically—keeping whole functions, classes, and interfaces perfectly intact.</li>
+          <li className="leading-relaxed">Metadata (file path, imports, dependencies) is cryptographically attached to every chunk before it is sent to the embedding model.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. HNSW Indexing ─────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🌌 3. High-Dimensional Vectorization &amp; HNSW Indexing</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Once the data is semantically chunked, Must-b converts these text blocks into dense mathematical vectors (typically 1536 dimensions using state-of-the-art embedding models).
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          To search through millions of vectors in milliseconds without crashing your CPU, Must-b utilizes <strong className="text-white">HNSW (Hierarchical Navigable Small World)</strong> graph algorithms locally.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-6">
+          <li className="leading-relaxed"><strong className="text-white">The Mathematics of Recall:</strong> When the Orchestrator Engine needs to know "How does the authentication module work?", it converts that question into a vector.</li>
+          <li className="leading-relaxed"><strong className="text-white">Cosine Similarity Thresholds:</strong> The local HNSW index calculates the cosine distance between the question's vector and the billions of coordinates in the vault.</li>
+          <li className="leading-relaxed"><strong className="text-white">Zero-Latency Retrieval:</strong> Must-b instantly extracts the top-K most mathematically relevant code snippets and injects <em>only</em> those fragments into the Cloud Brain's context window.</li>
+        </ul>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`# Conceptual Architecture of the Omni-Context Retrieval Engine
+async def query_omni_context(intent: str, top_k: int = 5):
+    # 1. Convert human intent into a 1536-dimensional vector
+    query_vector = await embedding_model.embed(intent)
+    
+    # 2. Execute HNSW Graph Search on the Local SQLite Vault
+    # Calculates cosine similarity distances in O(log N) time
+    raw_results = local_vault.hnsw_search(query_vector, k=top_k)
+    
+    # 3. Apply Temporal Decay & Reranking
+    ranked_context = reranker_engine.apply_temporal_decay(raw_results)
+    
+    # 4. Inject strict, hallucination-free context to the Cloud Brain
+    return Orchestrator.inject_context(ranked_context)`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. Temporal Decay ────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⏳ 4. Temporal Decay &amp; Memory Pruning</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Not all memories are equal. A bug fix from 5 minutes ago is infinitely more relevant than a boilerplate setup from 3 months ago.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b implements a strict <strong className="text-white">Temporal Decay Function</strong>. As vectors age, their "relevance weight" slowly diminishes unless they are accessed again (which strengthens their neural pathway). This prevents stale, deprecated code from polluting the Cloud Brain's decision-making process.
         </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">HNSW Local Indexing & Zero-Latency Retrieval</h3>
-        <p>
-          These vectors are indexed locally using HNSW (Hierarchical Navigable Small World) algorithms for hyper-fast nearest-neighbor search. When a complex autonomous task is initiated by the Orchestrator Engine, it queries this vector database with near-zero latency, calculating cosine similarity thresholds. It retrieves only the exact, semantically relevant fragments of knowledge required for the current execution context, allowing Must-b to seamlessly modify enterprise codebases spanning millions of lines without hallucination.
-        </p>
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 5. Memory Matrix ─────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚖️ Memory Paradigm Matrix</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Feature</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Traditional AI (ChatGPT/Claude)</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Must-b Omni-Context Memory</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Storage Limit</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Hard token limit (128k - 200k tokens)</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Infinite (Limited only by local HDD space)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Data Ingestion</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Blind text extraction</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">AST-Aware semantic parsing (Function/Class preservation)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Recall Mechanism</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Reads the entire context linearly</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">HNSW Vector Search (O(log N) cosine similarity)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Privacy &amp; Sovereignty</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Uploaded to third-party databases</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Encrypted locally in <code className="bg-gray-900 px-1 rounded text-emerald-400">~/.must-b/vault.db</code></td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Relevance Scaling</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Everything has equal weight</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Temporal Decay Engine prioritizes recent/active context</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </>
     )
   },
+
   "Orchestrator Engine": {
     title: "Orchestrator Engine",
     icon: Cpu,
