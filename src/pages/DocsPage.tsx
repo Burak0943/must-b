@@ -1087,33 +1087,150 @@ async function executeWithSupremacy(command: string, contextDir: string, depth =
     icon: Shield,
     content: (
       <>
-        <p>
-          Data sovereignty and cryptographic isolation form the uncompromising bedrock of the <strong className="text-cyan-400">Must-b ecosystem</strong>.
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          An autonomous AI with bare-metal OS access and Terminal Supremacy is, by definition, a loaded weapon. If compromised, it is not just a data breach; it is total system subversion. Therefore, the Must-b ecosystem is engineered with a paranoid, uncompromising <strong className="text-white">Zero-Trust Cybersecurity Architecture</strong> known as the Cyber Fortress.
+        </p>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          We operate under the assumption that the network is always hostile, the Cloud Brain can hallucinate, and external webhook channels are constantly under attack.
         </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Supabase Row Level Security (RLS) Implementation</h3>
-        <p className="mb-4">
-          Cloud-synchronized operational data, such as Live Task Delegation logs, Agent state management, and Vector Vault payloads, is secured via draconian Row Level Security (RLS) policies within our PostgreSQL infrastructure.
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. Cryptographic Vault ───────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🔐 1. The Local Cryptographic Vault (Air-Gapped Secrets)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          In traditional SaaS architectures, your API keys (OpenAI, AWS, Database URIs) are uploaded to a centralized cloud. Must-b fundamentally rejects this.
         </p>
-        <div className="p-4 rounded-xl bg-[#0a0a0a] border border-[#1f2937] overflow-x-auto mb-4">
-          <pre><code className="text-sm font-mono text-blue-400">{`-- Core Security Policy for Sovereign Agent Execution
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          All cognitive execution happens in the cloud, but <strong className="text-white">secrets never leave your machine</strong>. The local Must-b daemon provisions an encrypted SQLite vault (<code className="bg-gray-800 px-1 rounded text-emerald-400">~/.must-b/vault.db</code>) secured via AES-256-GCM.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed">Keys are injected directly into the local execution thread (The Muscle) strictly at runtime.</li>
+          <li className="leading-relaxed">The Cloud Brain generates the code (e.g., a Python script to query AWS), but the Local Muscle injects the <code className="bg-gray-800 px-1 rounded text-emerald-400">AWS_ACCESS_KEY</code> dynamically during execution. The LLM never sees your actual credentials.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. PostgreSQL RLS ────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛡️ 2. PostgreSQL Row Level Security (Cryptographic Tenant Isolation)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          For cloud-synchronized operational data (such as Live Task Delegation logs, Agent state management, and Vector Vault payloads), Must-b utilizes Supabase. We do not rely on application-layer logic to separate user data; we enforce it at the database engine level using <strong className="text-white">draconian Row Level Security (RLS)</strong>.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Authentication JWT (JSON Web Tokens) are verified at the edge. A user can mathematically only access, read, or modify data that is cryptographically bound to their <code className="bg-gray-800 px-1 rounded text-emerald-400">auth.uid()</code>. Even if the middleware is compromised, the Postgres kernel will deny access to unauthorized rows.
+        </p>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`-- Core Security Policy for Sovereign Agent Execution
 ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Strict Isolation: Users can only mutate their own nodes" 
-ON agents FOR ALL 
-USING (auth.uid() = user_id) 
-WITH CHECK (auth.uid() = user_id);`}</code></pre>
-        </div>
-        <p>
-          Authentication JWT tokens are cryptographically verified at the edge. A user can mathematically only access, read, or modify data that is cryptographically bound to their specific session identifier.
-        </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Zero-Trust Webhook Execution</h3>
-        <p>
-          The Bridge endpoints connecting the Local Muscle to external channels (WhatsApp/Discord) are fortified with stringent token verification mechanisms (e.g., Meta's verify_token challenge). We utilize HMAC signatures and payload validation to prevent replay attacks, man-in-the-middle (MITM) interception, and unauthorized arbitrary code execution from malicious external nodes.
+-- Strict Isolation: Users can only mutate their own autonomous nodes
+CREATE POLICY "Strict Isolation: Read/Write bound to JWT UID"
+ON agents FOR ALL
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- Enforce Immutable Audit Logs (Append-Only)
+CREATE POLICY "Append-Only Task Logs"
+ON task_logs FOR INSERT 
+WITH CHECK (auth.uid() = user_id);`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. Zero-Trust Webhooks ───────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🌉 3. The Bridge: Zero-Trust Webhook Ingestion</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b allows you to trigger autonomous workflows remotely via WhatsApp, Discord, or Slack. This introduces a critical attack vector: What if a malicious actor spoofs a WhatsApp payload to execute commands on your local machine?
         </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The Bridge endpoints are fortified with a multi-layered cryptographic verification matrix to prevent Replay Attacks, MITM (Man-in-the-Middle) interception, and Payload Tampering:
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-6">
+          <li className="leading-relaxed">
+            <strong className="text-white">HMAC-SHA256 Signature Validation:</strong> Every incoming webhook must contain a cryptographic hash generated by the provider (e.g., <code className="bg-gray-800 px-1 rounded text-emerald-400">X-Hub-Signature-256</code>). The Must-b edge router recalculates this hash using your private <code className="bg-gray-800 px-1 rounded text-emerald-400">WEBHOOK_SECRET</code>. If the hashes mismatch by a single byte, the payload is silently dropped.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Timestamp Drift Protection:</strong> To prevent replay attacks (where a hacker intercepts a valid webhook and resends it later), Must-b enforces a strict 5-minute TTL (Time-To-Live). If <code className="bg-gray-800 px-1 rounded text-emerald-400">{"Math.abs(Date.now() - payload.timestamp) > 300000"}</code>, the request is mathematically invalidated.
+          </li>
+        </ul>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`// Edge-Level HMAC Verification & Replay Protection
+function verifyZeroTrustPayload(req, rawBody, secret) {
+  const signature = req.headers['x-hub-signature-256'];
+  const timestamp = req.headers['x-timestamp'];
+  
+  // 1. Replay Attack Mitigation
+  if (Date.now() - parseInt(timestamp) > 300000)
+    throw new SecurityError("Timestamp Drift Exceeded.");
+
+  // 2. Cryptographic Integrity Check
+  const expectedHash = crypto
+    .createHmac('sha256', secret)
+    .update(rawBody)
+    .digest('hex');
+
+  if (!crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(\`sha256=\${expectedHash}\`)
+  )) {
+    throw new SecurityError("HMAC Signature Mismatch. Payload Tampered.");
+  }
+}`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. Hookify Shield ────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛑 4. The Hookify Execution Shield (AST Sanitization)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Even if a command originates from an authenticated user, the LLM (Cloud Brain) might hallucinate a destructive command (e.g., <code className="bg-gray-800 px-1 rounded text-emerald-400">rm -rf /</code> or <code className="bg-gray-800 px-1 rounded text-emerald-400">DROP TABLE users</code>).
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Before the Local Muscle dispatches any command to the Terminal or the OS, it must pass through the <strong className="text-white">Hookify Engine</strong>. Hookify does not use simple regex matching; it parses the command into an Abstract Syntax Tree (AST) and evaluates the semantic intent against your strict policy rules.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">Rule Example:</strong> <em>"Never allow deletion of files outside the ./temp directory."</em></li>
+          <li className="leading-relaxed">If the LLM generates <code className="bg-gray-800 px-1 rounded text-emerald-400">rm -rf /var/www/html</code>, Hookify detects the scope violation at the AST level and triggers a <strong className="text-red-400">Fatal Execution Block</strong>, overriding the Cloud Brain entirely.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 5. Security Matrix ───────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚖️ The Security Paradigm Shift</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Vulnerability Vector</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Traditional Cloud AI Providers</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Must-b Cyber Fortress</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">API Keys &amp; Secrets</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Uploaded to third-party cloud servers</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Encrypted locally (AES-256); injected at runtime</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Command Execution</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Unrestricted remote container execution</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Gated by Hookify AST analysis and Local Failsafes</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Data Isolation</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Software-level tenant checks (Prone to bugs)</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Engine-level PostgreSQL Row Level Security (RLS)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Remote Triggers</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Basic token checks</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">HMAC-SHA256 integrity + Timestamp Anti-Replay</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </>
     )
   },
+
   "Omni-Context Memory": {
     title: "Omni-Context Memory",
     icon: Database,
