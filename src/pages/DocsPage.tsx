@@ -1364,15 +1364,144 @@ async def query_omni_context(intent: str, top_k: int = 5):
     icon: Cpu,
     content: (
       <>
-        <p>
-          The core logic loop of Must-b operates on a definitive <strong className="text-cyan-400">"Plan, Execute, Synthesize"</strong> cycle.
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The <strong className="text-cyan-400">Orchestrator Engine</strong> is the central nervous system of Must-b. Traditional "autonomous" AI frameworks operate on naive, linear <code className="bg-gray-800 px-1 rounded text-emerald-400">while-loops</code> (e.g., Think -&gt; Act -&gt; Observe). This primitive architecture collapses under the weight of complex enterprise tasks, leading to infinite loops and context degradation.
         </p>
-        <p className="mt-4">
-          It evaluates external stimuli, breaks them into actionable sub-tasks, delegates them to specific native capabilities, and synthesizes the outcome into a final, flawless result.
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          Must-b fundamentally abandons linear execution. The Orchestrator Engine treats high-level human intents as complex engineering projects, compiling them into a <strong className="text-white">Directed Acyclic Graph (DAG)</strong> and delegating them to a localized swarm of specialized AI agents.
         </p>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. Swarm Topology & The DAG Compiler ─────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🕸️ 1. Swarm Topology &amp; The DAG Compiler</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          When you instruct Must-b to "Build a full-stack Next.js dashboard with a Supabase backend," a single LLM cannot hold all that context and execute it linearly without hallucinating.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The Orchestrator acts as the <strong className="text-white">Project Manager (PM)</strong>. It parses your intent and compiles it into a strict DAG execution matrix:
+        </p>
+        <ol className="list-decimal pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed">
+            <strong className="text-white">Node Isolation:</strong> The task is shattered into atomic, independent nodes (e.g., <code className="bg-gray-800 px-1 rounded text-emerald-400">Setup_DB</code>, <code className="bg-gray-800 px-1 rounded text-emerald-400">Scaffold_UI</code>, <code className="bg-gray-800 px-1 rounded text-emerald-400">Write_Auth_Logic</code>).
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Dependency Resolution:</strong> The Orchestrator maps which tasks depend on others. (e.g., <code className="bg-gray-800 px-1 rounded text-emerald-400">Write_Auth_Logic</code> cannot start until <code className="bg-gray-800 px-1 rounded text-emerald-400">Setup_DB</code> completes).
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Parallel Execution:</strong> Any nodes without codependencies are executed simultaneously by different agent instances, drastically reducing total completion time.
+          </li>
+        </ol>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. Dynamic Neural Routing ────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧠 2. Dynamic Neural Routing (Cost-Optimized Intelligence)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Not all tasks require the immense cognitive overhead (and cost) of an advanced model like Claude 3.5 Sonnet or GPT-4o. The Orchestrator Engine employs <strong className="text-white">Dynamic Neural Routing</strong> to assign the perfect LLM to each specific node in the DAG.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-6">
+          <li className="leading-relaxed">
+            <strong className="text-white">Heavy Synthesis (Claude 3.5 Sonnet / DeepSeek-V3):</strong> Routed exclusively for complex architectural decisions, deep refactoring, and AST patching.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Rapid Tool Execution (Groq / Llama 3):</strong> Routed for high-speed, low-latency tasks like executing basic terminal commands, parsing git diffs, or navigating DOM trees in Ghost Mode.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Local Verification (Ollama):</strong> Fallback routing for validating PII/sensitive data offline before sending payloads to external cloud models.
+          </li>
+        </ul>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`// Conceptual DAG Node Orchestration & Neural Routing
+interface DAGNode {
+  id: string;
+  intent: string;
+  dependencies: string[]; // IDs of nodes that must complete first
+  requiredCapability: 'TERMINAL' | 'BROWSER' | 'GHOST_MODE' | 'AST_PATCH';
+  optimalModel: 'claude-3-5-sonnet' | 'groq-llama-3' | 'gpt-4o-mini';
+}
+
+async function executeSwarm(graph: DAGNode[]) {
+  const readyNodes = Orchestrator.getResolvableNodes(graph);
+  
+  // Execute independent tasks in parallel across the agent swarm
+  await Promise.all(readyNodes.map(async (node) => {
+    const agent = Swarm.provisionAgent(node.optimalModel);
+    await agent.execute(node);
+  }));
+}`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. QA Sentinel ───────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛑 3. The QA Sentinel &amp; AST-Level Rollbacks</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          In a true operating system, failures are inevitable (APIs go down, compilers throw errors). The Orchestrator Engine does not crash when an agent makes a mistake. It operates a dedicated <strong className="text-white">QA Sentinel Agent</strong>.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed">
+            Every time a "Developer Agent" modifies a file or writes a function, the QA Sentinel autonomously reviews the diff and runs the local test suite via Terminal Supremacy.
+          </li>
+          <li className="leading-relaxed">
+            If the tests fail, the QA Sentinel generates a highly specific critique.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Stateful Rollback:</strong> If the Developer Agent enters a degenerative failure loop, the Orchestrator halts that branch of the DAG, instantly rolls back the File System to the exact AST state before the node started, and re-routes the task to a higher-tier model.
+          </li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. System-Wide Telemetry ─────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">📡 4. System-Wide Telemetry (Ghost Guard Integration)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The Orchestrator Engine is deeply aware of the host machine's physical limits. Before spawning multiple agents in parallel, it consults <strong className="text-white">Ghost Guard</strong>.
+        </p>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          If spinning up 4 concurrent V8 isolation contexts for parallel web scraping threatens to exhaust the host's RAM, the Orchestrator dynamically flattens the DAG into a linear queue, sacrificing speed to ensure absolute system stability.
+        </p>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 5. Architecture Matrix ───────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚖️ Architecture Matrix</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Capability</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Legacy Autonomous AI</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Must-b Orchestrator Engine</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Execution Architecture</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Linear, single-thread loops</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Parallel DAG (Directed Acyclic Graph) workflows</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Model Usage</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Monolithic (One expensive model for everything)</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Dynamic Neural Routing (Mixes Groq, Claude, OpenAI)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Error Handling</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Frequently gets stuck in infinite retry loops</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">QA Sentinel with AST-level snapshot rollbacks</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Resource Awareness</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Blindly consumes memory until crash</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Ghost Guard integration throttles agent spawning</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </>
     )
   },
+
   "Cross-Platform Nodes": {
     title: "Cross-Platform Nodes",
     icon: Layers,
