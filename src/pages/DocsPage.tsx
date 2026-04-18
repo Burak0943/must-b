@@ -1507,15 +1507,135 @@ async function executeSwarm(graph: DAGNode[]) {
     icon: Layers,
     content: (
       <>
-        <p>
-          The Cognitive OS dynamically adapts to its host environment. It speaks CMD/PowerShell on Windows, and Bash/Zsh on Unix-based systems seamlessly.
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          An AI that only understands a single operating system is merely an application. An AI that can seamlessly adapt its execution matrix to any host architecture is a true <strong className="text-white">Cognitive Operating System</strong>.
         </p>
-        <p className="mt-4">
-          Mobile Nodes (iOS/Android) remain in active R&D within our Cyber Fortress labs.
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          The Must-b swarm is designed to be universally infectious. Through the deployment of <strong className="text-cyan-400">Cross-Platform Nodes</strong>, the Orchestrator Engine dynamically translates high-level cloud directives into the native machine code, syscalls, and scripting dialects of the host environment.
         </p>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 1. Dynamic HAL ───────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">💻 1. The Dynamic HAL (Hardware Abstraction Layer)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          When the Cloud Brain decides, <em>"I need to forcefully terminate the process running on port 3000,"</em> it does not hardcode a specific terminal command. It sends an OS-agnostic intent to the local Node.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The Must-b HAL intercepts this intent and compiles it perfectly for the native architecture:
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-6">
+          <li className="leading-relaxed">
+            <strong className="text-white">Windows Node:</strong> Translates to <code className="bg-gray-800 px-1 rounded text-emerald-400">Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process -Force</code>
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">macOS/Linux Node:</strong> Translates to <code className="bg-gray-800 px-1 rounded text-emerald-400">kill -9 $(lsof -t -i:3000)</code>
+          </li>
+        </ul>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`// The Cross-Platform Intent Router (Conceptual)
+async function executeAgnosticIntent(intent: SystemIntent) {
+  const osType = NativeOS.getArchitecture(); // 'win32' | 'darwin' | 'linux'
+  
+  if (intent.action === 'FLUSH_DNS') {
+    switch (osType) {
+      case 'win32': return PTY.execute('ipconfig /flushdns');
+      case 'darwin': return PTY.execute('sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder');
+      case 'linux': return PTY.execute('sudo resolvectl flush-caches');
+      default: throw new FatalError("Unsupported Node Architecture");
+    }
+  }
+}`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. Windows Node ──────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🪟 2. Windows Node Supremacy (The NT Kernel)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Windows is the undisputed king of enterprise environments, but its legacy architecture (Registry, COM Objects, Win32 APIs) is notoriously hostile to standard AI agents.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">PowerShell Deep Hooking:</strong> Must-b bypasses standard <code className="bg-gray-800 px-1 rounded text-emerald-400">cmd.exe</code> limitations, utilizing persistent PowerShell 5.1+ runspaces to interact directly with .NET objects.</li>
+          <li className="leading-relaxed"><strong className="text-white">Registry &amp; Service Sovereignty:</strong> The daemon can autonomously modify Windows Registry keys to establish persistence or configure background <code className="bg-gray-800 px-1 rounded text-emerald-400">svchost</code> services.</li>
+          <li className="leading-relaxed"><strong className="text-white">DXGI Frame Interception:</strong> Ghost Mode on Windows utilizes DirectX Graphics Infrastructure (DXGI) for zero-latency screen buffering, bypassing standard GDI capture bottlenecks.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. Unix & macOS ──────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🍏 3. Unix &amp; macOS Sovereignty (POSIX Compliance)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          On Unix-like systems, everything is a file. Must-b leverages this philosophy to achieve absolute system dominance.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">Daemonization (systemd &amp; launchd):</strong> The local agent provisions itself as a background service, ensuring it survives system reboots and user logouts.</li>
+          <li className="leading-relaxed"><strong className="text-white">JXA &amp; AppleScript Injection:</strong> On macOS, Must-b breaks out of the terminal by synthesizing JavaScript for Automation (JXA) scripts. This allows the AI to autonomously control native macOS apps (System Settings, Finder, Safari) even when Ghost Mode (pixel-clicking) is disabled.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. Mobile Horizon ────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">📱 4. The Mobile Horizon: iOS &amp; Android Nodes (Active R&amp;D)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          A true Cognitive OS must eventually conquer the mobile ecosystem. Must-b Mobile Nodes are currently in advanced R&amp;D within our Cyber Fortress labs. We are not building a simple "Chat App"; we are building tethered mobile execution nodes.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed"><strong className="text-white">Android ADB Injection:</strong> By tethering an Android device to a Desktop Node via the Android Debug Bridge (ADB), Must-b can inject raw <code className="bg-gray-800 px-1 rounded text-emerald-400">input tap x y</code> and <code className="bg-gray-800 px-1 rounded text-emerald-400">input swipe</code> commands directly into the mobile kernel. This enables the AI to navigate apps like Instagram or TikTok that possess impenetrable APIs.</li>
+          <li className="leading-relaxed"><strong className="text-white">iOS XCUITest Harnessing:</strong> Bypassing Apple's draconian sandboxing requires leveraging developer testing frameworks. The Must-b iOS Node utilizes automated XCUITest pathways to simulate physical gestures, text injection, and UI element parsing on un-jailbroken iPhones.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 5. Node Architecture Matrix ──────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚖️ Node Architecture Matrix</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Capability</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Windows Node</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">macOS / Linux Node</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Mobile Nodes (R&amp;D)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Native Shell</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">PowerShell / CMD</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Bash / Zsh</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">ADB Shell / XCUITest</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">UI Automation</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Win32 API / Ghost Mode</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Quartz / X11 / JXA</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Appium / Native Injection</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Daemon Persistence</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Windows Services</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">systemd / launchd</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Background Execution Limits apply</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">File System Access</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">NTFS (Full ACL control)</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">APFS / ext4 (Root via sudo)</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Sandboxed (Scoped storage only)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Cloud Brain Link</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">TCP WebSocket Bridge</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">TCP WebSocket Bridge</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Tethered / HTTP/3 QUIC</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </>
     )
   },
+
   "Proprietary License": {
     title: "Proprietary License",
     icon: Scale,
