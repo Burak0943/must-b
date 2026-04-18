@@ -940,25 +940,148 @@ function extractDeepNodes(rootElement) {
     icon: Terminal,
     content: (
       <>
-        <p>
-          Must-b possesses absolute, <strong className="text-cyan-400">native terminal supremacy</strong>. The command-line interface is not merely a tool; it is the Cognitive OS's primary domain for system-level orchestration.
+        {/* ── Opening ──────────────────────────────────────── */}
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          For traditional AI, the command-line interface is a foreign concept—a place where it occasionally suggests bash snippets for the user to manually copy and paste. Must-b fundamentally shatters this barrier.
+        </p>
+        <p className="text-gray-300 mb-8 leading-relaxed">
+          Through <strong className="text-cyan-400">Terminal Supremacy</strong>, the command line is not just a tool; it is the Cognitive OS's primary domain for system-level orchestration. Must-b does not merely execute commands; it assimilates the shell environment, maintaining persistent state, managing detached processes, and autonomously self-healing broken deployments.
         </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">Advanced Process Management</h3>
-        <p>
-          The local daemon retains the capability to spawn detached background processes, aggressively terminate zombie tasks via PID isolation, monitor system resource allocation (CPU/RAM heap telemetry) in real-time, and dynamically pipe standard input/output streams (stdin/stdout) between disparate system applications.
-        </p>
+        <hr className="border-gray-800 my-8" />
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">The Auto-Debugging Healing Loop</h3>
-        <p>
-          When a fatal error is encountered during complex operations (e.g., compiling a Next.js application or building a Docker container image), Must-b traps the standard error output (stderr) and non-zero exit codes. Instead of halting execution, it feeds this error stack trace back into its cognitive reasoning loop. 
+        {/* ── 1. PTY Multiplexing ──────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🖥️ 1. Persistent PTY Multiplexing (Stateful Shells)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Standard AI CLI tools execute commands in isolated, stateless child processes (e.g., Node's <code className="bg-gray-800 px-1 rounded text-emerald-400">child_process.exec</code>). This means they forget environment variables (<code className="bg-gray-800 px-1 rounded text-emerald-400">$PATH</code>), directory changes (<code className="bg-gray-800 px-1 rounded text-emerald-400">cd</code>), and SSH keys the millisecond the command finishes.
         </p>
-        <p className="mt-3">
-          The Cloud Brain synthesizes an Abstract Syntax Tree (AST) structural patch, modifies the relevant source files via local File System APIs, and recursively re-executes the command. This deeply integrated, asynchronous auto-healing event loop continues until a zero-exit code is definitively achieved.
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b implements native <strong className="text-white">Pseudo-Terminal (PTY) Multiplexing</strong>. It spawns persistent, stateful <code className="bg-gray-800 px-1 rounded text-emerald-400">bash</code>, <code className="bg-gray-800 px-1 rounded text-emerald-400">zsh</code>, or <code className="bg-gray-800 px-1 rounded text-emerald-400">powershell</code> sessions in the background.
         </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed">
+            <strong className="text-white">State Retention:</strong> When Must-b navigates to <code className="bg-gray-800 px-1 rounded text-emerald-400">/var/www/html</code>, activates a Python <code className="bg-gray-800 px-1 rounded text-emerald-400">venv</code>, and exports an <code className="bg-gray-800 px-1 rounded text-emerald-400">AWS_ACCESS_KEY</code>, that exact state is preserved for all subsequent multi-agent operations.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Interactive Prompt Handling:</strong> If a command prompts for user input (e.g., <code className="bg-gray-800 px-1 rounded text-emerald-400">Do you want to continue? [Y/n]</code>), Must-b intercepts the <code className="bg-gray-800 px-1 rounded text-emerald-400">stdout</code> stream in real-time, autonomously evaluates the context via the Cloud Brain, and injects the correct <code className="bg-gray-800 px-1 rounded text-emerald-400">stdin</code> response without freezing.
+          </li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 2. Auto-Healing Loop ─────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧬 2. The Auto-Debugging Healing Loop</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          The hallmark of Terminal Supremacy is Must-b's ability to act as a relentless DevOps engineer. When a complex operation fails (e.g., compiling a Next.js application, building a fractured Docker image, or encountering a Rust borrow-checker error), Must-b does not halt execution and ask the human for help.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          It traps the <code className="bg-gray-800 px-1 rounded text-emerald-400">stderr</code> output, reads the non-zero exit code, and initiates an <strong className="text-white">Asynchronous Auto-Healing Event Loop</strong>:
+        </p>
+        <ol className="list-decimal pl-5 space-y-3 text-gray-300 mb-6">
+          <li className="leading-relaxed"><strong className="text-white">Trace Ingestion:</strong> The daemon captures the full stack trace and feeds it back into the Omni-Context Memory.</li>
+          <li className="leading-relaxed"><strong className="text-white">AST Structural Patching:</strong> The Cloud Brain synthesizes an Abstract Syntax Tree (AST) diff, locates the faulty logic in the local file system, and writes a highly targeted patch.</li>
+          <li className="leading-relaxed"><strong className="text-white">Recursive Execution:</strong> Must-b re-runs the compiler. If it fails again, it increases the context depth and tries a new topological approach.</li>
+          <li className="leading-relaxed"><strong className="text-white">Zero-Exit Sovereignty:</strong> This loop continues recursively (capped by the <code className="bg-gray-800 px-1 rounded text-emerald-400">maxRecursionDepth</code> limit) until a <code className="bg-gray-800 px-1 rounded text-emerald-400">0</code> exit code is definitively achieved.</li>
+        </ol>
+        <pre className="bg-gray-900 text-emerald-400 p-4 rounded-lg my-6 overflow-x-auto border border-gray-800"><code>{`// The Autonomous Healing Loop Architecture (Conceptual)
+async function executeWithSupremacy(command: string, contextDir: string, depth = 0) {
+  if (depth > MAX_RECURSION) throw new Error("Terminal Supremacy: Irrecoverable Cascade.");
+
+  const { exitCode, stdout, stderr } = await PTYEngine.run(command, contextDir);
+  
+  if (exitCode !== 0) {
+    Logger.warn(\`Execution failed. Initiating Healing Loop (Depth: \${depth + 1})\`);
+    
+    // Cloud Brain analyzes the raw stderr and the current file state
+    const astPatch = await CloudBrain.analyzeFailure(stderr, FileSystem.getTree());
+    
+    // Local Muscle applies the patch directly to the disk
+    await FileSystem.applyPatch(astPatch);
+    
+    // Recursive re-execution
+    return executeWithSupremacy(command, contextDir, depth + 1);
+  }
+  
+  return stdout; // Execution Sovereign
+}`}</code></pre>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 3. PID Sovereignty ───────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚙️ 3. PID Sovereignty &amp; Zombie Eradication</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Must-b manages the lifecycle of your host's background tasks with extreme prejudice.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed">
+            <strong className="text-white">Detached Spawning:</strong> It can spin up local PostgreSQL databases, Redis caches, or Next.js development servers as detached daemons, keeping them alive even if the main Must-b UI is closed.
+          </li>
+          <li className="leading-relaxed">
+            <strong className="text-white">Zombie Process Eradication:</strong> Utilizing OS-level telemetry, Must-b detects orphaned child processes (zombies) that are hoarding ports (e.g., <code className="bg-gray-800 px-1 rounded text-emerald-400">EADDRINUSE: port 3000 is already in use</code>) and aggressively terminates them via <code className="bg-gray-800 px-1 rounded text-emerald-400">SIGKILL</code> before restarting the required service.
+          </li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 4. Hookify Shield ────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🛡️ 4. The Hookify Shield (Execution Air-Gap)</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Absolute power requires absolute discipline. Granting an AI stateful, root-level terminal access is a massive security vector. Must-b mitigates this via the <strong className="text-white">Hookify Engine</strong>.
+        </p>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          Before any shell command is physically dispatched to the PTY, it must pass through a strict, zero-trust validation layer.
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          <li className="leading-relaxed">Destructive patterns (e.g., <code className="bg-gray-800 px-1 rounded text-emerald-400">rm -rf /</code>, <code className="bg-gray-800 px-1 rounded text-emerald-400">mkfs</code>, <code className="bg-gray-800 px-1 rounded text-emerald-400">DROP TABLE</code>) are intercepted at the AST level.</li>
+          <li className="leading-relaxed">Hookify enforces plain-language rules defined by the user (e.g., <em>"Never delete directories outside of ./tmp"</em>) and translates them into rigid cryptographic execution blockers. The Cloud Brain proposes the command; Hookify authorizes it.</li>
+        </ul>
+
+        <hr className="border-gray-800 my-8" />
+
+        {/* ── 5. Matrix ────────────────────────────────────── */}
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">⚖️ Command Line Matrix</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm mb-8 mt-4">
+            <thead>
+              <tr>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Feature</th>
+                <th className="border-b border-gray-800 pb-2 pr-6 text-white font-semibold">Stateless AI CLI Wrappers</th>
+                <th className="border-b border-gray-800 pb-2 text-white font-semibold">Must-b Terminal Supremacy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Execution Context</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Ephemeral, stateless <code className="bg-gray-900 px-1 rounded">exec()</code></td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Persistent, stateful PTY (Pseudo-Terminal)</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Interactive Prompts</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Freezes or crashes</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Autonomously reads stdout and pipes stdin</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Error Handling</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Prints error and exits</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Triggers AST-patching Auto-Healing Loop</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Process Management</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">Blind to background PIDs</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Kills port-hogging zombies, spawns daemons</td>
+              </tr>
+              <tr>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-cyan-400 font-medium whitespace-nowrap">Security Mechanism</td>
+                <td className="border-b border-gray-800/50 py-3 pr-6 text-gray-300">None (Executes anything)</td>
+                <td className="border-b border-gray-800/50 py-3 text-emerald-400 font-medium">Hookify Shield (AST-level destructive command blocking)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </>
     )
   },
+
   "Cyber Fortress": {
     title: "Cyber Fortress",
     icon: Shield,
