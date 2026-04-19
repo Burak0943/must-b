@@ -15,6 +15,7 @@ import HubDetail from "./pages/HubDetail";
 import DocsPage from "./pages/DocsPage";
 import VectorVault from "./pages/VectorVault";
 import TheBridge from "./pages/TheBridge";
+import { CodeApprovalPanel } from "@/components/CodeApprovalPanel";
 
 const queryClient = new QueryClient();
 
@@ -78,6 +79,8 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        {/* CodeApprovalPanel — always mounted, shows as a floating overlay when backend emits require_approval */}
+        <CodeApprovalPanel />
       </TooltipProvider>
     </QueryClientProvider>
   );
