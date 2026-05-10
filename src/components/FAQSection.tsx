@@ -5,23 +5,23 @@ import { ChevronDown, HelpCircle } from "lucide-react";
 const faqs = [
   {
     question: "Must-b yerel modelleri nasıl kullanıyor?",
-    answer: "Must-b, Ollama ve benzeri yerel LLM çalışma zamanları ile entegre olarak çalışır. Ekran kartınızın (GPU) gücünü kullanarak verilerinizi buluta göndermeden tamamen kendi donanımınızda işlem yapar."
+    answer: "Must-b, bilgisayarınızdaki donanım gücünü (özellikle GPU) tam kapasiteyle kullanabilmeniz için Ollama ve benzeri yerel LLM (Büyük Dil Modeli) çalışma zamanlarıyla %100 entegre çalışır. Sisteme Llama 3, Mistral veya kendi eğittiğiniz herhangi bir açık kaynaklı modeli doğrudan bağlayabilirsiniz. Bu sayede kodunuz, proje dosyalarınız veya ticari sırlarınız hiçbir zaman dış bulut sunucularına (OpenAI, Google vb.) gönderilmez. Hem \"Sıfır API Maliyeti\" avantajıyla öngörülemeyen dolar bazlı faturalardan kurtulursunuz hem de dış dünyadan tamamen izole, maksimum güvenlikli bir otonom yapay zeka deneyimi yaşarsınız."
   },
   {
     question: "API anahtarlarımı kendim mi sağlamalıyım?",
-    answer: "Lite ve Pro paketlerinde bulut tabanlı hazır modelleri kullanabilirsiniz. Ancak Local paketi seçerseniz kendi API anahtarlarınızı (OpenAI, Anthropic vb.) kullanabilir veya tamamen ücretsiz yerel modellerle devam edebilirsiniz."
+    answer: "Bu durum seçtiğiniz plana göre esneklik gösterir. Eğer Must-b Pro veya Elite paketlerinden birini kullanıyorsanız, hiçbir API anahtarıyla uğraşmanıza gerek yoktur; en güçlü bulut modellerine (GPT-4o, Claude 3.5 Sonnet vb.) kesintisiz erişim aboneliğinize dahildir ve arka planda bizim tarafımızdan yönetilir. Ancak Must-b Lite veya Local paketini tercih ederseniz kontrol tamamen size geçer. Kendi OpenAI, Anthropic veya diğer API anahtarlarınızı sisteme tanımlayarak (Bring Your Own Key) sadece harcadığınız token kadar ödeyebilir ya da güçlü bir bilgisayarınız varsa tamamen yerel modelleri (Local LLM) kullanarak API masrafını %100 sıfırlayabilirsiniz."
   },
   {
     question: "Kurumsal sürümde internet bağlantısı zorunlu mu?",
-    answer: "Hayır. Enterprise (Air-Gapped) sürümümüz tamamen kapalı ağlarda çalışacak şekilde tasarlanmıştır. Hiçbir dış bağlantı veya telemetri verisi transferi gerçekleşmez."
+    answer: "Kesinlikle hayır. Must-b Enterprise (Kurumsal) sürümünün, piyasadaki standart yapay zeka araçlarından en büyük farkı budur. Savunma sanayisi, bankacılık ve sağlık gibi veri gizliliğinin kırmızı çizgi olduğu stratejik sektörler için sistemimiz \"Air-Gapped\" (İnternetsiz / İzole Ağ) standartlarında çalışacak şekilde tasarlanmıştır. Kurumunuzun kendi yerel sunucularına (On-Premise) kurulan Must-b, dış dünya ile hiçbir veri alışverişi (Zero-Telemetry) yapmaz. Wi-Fi kartı sökülmüş gizlilik dereceli odalarda ve kapalı intranet ağlarında bile otonom yazılım geliştirme süreçlerini tam performansla, sızıntı riski sıfır olarak sürdürebilirsiniz."
   },
   {
     question: "Multi-Agent Swarm mimarisi ne işe yarar?",
-    answer: "Bu mimari, karmaşık bir görevi alt görevlere bölerek farklı uzmanlıklara sahip AI ajanlarına dağıtır. Örneğin bir ajan UI kodlarken diğeri veritabanı şemasını hazırlar, bu da işlem süresini %60'a kadar kısaltır."
+    answer: "Multi-Agent Swarm (Ajan Sürüsü) mimarisi, yapay zekayı tek boyutlu bir \"sohbet asistanı\" olmaktan çıkarıp otonom bir \"siber yazılım fabrikasına\" dönüştüren çekirdek teknolojimizdir. Siz sisteme büyük bir mimari görev verdiğinizde, Must-b bu işi tek bir ajana yüklemek yerine uzmanlıklara böler. Bir ajan veritabanı tablolarını ve RLS güvenlik politikalarını hazırlarken, eş zamanlı olarak diğer ajan UI/UX bileşenlerini kodlar, bir diğeri ise terminalden dönen logları okuyup çıkan hataları kendi kendine çözer (Auto-Fix). Bu paralel çalışma sistemi, insan müdahalesini %80 oranında ortadan kaldırır ve projelerin geleneksel yöntemlere göre katbekat hızlı ayağa kalkmasını sağlar."
   },
   {
     question: "Aboneliğimi istediğim zaman iptal edebilir miyim?",
-    answer: "Evet, aylık aboneliklerinizi dilediğiniz zaman kontrol paneliniz üzerinden tek tıkla iptal edebilirsiniz. İptal sonrası fatura dönemi sonuna kadar tüm özelliklere erişmeye devam edersiniz."
+    answer: "Evet, Must-b'nin Bireysel ve Profesyonel (Lite, Pro, Elite) paketlerinde taahhüt, gizli sözleşmeler veya karmaşık iptal süreçleri yoktur. Aboneliğinizi kullanıcı panelinizden tek tıkla istediğiniz an iptal edebilirsiniz. İptal ettiğinizde, o ayki fatura döneminizin sonuna kadar mevcut haklarınızı kullanmaya devam edersiniz. Ayrıca Must-b, projelerinizi kendi yerel dizininizde ve sizin bağladığınız hesaplarda (Vercel, Supabase vb.) ayağa kaldırdığı için aboneliğiniz bitse bile; yazdırılan tüm kodlar, kurulan mimariler ve oluşturulan veritabanları sonsuza kadar %100 sizin mülkiyetinizde kalır. Bizi bir kilit değil, bir hızlandırıcı olarak görün."
   }
 ];
 
