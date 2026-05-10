@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import MeshBackground from "@/components/MeshBackground";
 import PricingSection from "@/components/PricingSection";
-import FAQSection from "@/components/FAQSection";
+import CostKillerSection from "@/components/CostKillerSection";
+import FeatureMatrix from "@/components/FeatureMatrix";
 import { SiteFooter } from "@/components/SiteFooter";
 
 export default function PricingPage() {
@@ -36,7 +37,8 @@ export default function PricingPage() {
       </div>
 
       <PricingSection />
-      <FAQSection />
+      <CostKillerSection />
+      <FeatureMatrix />
       <SiteFooter />
     </motion.main>
   );
