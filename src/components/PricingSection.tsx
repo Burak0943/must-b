@@ -178,7 +178,7 @@ export default function PricingSection() {
           </motion.div>
         </motion.div>
 
-        {/* Kurumsal / Enterprise Blok */}
+        {/* Kurumsal / Enterprise Blok - Compact Banner Version */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -190,63 +190,54 @@ export default function PricingSection() {
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20" />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-cyan-600/50 to-transparent" />
           
-          <div className="p-8 md:p-12 lg:p-16 relative z-10 flex flex-col lg:flex-row gap-12 items-center">
+          <div className="p-6 md:p-8 lg:p-10 relative z-10 flex flex-col lg:flex-row gap-8 items-center">
             
             <div className="flex-1">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs font-mono text-muted-foreground mb-6">
-                <Shield className="w-3.5 h-3.5" />
-                <span>ENTERPRISE (B2B & B2G)</span>
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-white/10 bg-white/5 text-[10px] font-mono text-muted-foreground">
+                  <Shield className="w-3 h-3" />
+                  <span>ENTERPRISE (B2B & B2G)</span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight">
+                  Savunma Sanayii ve Kurumlar İçin Milli Bilişsel Altyapı
+                </h3>
               </div>
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
-                Savunma Sanayii ve Kurumlar İçin Milli Bilişsel Altyapı
-              </h3>
-              <p className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl">
+              
+              <p className="text-muted-foreground text-sm leading-relaxed mb-6 max-w-3xl">
                 Veri gizliliğinin hayati olduğu kapalı ağlarda, dış dünyaya tamamen kapalı (Air-Gapped) çalışan otonom işletim sistemi. Kurumunuzun KVKK yükümlülüklerini sıfırlayın.
               </p>
               
-              <div className="grid sm:grid-cols-2 gap-6 mb-10">
-                <div className="flex gap-4">
-                  <Server className="w-6 h-6 text-cyan-500 shrink-0" />
-                  <div>
-                    <h4 className="font-bold text-white text-sm mb-1">On-Premise (Yerinde Kurulum)</h4>
-                    <p className="text-xs text-muted-foreground">Sistemi doğrudan şirketinizin kendi kapalı sunucularına kuruyoruz.</p>
-                  </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-0">
+                <div className="flex gap-3 items-start">
+                  <Server className="w-4 h-4 text-cyan-500 shrink-0 mt-0.5" />
+                  <div className="font-medium text-white/80 text-[11px] leading-tight">On-Premise Kurulum</div>
                 </div>
-                <div className="flex gap-4">
-                  <Shield className="w-6 h-6 text-cyan-500 shrink-0" />
-                  <div>
-                    <h4 className="font-bold text-white text-sm mb-1">Air-Gapped & Zero-Telemetry</h4>
-                    <p className="text-xs text-muted-foreground">İnternetsiz kırmızı ağlarda %100 otonom garanti. Veri izleme (telemetry) yoktur.</p>
-                  </div>
+                <div className="flex gap-3 items-start">
+                  <Shield className="w-4 h-4 text-cyan-500 shrink-0 mt-0.5" />
+                  <div className="font-medium text-white/80 text-[11px] leading-tight">Air-Gapped Güvenlik</div>
                 </div>
-                <div className="flex gap-4">
-                  <Zap className="w-6 h-6 text-cyan-500 shrink-0" />
-                  <div>
-                    <h4 className="font-bold text-white text-sm mb-1">İthal Bağımlılığın Bitirilmesi</h4>
-                    <p className="text-xs text-muted-foreground">Yabancı bulut API'lerine olan bağımlılığı yerel modellerle ortadan kaldırın.</p>
-                  </div>
+                <div className="flex gap-3 items-start">
+                  <Zap className="w-4 h-4 text-cyan-500 shrink-0 mt-0.5" />
+                  <div className="font-medium text-white/80 text-[11px] leading-tight">Yerel Model Optimizasyonu</div>
                 </div>
-                <div className="flex gap-4">
-                  <Star className="w-6 h-6 text-cyan-500 shrink-0" />
-                  <div>
-                    <h4 className="font-bold text-white text-sm mb-1">Özel Eğitim ve Ar-Ge</h4>
-                    <p className="text-xs text-muted-foreground">Kurumunuzun iç verilerine göre eğitilmiş özel otonom ajanlar.</p>
-                  </div>
+                <div className="flex gap-3 items-start">
+                  <Star className="w-4 h-4 text-cyan-500 shrink-0 mt-0.5" />
+                  <div className="font-medium text-white/80 text-[11px] leading-tight">Özel Eğitim ve Ar-Ge</div>
                 </div>
               </div>
-
-              <button className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors">
-                Satış Ekibiyle Görüşün
-                <ArrowRight className="w-4 h-4" />
-              </button>
             </div>
 
-            {/* Sağ tarafta görsel bir obje veya boşluk olabilir. Şimdilik ağır bir kalkan/sunucu ikonu animasyonu. */}
-            <div className="hidden lg:flex w-[300px] h-[300px] shrink-0 items-center justify-center relative">
-              <div className="absolute inset-0 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
-              <div className="relative w-48 h-48 border border-white/10 rounded-3xl bg-black/50 backdrop-blur-xl flex items-center justify-center shadow-2xl">
-                <Shield className="w-20 h-20 text-cyan-500/80" />
-                <div className="absolute inset-0 border border-cyan-500/30 rounded-3xl animate-ping opacity-20" style={{ animationDuration: '3s' }} />
+            <div className="flex flex-col sm:flex-row items-center gap-6 shrink-0">
+              <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-bold text-xs hover:bg-gray-200 transition-colors">
+                Özel Teklif Alın
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              
+              <div className="hidden sm:flex w-16 h-16 shrink-0 items-center justify-center relative">
+                <div className="absolute inset-0 bg-cyan-500/10 rounded-full blur-xl animate-pulse" />
+                <div className="relative w-12 h-12 border border-white/10 rounded-xl bg-black/50 backdrop-blur-xl flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-cyan-500/80" />
+                </div>
               </div>
             </div>
 
