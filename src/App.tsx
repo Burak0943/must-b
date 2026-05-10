@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import MustbHub from "./components/MustbHub";
 import HubDetail from "./pages/HubDetail";
 import DocsPage from "./pages/DocsPage";
+import PricingPage from "./pages/PricingPage";
 import VectorVault from "./pages/VectorVault";
 import TheBridge from "./pages/TheBridge";
 import { CodeApprovalPanel } from "@/components/CodeApprovalPanel";
@@ -49,6 +50,7 @@ const App = () => {
             <Route path="/ecosystem" element={<MustbHub />} />
             <Route path="/ecosystem/:type/:id" element={<HubDetail />} />
             <Route path="/docs" element={<DocsPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
             <Route path="/docs/skills" element={<Navigate to="/ecosystem" replace />} />
             <Route path="/docs/setup" element={<Navigate to="/docs" replace />} />
             
