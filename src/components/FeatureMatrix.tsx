@@ -5,31 +5,30 @@ const tableData = [
     category: "Otonom Yetenekler",
     icon: Zap,
     features: [
-      { name: "Yapay Zeka Destekli Kod Yazımı", lite: true, pro: true, elite: true, local: true },
-      { name: "Gelişmiş Auto-Fix (Hata Çözme)", lite: false, pro: true, elite: true, local: true },
-      { name: "Multi-Agent Swarm (Ajan Sürüsü)", lite: false, pro: false, elite: true, local: "Sınırsız" },
-      { name: "Uçtan Uca UI/UX Tasarımı", lite: "Temel", pro: true, elite: true, local: true },
-      { name: "Veritabanı Şeması Yönetimi", lite: false, pro: true, elite: true, local: true },
+      { name: "Daily Limit (Günlük Hacim)", free: "$2", pro: "$20", elite: "$100", local: "Sınırsız" },
+      { name: "Artifacts 2.0 (Görsel Kod Panelleri)", free: false, pro: true, elite: true, local: false },
+      { name: "Multi-Agent Swarm (Ajan Sürüsü)", free: false, pro: false, elite: "13+ Ajan", local: "Sınırsız" },
+      { name: "Auto-Fix (Hata Çözme)", free: false, pro: true, elite: true, local: true },
+      { name: "Akıllı Rotalama (Model Router)", free: true, pro: true, elite: true, local: false },
     ]
   },
   {
     category: "Bağlam ve Hafıza",
     icon: Database,
     features: [
-      { name: "Kısa Süreli Bilişsel Hafıza", lite: "4K Token", pro: "32K Token", elite: "128K Token", local: "Limit Yok" },
-      { name: "LTM (Uzun Süreli Proje Hafızası)", lite: false, pro: true, elite: true, local: true },
-      { name: "Dosya Okuma ve İndeksleme", lite: "5 Dosya", pro: "Sınırsız", elite: "Sınırsız", local: "Sınırsız" },
-      { name: "Büyük Mimari Analizi", lite: false, pro: "Kısmi", elite: true, local: true },
+      { name: "Hafıza Tipi", free: "Lokal Context", pro: "Cloud LTM", elite: "Cloud LTM", local: "Lokal Context" },
+      { name: "Dosya Okuma ve İndeksleme", free: "5 Dosya", pro: "Sınırsız", elite: "Sınırsız", local: "Sınırsız" },
+      { name: "Deep Research & Scrape", free: false, pro: "Kısmi", elite: true, local: true },
     ]
   },
   {
     category: "Güvenlik ve Altyapı",
     icon: Shield,
     features: [
-      { name: "Zero-Telemetry (Veri Gizliliği)", lite: false, pro: false, elite: "Opsiyonel", local: true },
-      { name: "Yerel Donanım (GPU) Desteği", lite: false, pro: false, elite: false, local: true },
-      { name: "Öncelikli Bulut Entegrasyonu", lite: false, pro: true, elite: true, local: false },
-      { name: "Air-Gapped (Çevrimdışı Çalışma)", lite: false, pro: false, elite: false, local: true },
+      { name: "Model Kullanımı", free: "Smart Routing", pro: "Smart Routing", elite: "Smart Routing", local: "Kendi API'n / Ollama" },
+      { name: "Zero-Telemetry (Veri Gizliliği)", free: false, pro: false, elite: "Opsiyonel", local: true },
+      { name: "Air-Gapped (Çevrimdışı Çalışma)", free: false, pro: false, elite: false, local: true },
+      { name: "Full Skill Store Erişimi", free: false, pro: true, elite: true, local: true },
     ]
   }
 ];
@@ -51,7 +50,7 @@ export default function FeatureMatrix() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Detaylı Özellik Karşılaştırması</h2>
-          <p className="text-muted-foreground">İhtiyacınıza en uygun Must-b deneyimini keşfedin.</p>
+          <p className="text-muted-foreground">V1.72.40 — Stratejik Yetenek Matrisi</p>
         </div>
 
         <div className="overflow-x-auto rounded-3xl border border-white/[0.08] bg-[#060709] backdrop-blur-xl">
@@ -60,7 +59,7 @@ export default function FeatureMatrix() {
               <tr className="border-b border-white/[0.08]">
                 <th className="p-8 text-sm font-bold text-muted-foreground uppercase tracking-widest bg-white/[0.02]">Özellikler</th>
                 <th className="p-8 text-center bg-white/[0.02]">
-                  <div className="text-white font-bold text-xl">Lite</div>
+                  <div className="text-white font-bold text-xl">Free</div>
                 </th>
                 <th className="p-8 text-center bg-primary/[0.05] relative">
                   <div className="text-primary font-bold text-xl">Pro</div>
@@ -90,7 +89,7 @@ export default function FeatureMatrix() {
                       <td className="p-8 text-white/70 group-hover:text-white transition-colors">
                         <span className="text-sm font-medium">{feature.name}</span>
                       </td>
-                      <td className="p-8 border-l border-white/[0.04]">{renderCell(feature.lite)}</td>
+                      <td className="p-8 border-l border-white/[0.04]">{renderCell(feature.free)}</td>
                       <td className="p-8 border-l border-white/[0.04] bg-primary/[0.02]">{renderCell(feature.pro)}</td>
                       <td className="p-8 border-l border-white/[0.04]">{renderCell(feature.elite)}</td>
                       <td className="p-8 border-l border-white/[0.04]">{renderCell(feature.local)}</td>
