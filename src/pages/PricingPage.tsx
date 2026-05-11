@@ -24,7 +24,7 @@ export default function PricingPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-gradient-hero"
         >
-          Şeffaf Fiyatlandırma,<br />Sınırsız Güç.
+          Kod Yazmayın,<br />Sistem İnşa Edin.
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
@@ -32,7 +32,7 @@ export default function PricingPage() {
           transition={{ delay: 0.1 }}
           className="text-lg text-muted-foreground"
         >
-          Geliştirme sürecinizi otonomlaştırmak için size en uygun paketi seçin.
+          Sınırları aşan otonomi. Hobi projelerinden devasa kurumsal mimarilere kadar her ölçekte zekâ ve performans.
         </motion.p>
       </div>
 

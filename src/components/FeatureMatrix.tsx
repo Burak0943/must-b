@@ -5,18 +5,17 @@ const tableData = [
     category: "Otonom Yetenekler",
     icon: Zap,
     features: [
-      { name: "Daily Limit (Günlük Hacim)", free: "$2", pro: "$20", elite: "$100", local: "Sınırsız" },
-      { name: "Artifacts 2.0 (Görsel Kod Panelleri)", free: false, pro: true, elite: true, local: false },
-      { name: "Multi-Agent Swarm (Ajan Sürüsü)", free: false, pro: false, elite: "13+ Ajan", local: "Sınırsız" },
-      { name: "Auto-Fix (Hata Çözme)", free: false, pro: true, elite: true, local: true },
-      { name: "Akıllı Rotalama (Model Router)", free: true, pro: true, elite: true, local: false },
+      { name: "Günlük İşlem Hacmi", free: "$2", pro: "$20", elite: "$100", local: "∞ (Limitsiz)" },
+      { name: "Ajan Mimarisi", free: "Tek Ajan", pro: "Hibrit", elite: "13+ Paralel Swarm", local: "Özel Yapılandırılabilir" },
+      { name: "Görsel Paneller (Artifacts)", free: false, pro: true, elite: true, local: "✅ (Gelişmiş)" },
+      { name: "Hata Çözme (Auto-Fix)", free: "Manuel", pro: "Otonom", elite: "Otonom+", local: "Mimari Seviye" },
     ]
   },
   {
     category: "Bağlam ve Hafıza",
     icon: Database,
     features: [
-      { name: "Hafıza Tipi", free: "Lokal Context", pro: "Cloud LTM", elite: "Cloud LTM", local: "Lokal Context" },
+      { name: "Hafıza Tipi", free: "Cihaz Bazlı", pro: "Bulut Sync", elite: "Bulut Sync", local: "Özel Veri Merkezi" },
       { name: "Dosya Okuma ve İndeksleme", free: "5 Dosya", pro: "Sınırsız", elite: "Sınırsız", local: "Sınırsız" },
       { name: "Deep Research & Scrape", free: false, pro: "Kısmi", elite: true, local: true },
     ]
@@ -25,9 +24,9 @@ const tableData = [
     category: "Güvenlik ve Altyapı",
     icon: Shield,
     features: [
-      { name: "Model Kullanımı", free: "Smart Routing", pro: "Smart Routing", elite: "Smart Routing", local: "Kendi API'n / Ollama" },
-      { name: "Zero-Telemetry (Veri Gizliliği)", free: false, pro: false, elite: "Opsiyonel", local: true },
-      { name: "Air-Gapped (Çevrimdışı Çalışma)", free: false, pro: false, elite: false, local: true },
+      { name: "Veri Gizliliği", free: "Standart", pro: "Standart", elite: "Opsiyonel", local: "💎 Zero-Telemetry" },
+      { name: "Çevrimdışı Çalışma", free: false, pro: false, elite: false, local: "💎 Air-Gapped" },
+      { name: "API Bağımsızlığı", free: false, pro: false, elite: false, local: "💎 BYOK / Local LLM" },
       { name: "Full Skill Store Erişimi", free: false, pro: true, elite: true, local: true },
     ]
   }
@@ -42,7 +41,7 @@ export default function FeatureMatrix() {
         <X className="w-5 h-5 text-white/10 mx-auto" />
       );
     }
-    return <span className="text-sm text-white/80 font-medium text-center block">{val}</span>;
+    return <span className="text-sm text-white/80 font-medium text-center block whitespace-pre-wrap">{val}</span>;
   };
 
   return (
@@ -69,7 +68,7 @@ export default function FeatureMatrix() {
                   <div className="text-white font-bold text-xl">Elite</div>
                 </th>
                 <th className="p-8 text-center bg-white/[0.02]">
-                  <div className="text-purple-400 font-bold text-xl">Local</div>
+                  <div className="text-purple-400 font-bold text-xl">Local (Sovereign)</div>
                 </th>
               </tr>
             </thead>

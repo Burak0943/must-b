@@ -42,11 +42,11 @@ export default function PricingSection() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4 xl:gap-8 mb-16"
         >
-          {/* MUST-B FREE */}
+          {/* 🆓 MUST-B FREE */}
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-white/10 bg-[#0a0c10]/50 backdrop-blur-sm">
             <div className="mb-6">
               <h3 className="text-xl font-bold text-white mb-2">Must-b Free</h3>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Otonom dünyanın sihrini deneyimleyin.</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">"Otonom Dünyaya Merhaba"</p>
             </div>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
@@ -56,10 +56,10 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1">
               {[
-                "Günlük $2 değerinde işlem limiti",
-                "Tek Ajan Mimarisi",
+                "Günlük $2 Bilişsel Kredi",
+                "Standart Otonomi",
                 "Lokal Hafıza",
-                "Temel UI (Standart terminal)",
+                "Ham Terminal Çıktısı",
                 "Must-b Forum Desteği"
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
@@ -73,7 +73,7 @@ export default function PricingSection() {
             </button>
           </motion.div>
 
-          {/* MUST-B PRO (Vurgulu) */}
+          {/* 🥈 MUST-B PRO (Vurgulu) */}
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-primary/50 bg-[#0a0c10] shadow-[0_0_30px_rgba(34,211,238,0.15)] transform lg:-translate-y-4">
             <div className="absolute -top-4 left-1/2 -translate-x-1/2">
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 border border-primary/50 text-xs font-bold text-primary whitespace-nowrap backdrop-blur-md">
@@ -85,7 +85,7 @@ export default function PricingSection() {
             
             <div className="mb-6 relative z-10">
               <h3 className="text-xl font-bold text-white mb-2">Must-b Pro</h3>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Claude Pro fiyatına, tüm Must-b ekosistemi emrinizde.</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">"Kişisel Yazılım Fabrikanız"</p>
             </div>
             <div className="mb-6 relative z-10">
               <div className="flex items-baseline gap-1">
@@ -95,10 +95,10 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1 relative z-10">
               {[
-                "Günlük $20 değerinde işlem limiti",
+                "Günlük $20 Devasa İşlem Hacmi",
                 "Akıllı Rotalama (Model Router)",
-                "Gelişmiş Bilişsel Hafıza (Cloud LTM)",
-                "Artifacts 2.0 (Görsel Kod Panelleri)",
+                "Gelişmiş Artifacts 2.0",
+                "Bulut Bilişsel Hafıza (Cloud LTM)",
                 "Otonom Hata Çözme (Auto-Fix)"
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-white/90">
@@ -112,11 +112,11 @@ export default function PricingSection() {
             </button>
           </motion.div>
 
-          {/* MUST-B ELITE */}
+          {/* 🥇 MUST-B ELITE */}
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-white/10 bg-[#0a0c10]/50 backdrop-blur-sm">
             <div className="mb-6">
               <h3 className="text-xl font-bold text-white mb-2">Must-b Elite</h3>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Kendi otonom ajansınızı saniyeler içinde kurun.</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">"Otonom Ajan Ordusu"</p>
             </div>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
@@ -126,11 +126,11 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1">
               {[
-                "Günlük $100 değerinde işlem hacmi",
-                "Multi-Agent Swarm (13+ Paralel Ajan)",
+                "Günlük $100 Elit İşlem Hacmi",
+                "Multi-Agent Swarm (13+ Ajan)",
                 "Deep Research & Scrape",
-                "Full Skill Store (Spotify, Docker vb.)",
-                "7/24 VIP Destek"
+                "Full Skill Store",
+                "7/24 VIP Mühendis Desteği"
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -143,14 +143,14 @@ export default function PricingSection() {
             </button>
           </motion.div>
 
-          {/* MUST-B LOCAL */}
+          {/* 🏰 MUST-B LOCAL */}
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-purple-500/20 bg-[#0a0c10]/50 backdrop-blur-sm overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <Zap className="w-24 h-24 text-purple-400" />
             </div>
             <div className="mb-6 relative z-10">
               <h3 className="text-xl font-bold text-purple-400 mb-2">Must-b Local</h3>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Kendi donanımınız, sıfır bulut faturası.</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">"Bilişsel Egemenlik"</p>
             </div>
             <div className="mb-6 relative z-10">
               <div className="flex items-baseline gap-1">
@@ -160,11 +160,11 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1 relative z-10">
               {[
-                "Sıfır API Maliyeti (BYOK/Ollama)",
+                "Maliyet Katili ($0 API)",
                 "%100 Veri Gizliliği (Air-Gapped)",
-                "Limitsiz Token (Donanım Gücü Kadar)",
-                "Özel Skill Geliştirme SDK",
-                "Yerel Veri Kaynağı İndeksleme"
+                "Sınırsız Token",
+                "Özel Skill SDK",
+                "Kurumsal Veri İndeksleme"
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
@@ -197,26 +197,26 @@ export default function PricingSection() {
                 <Shield className="w-3.5 h-3.5" />
                 <span>ENTERPRISE (B2B & B2G)</span>
               </div>
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
-                Savunma Sanayii ve Kurumlar İçin Milli Bilişsel Altyapı
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight uppercase">
+                SAVUNMA SANAYİİ VE KURUMLAR İÇİN MİLLİ BİLİŞSEL ALTYAPI
               </h3>
               <p className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl">
-                Veri gizliliğinin hayati olduğu kapalı ağlarda, dış dünyaya tamamen kapalı (Air-Gapped) çalışan otonom işletim sistemi. Kurumunuzun KVKK yükümlülüklerini sıfırlayın.
+                Must-b Local, sadece bir yazılım değildir; kurumunuzun dış dünyadan izole, kendi kendine yeten zekasıdır. KVKK yükümlülüklerini sıfırlayın, ithal bulut API'lerine olan bağımlılığı bitirin.
               </p>
               
               <div className="grid sm:grid-cols-2 gap-6 mb-10">
                 <div className="flex gap-4">
                   <Server className="w-6 h-6 text-cyan-500 shrink-0" />
                   <div>
-                    <h4 className="font-bold text-white text-sm mb-1">On-Premise (Yerinde Kurulum)</h4>
-                    <p className="text-xs text-muted-foreground">Sistemi doğrudan şirketinizin kendi kapalı sunucularına kuruyoruz.</p>
+                    <h4 className="font-bold text-white text-sm mb-1">Yerinde Kurulum</h4>
+                    <p className="text-xs text-muted-foreground">Ekibimiz sisteminizi kendi kapalı sunucularınıza kurar.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <Shield className="w-6 h-6 text-cyan-500 shrink-0" />
                   <div>
-                    <h4 className="font-bold text-white text-sm mb-1">Air-Gapped & Zero-Telemetry</h4>
-                    <p className="text-xs text-muted-foreground">İnternetsiz kırmızı ağlarda %100 otonom garanti. Veri izleme (telemetry) yoktur.</p>
+                    <h4 className="font-bold text-white text-sm mb-1">Hava Boşluklu Güvenlik</h4>
+                    <p className="text-xs text-muted-foreground">İnternet kablosunu çektiğinizde bile Must-b üretmeye devam eder.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
