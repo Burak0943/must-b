@@ -46,8 +46,8 @@ export default function PricingSection() {
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-white/10 bg-[#0a0c10]/50 backdrop-blur-sm">
             <div className="mb-6">
               <h3 className="text-xl font-bold text-white mb-1">Must-b Free</h3>
-              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Otonom Dünyaya İlk Adım"</p>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Yapay zekanın terminalle buluştuğu yeri keşfedin. Basit işleri ona delege edin.</p>
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Bilişsel Asistanınız"</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">Sesinle uyanan, 57+ yeteneğiyle bilgisayarında temel görevleri yerine getiren otonom giriş katmanı.</p>
             </div>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
@@ -57,10 +57,11 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1">
               {[
-                "Basit Terminal Görevleri: Amelelikleri ona yaptırın.",
-                "Temel Kod Yazımı: Tek dosyada fonksiyonlar ve düzeltmeler.",
-                "Bilgisayarınla Konuş: Terminalden analizler iste.",
-                "Günlük $2 Bilişsel Kredi: Öğrenmek için yeterli limit."
+                "57+ Gömülü Yetenek: Dosya, git ve sistem komutları.",
+                "Sesli Komut (Whisper): Sadece konuşarak Must-b'yi yönetin.",
+                "Akıllı Tarayıcı Asistanı: Verileri .md formatında çeker.",
+                "Tek Ajanlı Yürütme: Görevleri güvenli ve adım adım çözer.",
+                "Günlük Otonom Kredi: Her gün yenilenen $2 kullanım hakkı."
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -85,8 +86,8 @@ export default function PricingSection() {
             
             <div className="mb-6 relative z-10">
               <h3 className="text-xl font-bold text-white mb-1">Must-b Pro</h3>
-              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Kişisel Yazılım Fabrikanız"</p>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Siz sadece ne istediğinizi söyleyin, o kodlasın, kursun ve hataları düzeltsin.</p>
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Dijital İş Ortağınız"</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">Finansal otomasyondan fiziksel donanım kontrolüne kadar bilgisayarınızın tam kontrolünü ona bırakın.</p>
             </div>
             <div className="mb-6 relative z-10">
               <div className="flex items-baseline gap-1">
@@ -96,11 +97,11 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1 relative z-10">
               {[
-                "Senin Yerine Kod Yazar ve Düzenler: Baştan sona kurgu.",
-                "Hataları Kendi Kendine Çözer (Auto-Fix): Anında çözüm.",
-                "Dünyanın En Zeki Modelleri (Smart Router): Otomatik seçim.",
-                "Gelişmiş Görsel Çalışma Alanı (Artifacts): Canlı önizleme.",
-                "Projelerini Hatırlar (Cloud LTM): Geçmişi asla unutmaz."
+                "Dinamik Ajan Sürüsü (Swarm): Anında 20+ paralel ajan.",
+                "Ghost Mode (Fiziksel Kontrol): Mouse ve klavyeye hükmeder.",
+                "MetaTrader 5 Entegrasyonu: Otonom ticaret stratejileri.",
+                "Bilişsel Hafıza (Cloud LTM): LanceDB ile asla unutmaz.",
+                "Günlük $20 Kredi & Smart Routing: Claude/GPT geçişi."
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-white/90">
                   <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -117,8 +118,8 @@ export default function PricingSection() {
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-white/10 bg-[#0a0c10]/50 backdrop-blur-sm">
             <div className="mb-6">
               <h3 className="text-xl font-bold text-white mb-1">Must-b Elite</h3>
-              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Otonom Ajan Ordusu"</p>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Karmaşık projeleri yöneten ajanslar ve senior yazılımcılar için tam yetkili güç.</p>
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Otonom Yazılım Fabrikası"</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">Sınır tanımayan işlem hacmiyle, uçtan uca proje teslimatı isteyen ajanslar ve seniorlar için.</p>
             </div>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
@@ -128,10 +129,11 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1">
               {[
-                "13+ Uzman Ajan Aynı Anda Çalışır (Swarm): 13 kat hız.",
-                "Derin İnternet Araştırması (Deep Research): Koduna uygular.",
-                "Sınırları Zorlayan İşlem Hacmi: Devasa kapasite.",
-                "Tam Yetki, Sıfır Müdahale: Uçtan uca otonom teslimat."
+                "Günlük $100 Dev İşlem Hacmi: Devasa refactoring kapasitesi.",
+                "Claude 4.7 & Opus Önceliği: En zeki modellere kilitlenir.",
+                "Otonom Mimari ve Hata Çözme: Crash ve Timeout'ları çözer.",
+                "Özel Yetenek (Skill) Geliştirme: Şirketinize özel araçlar.",
+                "Artifacts 2.0 Arayüzü: Yapılan işleri canlı panellerde izleyin."
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -144,15 +146,15 @@ export default function PricingSection() {
             </button>
           </motion.div>
 
-          {/* 🏰 MUST-B LOCAL */}
+          {/* ⚡ MUST-B LOCAL */}
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-purple-500/20 bg-[#0a0c10]/50 backdrop-blur-sm overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <Zap className="w-24 h-24 text-purple-400" />
             </div>
             <div className="mb-6 relative z-10">
               <h3 className="text-xl font-bold text-purple-400 mb-1">Must-b Local</h3>
-              <p className="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2">"Kendi Kaleni İnşa Et"</p>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Verinin dışarı çıkmasına tahammülü olmayanlar ve maliyet takıntısı olanlar için.</p>
+              <p className="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2">"Bilişsel Egemenlik"</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">API faturalarından kurtulun. Bulut bağlantısını kesin ve yerel gücünüzü serbest bırakın.</p>
             </div>
             <div className="mb-6 relative z-10">
               <div className="flex items-baseline gap-1">
@@ -162,10 +164,11 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1 relative z-10">
               {[
-                "Sıfır API Faturası: Kendi ekran kartının gücünü kullan.",
-                "İnternetsiz Otonom (Air-Gapped): Gizlilik %100.",
-                "Sınırsız Zekâ: Bilgisayarın yorulana kadar üret.",
-                "Kurumsal Hafıza: Kurumuna özel yapay zeka çalışanı."
+                "Sıfır API Faturası: Kendi API'lerinizi (BYOK) kullanın.",
+                "%100 Air-Gapped (Çevrimdışı): Sıfır telemetri verisi.",
+                "Sınırsız Token ve İşlem: 7/24 otonom üretim yapın.",
+                "Kurumsal Veri İndeksleme: Özel SQLite/LanceDB hafızası.",
+                "Yerinde Kurulum & Sınırsız Swarm: Kendi sunucularında güç."
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
