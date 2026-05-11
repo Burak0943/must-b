@@ -45,8 +45,9 @@ export default function PricingSection() {
           {/* 🆓 MUST-B FREE */}
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-white/10 bg-[#0a0c10]/50 backdrop-blur-sm">
             <div className="mb-6">
-              <h3 className="text-xl font-bold text-white mb-2">Must-b Free</h3>
-              <p className="text-sm text-muted-foreground min-h-[40px]">"Otonom Dünyaya Merhaba"</p>
+              <h3 className="text-xl font-bold text-white mb-1">Must-b Free</h3>
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Otonom Dünyaya İlk Adım"</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">Yapay zekanın terminalle buluştuğu yeri keşfedin. Basit işleri ona delege edin.</p>
             </div>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
@@ -56,11 +57,10 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1">
               {[
-                "Günlük $2 Bilişsel Kredi",
-                "Standart Otonomi",
-                "Lokal Hafıza",
-                "Ham Terminal Çıktısı",
-                "Must-b Forum Desteği"
+                "Basit Terminal Görevleri: Amelelikleri ona yaptırın.",
+                "Temel Kod Yazımı: Tek dosyada fonksiyonlar ve düzeltmeler.",
+                "Bilgisayarınla Konuş: Terminalden analizler iste.",
+                "Günlük $2 Bilişsel Kredi: Öğrenmek için yeterli limit."
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -84,8 +84,9 @@ export default function PricingSection() {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-3xl pointer-events-none" />
             
             <div className="mb-6 relative z-10">
-              <h3 className="text-xl font-bold text-white mb-2">Must-b Pro</h3>
-              <p className="text-sm text-muted-foreground min-h-[40px]">"Kişisel Yazılım Fabrikanız"</p>
+              <h3 className="text-xl font-bold text-white mb-1">Must-b Pro</h3>
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Kişisel Yazılım Fabrikanız"</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">Siz sadece ne istediğinizi söyleyin, o kodlasın, kursun ve hataları düzeltsin.</p>
             </div>
             <div className="mb-6 relative z-10">
               <div className="flex items-baseline gap-1">
@@ -95,11 +96,11 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1 relative z-10">
               {[
-                "Günlük $20 Devasa İşlem Hacmi",
-                "Akıllı Rotalama (Model Router)",
-                "Gelişmiş Artifacts 2.0",
-                "Bulut Bilişsel Hafıza (Cloud LTM)",
-                "Otonom Hata Çözme (Auto-Fix)"
+                "Senin Yerine Kod Yazar ve Düzenler: Baştan sona kurgu.",
+                "Hataları Kendi Kendine Çözer (Auto-Fix): Anında çözüm.",
+                "Dünyanın En Zeki Modelleri (Smart Router): Otomatik seçim.",
+                "Gelişmiş Görsel Çalışma Alanı (Artifacts): Canlı önizleme.",
+                "Projelerini Hatırlar (Cloud LTM): Geçmişi asla unutmaz."
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-white/90">
                   <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -115,8 +116,9 @@ export default function PricingSection() {
           {/* 🥇 MUST-B ELITE */}
           <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-white/10 bg-[#0a0c10]/50 backdrop-blur-sm">
             <div className="mb-6">
-              <h3 className="text-xl font-bold text-white mb-2">Must-b Elite</h3>
-              <p className="text-sm text-muted-foreground min-h-[40px]">"Otonom Ajan Ordusu"</p>
+              <h3 className="text-xl font-bold text-white mb-1">Must-b Elite</h3>
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Otonom Ajan Ordusu"</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">Karmaşık projeleri yöneten ajanslar ve senior yazılımcılar için tam yetkili güç.</p>
             </div>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
@@ -126,11 +128,10 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1">
               {[
-                "Günlük $100 Elit İşlem Hacmi",
-                "Multi-Agent Swarm (13+ Ajan)",
-                "Deep Research & Scrape",
-                "Full Skill Store",
-                "7/24 VIP Mühendis Desteği"
+                "13+ Uzman Ajan Aynı Anda Çalışır (Swarm): 13 kat hız.",
+                "Derin İnternet Araştırması (Deep Research): Koduna uygular.",
+                "Sınırları Zorlayan İşlem Hacmi: Devasa kapasite.",
+                "Tam Yetki, Sıfır Müdahale: Uçtan uca otonom teslimat."
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -149,8 +150,9 @@ export default function PricingSection() {
               <Zap className="w-24 h-24 text-purple-400" />
             </div>
             <div className="mb-6 relative z-10">
-              <h3 className="text-xl font-bold text-purple-400 mb-2">Must-b Local</h3>
-              <p className="text-sm text-muted-foreground min-h-[40px]">"Bilişsel Egemenlik"</p>
+              <h3 className="text-xl font-bold text-purple-400 mb-1">Must-b Local</h3>
+              <p className="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2">"Kendi Kaleni İnşa Et"</p>
+              <p className="text-sm text-muted-foreground min-h-[40px]">Verinin dışarı çıkmasına tahammülü olmayanlar ve maliyet takıntısı olanlar için.</p>
             </div>
             <div className="mb-6 relative z-10">
               <div className="flex items-baseline gap-1">
@@ -160,11 +162,10 @@ export default function PricingSection() {
             </div>
             <ul className="space-y-4 mb-8 flex-1 relative z-10">
               {[
-                "Maliyet Katili ($0 API)",
-                "%100 Veri Gizliliği (Air-Gapped)",
-                "Sınırsız Token",
-                "Özel Skill SDK",
-                "Kurumsal Veri İndeksleme"
+                "Sıfır API Faturası: Kendi ekran kartının gücünü kullan.",
+                "İnternetsiz Otonom (Air-Gapped): Gizlilik %100.",
+                "Sınırsız Zekâ: Bilgisayarın yorulana kadar üret.",
+                "Kurumsal Hafıza: Kurumuna özel yapay zeka çalışanı."
               ].map((feature, i) => (
                 <li key={i} className="flex gap-3 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
