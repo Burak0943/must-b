@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info, LogOut } from "lucide-react";
+import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info, LogOut, Shield, Zap, Key, Copy, Eye, EyeOff, Check } from "lucide-react";
+import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
@@ -18,6 +18,9 @@ const Dashboard = () => {
   
   const [agents, setAgents] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any>(null);
+  const [showToken, setShowToken] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -32,13 +35,15 @@ const Dashboard = () => {
         return; 
       }
       
-      const [{ data: agentsData }, { data: tasksData }] = await Promise.all([
+      const [{ data: agentsData }, { data: tasksData }, { data: profileData }] = await Promise.all([
         supabase.from('agents').select('*').order('created_at', { ascending: false }),
-        supabase.from('tasks').select('*').order('created_at', { ascending: false })
+        supabase.from('tasks').select('*').order('created_at', { ascending: false }),
+        supabase.from('profiles').select('*').eq('id', session.user.id).single()
       ]);
       
       setAgents(agentsData || []);
       setTasks(tasksData || []);
+      setProfile(profileData || null);
       setLoading(false);
     };
     checkAuthAndFetchData();
@@ -158,51 +163,83 @@ const Dashboard = () => {
             transition={{ duration: 0.4 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10"
           >
-            {/* STAT CARD 1: System Health */}
+            {/* CARD 1: Mevcut Paket */}
             <div className="bg-[#0a0a0a] border border-[#1f2937] p-6 rounded-2xl relative overflow-hidden group hover:border-[#06b6d4]/40 transition-colors">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Server className="w-16 h-16 text-[#06b6d4]" />
+                <Shield className="w-16 h-16 text-[#06b6d4]" />
               </div>
               <div className="flex items-center gap-3 mb-4">
-                <Activity className="w-5 h-5 text-[#06b6d4]" />
-                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">System Health</span>
+                <Zap className="w-5 h-5 text-[#06b6d4]" />
+                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Mevcut Paket</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                </div>
-                <span className="text-3xl font-bold text-white tracking-tight">Online</span>
+                <span className="text-3xl font-bold text-white tracking-tight">{profile?.plan || 'Free'}</span>
+                <span className="text-xs px-2 py-0.5 rounded bg-[#06b6d4]/10 text-[#06b6d4] border border-[#06b6d4]/20 font-mono uppercase">
+                  Active
+                </span>
               </div>
             </div>
 
-            {/* STAT CARD 2: Active Agents */}
+            {/* CARD 2: Günlük Kullanım */}
             <div className="bg-[#0a0a0a] border border-[#1f2937] p-6 rounded-2xl relative overflow-hidden group hover:border-[#06b6d4]/40 transition-colors">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Cpu className="w-16 h-16 text-[#06b6d4]" />
-              </div>
-              <div className="flex items-center gap-3 mb-4">
-                <Cpu className="w-5 h-5 text-[#06b6d4]" />
-                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Active Agents</span>
-              </div>
-              <div className="flex items-end gap-2">
-                <span className="text-3xl font-bold text-white tracking-tight">{activeAgentsCount}</span>
-                <span className="text-gray-500 mb-1 font-medium">Deployed</span>
-              </div>
-            </div>
-
-            {/* STAT CARD 3: Memory Vault */}
-            <div className="bg-[#0a0a0a] border border-[#1f2937] p-6 rounded-2xl relative overflow-hidden group hover:border-[#06b6d4]/40 transition-colors">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <DatabaseZap className="w-16 h-16 text-[#06b6d4]" />
+                <Activity className="w-16 h-16 text-[#06b6d4]" />
               </div>
               <div className="flex items-center gap-3 mb-4">
                 <DatabaseZap className="w-5 h-5 text-[#06b6d4]" />
-                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Memory Vault</span>
+                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Günlük Kullanım</span>
               </div>
-              <div className="flex items-end gap-2">
-                <span className="text-3xl font-bold text-white tracking-tight">{totalMemory}</span>
-                <span className="text-gray-500 mb-1 font-medium">GB Indexed</span>
+              <div className="space-y-3">
+                <div className="flex justify-between items-end">
+                  <span className="text-2xl font-bold text-white tracking-tight">
+                    ${profile?.used_credit_today?.toFixed(2) || '0.00'}
+                  </span>
+                  <span className="text-xs text-gray-500 mb-1">
+                    Limit: ${profile?.daily_credit_limit?.toFixed(2) || '2.00'}
+                  </span>
+                </div>
+                <div className="w-full h-1.5 bg-[#1f2937] rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min(((profile?.used_credit_today || 0) / (profile?.daily_credit_limit || 1)) * 100, 100)}%` }}
+                    className="h-full bg-gradient-to-r from-[#06b6d4] to-[#0891b2]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* CARD 3: API Access Token */}
+            <div className="bg-[#0a0a0a] border border-[#1f2937] p-6 rounded-2xl relative overflow-hidden group hover:border-[#06b6d4]/40 transition-colors">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Key className="w-16 h-16 text-[#06b6d4]" />
+              </div>
+              <div className="flex items-center gap-3 mb-4">
+                <Key className="w-5 h-5 text-[#06b6d4]" />
+                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">API Access Token</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 bg-black/50 border border-[#1f2937] px-3 py-2 rounded-lg font-mono text-xs overflow-hidden text-ellipsis whitespace-nowrap text-gray-400">
+                  {showToken ? profile?.api_access_token : '••••••••••••••••••••••••••••••••'}
+                </div>
+                <button 
+                  onClick={() => setShowToken(!showToken)}
+                  className="p-2 hover:bg-white/5 rounded-lg text-gray-400 hover:text-white transition-colors"
+                >
+                  {showToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+                <button 
+                  onClick={() => {
+                    if (profile?.api_access_token) {
+                      navigator.clipboard.writeText(profile.api_access_token);
+                      setCopied(true);
+                      toast.success("Token kopyalandı!");
+                      setTimeout(() => setCopied(false), 2000);
+                    }
+                  }}
+                  className="p-2 hover:bg-white/5 rounded-lg text-gray-400 hover:text-white transition-colors"
+                >
+                  {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                </button>
               </div>
             </div>
           </motion.div>

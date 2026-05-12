@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import LocalSetup from "./pages/LocalSetup";
 import AuthConnect from "./pages/AuthConnect";
+import CliLogin from "./pages/CliLogin";
 import NotFound from "./pages/NotFound";
 import MustbHub from "./components/MustbHub";
 import HubDetail from "./pages/HubDetail";
@@ -59,6 +60,8 @@ const App = () => {
               path="/login" 
               element={!session ? <Login /> : <Navigate to="/dashboard" replace />} 
             />
+            
+            <Route path="/cli-login" element={<CliLogin />} />
 
             {/* Giriş yapmamışsa Dashboard'a gidemez, Login'e fırlatılır */}
             <Route 
