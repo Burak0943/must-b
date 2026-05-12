@@ -88,6 +88,7 @@ function CopyButton({ text }: { text: string }) {
 }
 
 function TerminalBlock({ platform }: { platform: Platform }) {
+  const { t } = useTranslation();
   const { shellLabel, lines } = PLATFORM_CONTENT[platform];
   const allCmds = lines.map((l) => l.cmd).join("\n");
 
@@ -132,6 +133,7 @@ function TerminalBlock({ platform }: { platform: Platform }) {
 }
 
 const InstallPanel = () => {
+  const { t } = useTranslation();
   const [activePlatform, setActivePlatform] = useState<Platform>("npm");
 
   return (

@@ -55,7 +55,7 @@ export default function PricingSection() {
       desc: t('pricing.plans.elite.desc'),
       features: t('pricing.plans.elite.features', { returnObjects: true }) as string[],
       button: t('pricing.plans.elite.button'),
-      icon: RocketIcon,
+      icon: Rocket,
       color: "text-cyan-400",
       border: "border-cyan-400/20",
     },
