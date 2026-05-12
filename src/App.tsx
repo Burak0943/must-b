@@ -17,6 +17,8 @@ import DocsPage from "./pages/DocsPage";
 import PricingPage from "./pages/PricingPage";
 import VectorVault from "./pages/VectorVault";
 import TheBridge from "./pages/TheBridge";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { CodeApprovalPanel } from "@/components/CodeApprovalPanel";
 
 const queryClient = new QueryClient();
@@ -52,6 +54,8 @@ const App = () => {
             <Route path="/ecosystem/:type/:id" element={<HubDetail />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/docs/skills" element={<Navigate to="/ecosystem" replace />} />
             <Route path="/docs/setup" element={<Navigate to="/docs" replace />} />
             

@@ -72,30 +72,26 @@ export function SiteFooter() {
           </div>
         </div>
 
-        {/* Resources + Dark Mode Toggle */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
+        {/* Resources + Legal */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
             <p className="text-[10px] font-mono text-muted-foreground/50 uppercase tracking-[0.2em]">Resources</p>
-            <IndustrialSwitch initialState={isDark} onToggle={handleToggle} />
+            <ul className="space-y-2.5 text-sm text-muted-foreground">
+              <li><a href="https://www.npmjs.com/package/@must-b/must-b" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">npm Package</a></li>
+              <li><a href="https://must-b.com/install.sh" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">CLI Installer</a></li>
+              <li><a href="https://discord.gg/mustb" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Discord</a></li>
+            </ul>
           </div>
-          <ul className="space-y-2.5 text-sm text-muted-foreground">
-            <li>
-              <a href="https://www.npmjs.com/package/@must-b/must-b" target="_blank" rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors">npm Package</a>
-            </li>
-            <li>
-              <a href="https://must-b.com/install.sh" target="_blank" rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors">Linux / macOS Installer</a>
-            </li>
-            <li>
-              <a href="https://must-b.com/install.ps1" target="_blank" rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors">Windows Installer</a>
-            </li>
-            <li>
-              <a href="https://discord.gg/mustb" target="_blank" rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors">Community Discord</a>
-            </li>
-          </ul>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-mono text-muted-foreground/50 uppercase tracking-[0.2em]">Legal</p>
+              <IndustrialSwitch initialState={isDark} onToggle={handleToggle} />
+            </div>
+            <ul className="space-y-2.5 text-sm text-muted-foreground">
+              <li><a href="/terms" className="hover:text-foreground transition-colors">Terms of Service</a></li>
+              <li><a href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</a></li>
+            </ul>
+          </div>
         </div>
 
         {/* Newsletter */}
