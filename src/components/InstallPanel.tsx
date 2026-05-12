@@ -4,6 +4,7 @@ import {
   Terminal, Monitor, Apple, Download,
   Copy, CheckCheck, Zap, ExternalLink, ChevronRight,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type Platform = "npm" | "windows" | "unix";
 
@@ -52,6 +53,7 @@ const TABS: { id: Platform; label: string; Icon: React.ElementType }[] = [
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
   const handle = () => {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
@@ -63,7 +65,7 @@ function CopyButton({ text }: { text: string }) {
       onClick={handle}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.94 }}
-      title="Copy to clipboard"
+      title={t('install.copyTitle') || 'Copy to clipboard'}
       className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono
                  bg-white/5 hover:bg-white/10 border border-white/10 transition-colors
                  text-muted-foreground hover:text-foreground"
@@ -72,12 +74,12 @@ function CopyButton({ text }: { text: string }) {
         {copied ? (
           <motion.span key="ok" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
             className="flex items-center gap-1 text-emerald-400">
-            <CheckCheck className="w-3 h-3" /> Copied
+            <CheckCheck className="w-3 h-3" /> {t('install.copied') || 'Copied'}
           </motion.span>
         ) : (
           <motion.span key="cp" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
             className="flex items-center gap-1">
-            <Copy className="w-3 h-3" /> Copy
+            <Copy className="w-3 h-3" /> {t('install.copy') || 'Copy'}
           </motion.span>
         )}
       </AnimatePresence>
@@ -119,9 +121,9 @@ function TerminalBlock({ platform }: { platform: Platform }) {
         <div className="flex items-center gap-2 pt-3 border-t border-white/[0.05]">
           <Zap className="w-3 h-3 text-amber-400 shrink-0" />
           <span className="text-[11px] font-mono text-muted-foreground/55">
-            After install, run{" "}
+            {t('install.afterInstall') || 'After install, run'}{" "}
             <span className="text-amber-400/80 font-semibold">must-b gateway</span>
-            {" "}to wake the Fox.
+            {" "}{t('install.toWake') || 'to wake the Fox.'}
           </span>
         </div>
       </div>
@@ -221,7 +223,7 @@ const InstallPanel = () => {
             </a>
           </div>
           <div className="flex items-center justify-between gap-4">
-            <p className="text-xs text-muted-foreground/50 font-mono">Node 18+ required</p>
+            <p className="text-xs text-muted-foreground/50 font-mono">{t('install.nodeRequired') || 'Node 18+ required'}</p>
             <motion.a
               href="https://www.npmjs.com/package/@must-b/must-b"
               target="_blank"
@@ -231,7 +233,7 @@ const InstallPanel = () => {
               className="btn-primary-glow flex items-center gap-2 text-sm px-5 py-2.5"
             >
               <Download className="w-4 h-4" />
-              View on npm
+              {t('install.viewNpm') || 'View on npm'}
               <ChevronRight className="w-3.5 h-3.5" />
             </motion.a>
           </div>

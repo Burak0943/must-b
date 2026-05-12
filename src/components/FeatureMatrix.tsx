@@ -1,38 +1,42 @@
+import React from "react";
 import { Check, X, Shield, Zap, Database, Cpu } from "lucide-react";
-
-const tableData = [
-  {
-    category: "Otonom Yetenekler",
-    icon: Zap,
-    features: [
-      { name: "Günlük İşlem Hacmi", free: "$2", pro: "$20", elite: "$100", local: "∞ (Limitsiz)" },
-      { name: "Ajan Mimarisi", free: "Tek Ajan", pro: "Hibrit", elite: "13+ Paralel Swarm", local: "Özel Yapılandırılabilir" },
-      { name: "Görsel Paneller (Artifacts)", free: false, pro: true, elite: true, local: "✅ (Gelişmiş)" },
-      { name: "Hata Çözme (Auto-Fix)", free: "Manuel", pro: "Otonom", elite: "Otonom+", local: "Mimari Seviye" },
-    ]
-  },
-  {
-    category: "Bağlam ve Hafıza",
-    icon: Database,
-    features: [
-      { name: "Hafıza Tipi", free: "Cihaz Bazlı", pro: "Bulut Sync", elite: "Bulut Sync", local: "Özel Veri Merkezi" },
-      { name: "Dosya Okuma ve İndeksleme", free: "5 Dosya", pro: "Sınırsız", elite: "Sınırsız", local: "Sınırsız" },
-      { name: "Deep Research & Scrape", free: false, pro: "Kısmi", elite: true, local: true },
-    ]
-  },
-  {
-    category: "Güvenlik ve Altyapı",
-    icon: Shield,
-    features: [
-      { name: "Veri Gizliliği", free: "Standart", pro: "Standart", elite: "Opsiyonel", local: "💎 Zero-Telemetry" },
-      { name: "Çevrimdışı Çalışma", free: false, pro: false, elite: false, local: "💎 Air-Gapped" },
-      { name: "API Bağımsızlığı", free: false, pro: false, elite: false, local: "💎 BYOK / Local LLM" },
-      { name: "Full Skill Store Erişimi", free: false, pro: true, elite: true, local: true },
-    ]
-  }
-];
+import { useTranslation } from "react-i18next";
 
 export default function FeatureMatrix() {
+  const { t } = useTranslation();
+
+  const tableData = [
+    {
+      category: t('pricing.matrix.categories.autonomous'),
+      icon: Zap,
+      features: [
+        { name: t('pricing.matrix.items.volume'), free: "$2", pro: "$20", elite: "$100", local: t('pricing.matrix.values.unlimited') },
+        { name: t('pricing.matrix.items.architecture'), free: t('pricing.matrix.values.single'), pro: t('pricing.matrix.values.hybrid'), elite: t('pricing.matrix.values.swarm'), local: t('pricing.matrix.values.customizable') },
+        { name: t('pricing.matrix.items.artifacts'), free: false, pro: true, elite: true, local: t('pricing.matrix.values.advanced') },
+        { name: t('pricing.matrix.items.autofix'), free: t('pricing.matrix.values.manual'), pro: t('pricing.matrix.values.autonomous'), elite: t('pricing.matrix.values.autonomousPlus'), local: t('pricing.matrix.values.archLevel') },
+      ]
+    },
+    {
+      category: t('pricing.matrix.categories.memory'),
+      icon: Database,
+      features: [
+        { name: t('pricing.matrix.items.memoryType'), free: t('pricing.matrix.values.deviceBased'), pro: t('pricing.matrix.values.cloudSync'), elite: t('pricing.matrix.values.cloudSync'), local: t('pricing.matrix.values.dataCenter') },
+        { name: t('pricing.matrix.items.indexing'), free: t('pricing.matrix.values.files'), pro: t('pricing.matrix.values.sirus'), elite: t('pricing.matrix.values.sirus'), local: t('pricing.matrix.values.sirus') },
+        { name: t('pricing.matrix.items.research'), free: false, pro: t('pricing.matrix.values.partial'), elite: true, local: true },
+      ]
+    },
+    {
+      category: t('pricing.matrix.categories.security'),
+      icon: Shield,
+      features: [
+        { name: t('pricing.matrix.items.privacy'), free: t('pricing.matrix.values.standard'), pro: t('pricing.matrix.values.standard'), elite: t('pricing.matrix.values.optional'), local: t('pricing.matrix.values.zeroTelemetry') },
+        { name: t('pricing.matrix.items.offline'), free: false, pro: false, elite: false, local: t('pricing.matrix.values.airGapped') },
+        { name: t('pricing.matrix.items.byok'), free: false, pro: false, elite: false, local: t('pricing.matrix.values.byok') },
+        { name: t('pricing.matrix.items.skillstore'), free: false, pro: true, elite: true, local: true },
+      ]
+    }
+  ];
+
   const renderCell = (val: any) => {
     if (typeof val === "boolean") {
       return val ? (
@@ -48,15 +52,15 @@ export default function FeatureMatrix() {
     <section className="py-24 px-6 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Detaylı Özellik Karşılaştırması</h2>
-          <p className="text-muted-foreground">V1.72.40 — Stratejik Yetenek Matrisi</p>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">{t('pricing.matrix.title')}</h2>
+          <p className="text-muted-foreground">{t('pricing.matrix.version')}</p>
         </div>
 
         <div className="overflow-x-auto rounded-3xl border border-white/[0.08] bg-[#060709] backdrop-blur-xl">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="border-b border-white/[0.08]">
-                <th className="p-8 text-sm font-bold text-muted-foreground uppercase tracking-widest bg-white/[0.02]">Özellikler</th>
+                <th className="p-8 text-sm font-bold text-muted-foreground uppercase tracking-widest bg-white/[0.02]">{t('pricing.matrix.features')}</th>
                 <th className="p-8 text-center bg-white/[0.02]">
                   <div className="text-white font-bold text-xl">Free</div>
                 </th>
@@ -103,5 +107,3 @@ export default function FeatureMatrix() {
     </section>
   );
 }
-
-import React from "react";

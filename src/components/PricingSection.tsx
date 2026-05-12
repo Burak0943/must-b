@@ -1,7 +1,11 @@
+import { Check, Star, Zap, Shield, Server, ArrowRight, Rocket, Lock, Bot, ShieldCheck, Globe } from "lucide-react";
 import { motion } from "framer-motion";
-import { Check, Star, Zap, Shield, Server, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import FeatureMatrix from "./FeatureMatrix";
 
 export default function PricingSection() {
+  const { t } = useTranslation();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -17,24 +21,75 @@ export default function PricingSection() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
   };
 
+  const plans = [
+    {
+      id: "free",
+      name: t('pricing.plans.free.title'),
+      tagline: t('pricing.plans.free.tagline'),
+      price: "0",
+      desc: t('pricing.plans.free.desc'),
+      features: t('pricing.plans.free.features', { returnObjects: true }) as string[],
+      button: t('pricing.plans.free.button'),
+      icon: Bot,
+      color: "text-white/40",
+      border: "border-white/10",
+    },
+    {
+      id: "pro",
+      name: t('pricing.plans.pro.title'),
+      tagline: t('pricing.plans.pro.tagline'),
+      price: "29",
+      desc: t('pricing.plans.pro.desc'),
+      features: t('pricing.plans.pro.features', { returnObjects: true }) as string[],
+      button: t('pricing.plans.pro.button'),
+      icon: Zap,
+      color: "text-primary",
+      border: "border-primary/50",
+      popular: true,
+    },
+    {
+      id: "elite",
+      name: t('pricing.plans.elite.title'),
+      tagline: t('pricing.plans.elite.tagline'),
+      price: "99",
+      desc: t('pricing.plans.elite.desc'),
+      features: t('pricing.plans.elite.features', { returnObjects: true }) as string[],
+      button: t('pricing.plans.elite.button'),
+      icon: RocketIcon,
+      color: "text-cyan-400",
+      border: "border-cyan-400/20",
+    },
+    {
+      id: "local",
+      name: t('pricing.plans.local.title'),
+      tagline: t('pricing.plans.local.tagline'),
+      price: "199",
+      desc: t('pricing.plans.local.desc'),
+      features: t('pricing.plans.local.features', { returnObjects: true }) as string[],
+      button: t('pricing.plans.local.button'),
+      icon: Lock,
+      color: "text-purple-400",
+      border: "border-purple-400/20",
+    },
+  ];
+
   return (
-    <section className="py-24 px-6 relative">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-      
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <span className="inline-block text-xs font-mono text-primary uppercase tracking-[0.2em] mb-4">
-            Fiyatlandırma
+    <section id="pricing" className="py-24 px-6 relative overflow-hidden bg-[#060709]">
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(34,211,238,0.05),transparent_50%)]" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="text-center mb-20">
+          <span className="inline-block text-xs font-mono text-primary uppercase tracking-[0.3em] mb-4">
+            {t('pricing.title')}
           </span>
-          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-            Sınırları aşan otonomi.
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+            {t('pricing.subtitle')}
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Hobi projelerinden devasa kurumsal mimarilere kadar her ölçekte zeka ve performans.
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed">
+            {t('pricing.desc')}
           </p>
         </div>
 
-        {/* 4 Kolonlu Fiyatlandırma */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -42,209 +97,115 @@ export default function PricingSection() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4 xl:gap-8 mb-16"
         >
-          {/* 🆓 MUST-B FREE */}
-          <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-white/10 bg-[#0a0c10]/50 backdrop-blur-sm">
-            <div className="mb-6">
-              <h3 className="text-xl font-bold text-white mb-1">Must-b Free</h3>
-              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Otonom Dünyaya İlk Adım"</p>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Sistemin temellerini test etmeniz için tasarlanmış, kısıtlı ve tek ajanlı giriş katmanı.</p>
-            </div>
-            <div className="mb-6">
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-white">$0</span>
-              </div>
-            </div>
-            <ul className="space-y-4 mb-8 flex-1">
-              {[
-                "Temel Terminal Otonomisi: Klasör ve git işlemleri.",
-                "Kısıtlı İşlem Hacmi: Günlük yenilenen $2 kullanım hakkı.",
-                "Tek Ajanlı Yürütme: Görevleri sırayla ve tekdüze işler.",
-                "Oturum Bazlı Hafıza: Sistemi kapattığınızda bağlamı unutur.",
-                "Sınırlı Eklenti Erişimi: Sadece çekirdek araçlar aktiftir."
-              ].map((feature, i) => (
-                <li key={i} className="flex gap-3 text-sm text-muted-foreground">
-                  <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-            <button className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-white/5 text-white hover:bg-white/10 transition-colors border border-white/10">
-              Ücretsiz Başla
-            </button>
-          </motion.div>
+          {plans.map((plan) => (
+            <motion.div 
+              key={plan.id}
+              variants={itemVariants} 
+              className={`relative flex flex-col p-6 lg:p-8 rounded-3xl border ${plan.border} ${plan.popular ? 'bg-[#0a0c10] shadow-[0_0_30px_rgba(34,211,238,0.15)] lg:-translate-y-4' : 'bg-[#0a0c10]/50 backdrop-blur-sm'}`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 border border-primary/50 text-xs font-bold text-primary whitespace-nowrap backdrop-blur-md">
+                    <Star className="w-3.5 h-3.5 fill-primary" />
+                    {t('pricing.plans.pro.badge')}
+                  </div>
+                </div>
+              )}
 
-          {/* 🥈 MUST-B PRO (Vurgulu) */}
-          <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-primary/50 bg-[#0a0c10] shadow-[0_0_30px_rgba(34,211,238,0.15)] transform lg:-translate-y-4">
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 border border-primary/50 text-xs font-bold text-primary whitespace-nowrap backdrop-blur-md">
-                <Star className="w-3.5 h-3.5 fill-primary" />
-                EN POPÜLER
+              <div className="mb-6 relative z-10">
+                <div className={`w-12 h-12 rounded-2xl bg-white/[0.03] flex items-center justify-center mb-6`}>
+                  <plan.icon className={`w-6 h-6 ${plan.color}`} />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
+                <p className={`text-xs font-bold ${plan.color} uppercase tracking-wider mb-2`}>{plan.tagline}</p>
+                <p className="text-sm text-muted-foreground min-h-[40px]">{plan.desc}</p>
               </div>
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-3xl pointer-events-none" />
-            
-            <div className="mb-6 relative z-10">
-              <h3 className="text-xl font-bold text-white mb-1">Must-b Pro</h3>
-              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Dijital İş Ortağınız"</p>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Tüm ameleliği ona bırakın. Bilgisayarınızın kontrolünü ele alan tam yetkili asistan.</p>
-            </div>
-            <div className="mb-6 relative z-10">
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-white">$25</span>
-                <span className="text-sm font-mono text-muted-foreground">/ay</span>
-              </div>
-            </div>
-            <ul className="space-y-4 mb-8 flex-1 relative z-10">
-              {[
-                "Günlük $20 Otonom İşlem Hacmi: Kesintisiz geliştirme.",
-                "Yüzlerce Sistem Yeteneği (Skills): İşletim sistemine entegre.",
-                "Otonom Tarayıcı Motoru: İnsan gibi gezinir ve analiz eder.",
-                "Ghost Mode (Fiziksel Kontrol): Mouse ve klavyeye hükmeder.",
-                "Kalıcı Bilişsel Hafıza (Cloud LTM): Geçmişi asla unutmaz."
-              ].map((feature, i) => (
-                <li key={i} className="flex gap-3 text-sm text-white/90">
-                  <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-            <button className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(34,211,238,0.4)] relative z-10">
-              Pro'ya Yükselt
-            </button>
-          </motion.div>
 
-          {/* 🥇 MUST-B ELITE */}
-          <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-white/10 bg-[#0a0c10]/50 backdrop-blur-sm">
-            <div className="mb-6">
-              <h3 className="text-xl font-bold text-white mb-1">Must-b Elite</h3>
-              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">"Otonom Yazılım Fabrikası"</p>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Eşzamanlı ajan ordusuyla, dev projeleri saniyeler içinde ayağa kaldıran üst düzey güç.</p>
-            </div>
-            <div className="mb-6">
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-white">$85</span>
-                <span className="text-sm font-mono text-muted-foreground">/ay</span>
+              <div className="mb-6 relative z-10">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-white">${plan.price}</span>
+                  <span className="text-sm font-mono text-muted-foreground">/{plan.id === 'local' ? 'yr' : 'mo'}</span>
+                </div>
               </div>
-            </div>
-            <ul className="space-y-4 mb-8 flex-1">
-              {[
-                "Günlük $100 Dev İşlem Hacmi: Ağır mimari kurulumlar.",
-                "Dinamik Ajan Sürüsü (Swarm): Onlarca paralel ajan mimarisi.",
-                "Gelişmiş AI Erişimi: Otomatik olarak en zeki modellere kilitlenir.",
-                "Kendi Kendini Onaran Sistem (Auto-Fix): Hataları anında çözer.",
-                "Derin Otonom Görevler: Müdahalesiz tasarım ve teslimat."
-              ].map((feature, i) => (
-                <li key={i} className="flex gap-3 text-sm text-muted-foreground">
-                  <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-            <button className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-white/5 text-white hover:bg-white/10 transition-colors border border-white/10">
-              Elite Ol
-            </button>
-          </motion.div>
 
-          {/* ⚡ MUST-B LOCAL */}
-          <motion.div variants={itemVariants} className="relative flex flex-col p-6 lg:p-8 rounded-3xl border border-purple-500/20 bg-[#0a0c10]/50 backdrop-blur-sm overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Zap className="w-24 h-24 text-purple-400" />
-            </div>
-            <div className="mb-6 relative z-10">
-              <h3 className="text-xl font-bold text-purple-400 mb-1">Must-b Local</h3>
-              <p className="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2">"Bilişsel Egemenlik"</p>
-              <p className="text-sm text-muted-foreground min-h-[40px]">Bulut bağlantısını kesin. Verilerini kilitlemek ve sınırsız güce ulaşmak isteyenler için.</p>
-            </div>
-            <div className="mb-6 relative z-10">
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-white">$499</span>
-                <span className="text-sm font-mono text-muted-foreground">/yıllık</span>
-              </div>
-            </div>
-            <ul className="space-y-4 mb-8 flex-1 relative z-10">
-              {[
-                "Sıfır API Faturası: Kendi API anahtarlarınızı (BYOK) kullanın.",
-                "%100 Air-Gapped (Çevrimdışı): Sıfır telemetri verisi.",
-                "Sınırsız Token ve İşlem: Kredi kısıtlaması yok.",
-                "Kurumsal Veri İndeksleme: Tüm kod tabanını lokal öğretin.",
-                "Özel Skill SDK: Kurumun iç ağına özel yetenekler geliştirin."
-              ].map((feature, i) => (
-                <li key={i} className="flex gap-3 text-sm text-muted-foreground">
-                  <Check className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-            <button className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-colors border border-purple-500/20 relative z-10">
-              Yerel Gücü Kullan
-            </button>
-          </motion.div>
+              <ul className="space-y-4 mb-8 flex-1 relative z-10">
+                {plan.features.map((feature, i) => (
+                  <li key={i} className="flex gap-3 text-sm text-white/90">
+                    <Check className={`w-4 h-4 ${plan.color} shrink-0 mt-0.5`} />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button className={`w-full py-3 px-4 rounded-xl font-semibold text-sm transition-all relative z-10 
+                ${plan.popular ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(34,211,238,0.4)]' : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}`}>
+                {plan.button}
+              </button>
+            </motion.div>
+          ))}
         </motion.div>
 
-        {/* Kurumsal / Enterprise Blok - Premium Reverted Version */}
+        {/* Enterprise Block */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="relative rounded-3xl border border-white/[0.08] bg-[#030405] overflow-hidden"
+          className="relative rounded-3xl border border-white/[0.08] bg-[#030405] overflow-hidden mt-20"
         >
-          {/* Subtle grid/glow background for enterprise */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20" />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-cyan-600/50 to-transparent" />
           
           <div className="p-8 md:p-10 lg:p-12 relative z-10 flex flex-col lg:flex-row gap-12 items-center">
-            
             <div className="flex-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs font-mono text-muted-foreground mb-6">
-                <Shield className="w-3.5 h-3.5" />
-                <span>ENTERPRISE (B2B & B2G)</span>
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>{t('pricing.enterprise.badge')}</span>
               </div>
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight uppercase">
-                SAVUNMA SANAYİİ VE KURUMLAR İÇİN MİLLİ BİLİŞSEL ALTYAPI
+                {t('pricing.enterprise.title')}
               </h3>
               <p className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl">
-                Must-b Local, sadece bir yazılım değildir; kurumunuzun dış dünyadan izole, kendi kendine yeten zekasıdır. KVKK yükümlülüklerini sıfırlayın, ithal bulut API'lerine olan bağımlılığı bitirin.
+                {t('pricing.enterprise.desc')}
               </p>
               
               <div className="grid sm:grid-cols-2 gap-6 mb-10">
                 <div className="flex gap-4">
                   <Server className="w-6 h-6 text-cyan-500 shrink-0" />
                   <div>
-                    <h4 className="font-bold text-white text-sm mb-1">Yerinde Kurulum</h4>
-                    <p className="text-xs text-muted-foreground">Ekibimiz sisteminizi kendi kapalı sunucularınıza kurar.</p>
+                    <h4 className="font-bold text-white text-sm mb-1">{t('pricing.enterprise.features.onPrem.title')}</h4>
+                    <p className="text-xs text-muted-foreground">{t('pricing.enterprise.features.onPrem.desc')}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <Shield className="w-6 h-6 text-cyan-500 shrink-0" />
                   <div>
-                    <h4 className="font-bold text-white text-sm mb-1">Hava Boşluklu Güvenlik</h4>
-                    <p className="text-xs text-muted-foreground">İnternet kablosunu çektiğinizde bile Must-b üretmeye devam eder.</p>
+                    <h4 className="font-bold text-white text-sm mb-1">{t('pricing.enterprise.features.airGapped.title')}</h4>
+                    <p className="text-xs text-muted-foreground">{t('pricing.enterprise.features.airGapped.desc')}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <Zap className="w-6 h-6 text-cyan-500 shrink-0" />
                   <div>
-                    <h4 className="font-bold text-white text-sm mb-1">İthal Bağımlılığın Bitirilmesi</h4>
-                    <p className="text-xs text-muted-foreground">Yabancı bulut API'lerine olan bağımlılığı yerel modellerle ortadan kaldırın.</p>
+                    <h4 className="font-bold text-white text-sm mb-1">{t('pricing.enterprise.features.independence.title')}</h4>
+                    <p className="text-xs text-muted-foreground">{t('pricing.enterprise.features.independence.desc')}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <Star className="w-6 h-6 text-cyan-500 shrink-0" />
                   <div>
-                    <h4 className="font-bold text-white text-sm mb-1">Özel Eğitim ve Ar-Ge</h4>
-                    <p className="text-xs text-muted-foreground">Kurumunuzun iç verilerine göre eğitilmiş özel otonom ajanlar.</p>
+                    <h4 className="font-bold text-white text-sm mb-1">{t('pricing.enterprise.features.customRd.title')}</h4>
+                    <p className="text-xs text-muted-foreground">{t('pricing.enterprise.features.customRd.desc')}</p>
                   </div>
                 </div>
               </div>
 
               <button className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors">
-                Özel Teklif Alın
+                {t('pricing.enterprise.button')}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Sağ tarafta görsel bir obje veya boşluk olabilir. Şimdilik ağır bir kalkan/sunucu ikonu animasyonu. */}
             <div className="hidden lg:flex w-[300px] h-[300px] shrink-0 items-center justify-center relative">
               <div className="absolute inset-0 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
               <div className="relative w-48 h-48 border border-white/10 rounded-3xl bg-black/50 backdrop-blur-xl flex items-center justify-center shadow-2xl">
@@ -252,11 +213,20 @@ export default function PricingSection() {
                 <div className="absolute inset-0 border border-cyan-500/30 rounded-3xl animate-ping opacity-20" style={{ animationDuration: '3s' }} />
               </div>
             </div>
-
           </div>
         </motion.div>
 
+        <FeatureMatrix />
       </div>
     </section>
   );
 }
+
+const RocketIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+    <path d="M9 12H4s.55-3.03 2-4.5c1.62-1.74 5-2 5-2" />
+    <path d="M12 15v5s3.03-.55 4.5-2c1.74-1.62 2-5 2-5" />
+  </svg>
+);

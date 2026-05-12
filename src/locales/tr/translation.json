@@ -1,0 +1,443 @@
+{
+  "nav": {
+    "hub": "Hub",
+    "docs": "Dokümanlar",
+    "pricing": "Fiyatlandırma",
+    "dashboard": "Panel",
+    "signOut": "Çıkış Yap",
+    "login": "Giriş Yap",
+    "getStarted": "Başla"
+  },
+  "footer": {
+    "tagline": "Yerel çalışan, küresel düşünen ve gizliliği esas alan otonom yapay zeka ajanları.",
+    "resources": "Kaynaklar",
+    "legal": "Yasal",
+    "newsletter": {
+      "title": "Takipte Kalın",
+      "desc": "Ajan güncellemeleri, model desteği ve Dünya Modu haberleri.",
+      "success": "Kaydınız alındı. E-postanızı kontrol edin.",
+      "placeholder": "ad@sirket.com",
+      "button": "Abone Ol"
+    },
+    "rights": "© 2026 must-b. Tüm hakları saklıdır.",
+    "proprietary": "Tescilli Yazılım"
+  },
+  "getStarted": {
+    "title": "Tek komutla dağıtın."
+  },
+  "demo": {
+    "title": "Canlı Demo",
+    "subtitle": "Harekete şahit olun.",
+    "desc": "Gerçek must-b kurulumu — yüklemeden canlı yerel ajana 30 saniyenin altında."
+  },
+  "hero": {
+    "version": "v1.2.2 — Şimdi Kullanılabilir",
+    "title": "Bulut Zekası,\nYerel Güç.",
+    "subtitle": "Yapay zekayı donanımınızda yerel olarak çalıştıran, görevleri çok katmanlı bir sürüye devreden ve kimliği küresel olarak senkronize eden otonom bir ajan iskeleti."
+  },
+  "roadmap": {
+    "title": "B2B Yol Haritası",
+    "subtitle": "Sürünün Evrimi.",
+    "desc": "Bireysel tetikleyici hatlarından kurumsal çapta bilişsel ağlara.",
+    "steps": {
+      "1": { "phase": "Aşama 1: Görsel Otomasyonlar", "text": "Kodsuz, sürükle-bırak tetikleyici boru hatları." },
+      "2": { "phase": "Aşama 2: Çoklu Ajan Sürüleri", "text": "İşbirliği yapan uzmanlaşmış yapay zeka ajanları." },
+      "3": { "phase": "Aşama 3: B2B Kurumsal Çalışanlar", "text": "SAP/Salesforce kurumsal ağ dağıtımı." },
+      "4": { "phase": "Aşama 4: Must-b Pazaryeri", "text": "Özel yapay zeka yetenekleri için küresel Uygulama Mağazası." }
+    }
+  },
+  "features": {
+    "title": "Özellikler",
+    "subtitle": "Otonom çalışma için tasarlandı.",
+    "desc": "Ajanların yerel, özel ve ölçeklenebilir şekilde planladığı, devrettiği ve yürüttüğü bir iskelet.",
+    "items": {
+      "planning": {
+        "title": "Otonom Planlama",
+        "desc": "must-b, akıl yürütme katmanı olarak GPT-4o ve Claude 3.5 Sonnet kullanır. Bir hedef verildiğinde, işi yönlendirilmiş bir görev grafiğine ayırır; her düğüm için uzmanlaşmış alt ajanlar oluşturur, bağımlılıkları çözer, başarısızlıkları yeniden dener ve sonuçları nihai bir çıktıya dönüştürür. Manuel orkestrasyon sıfırdır.",
+        "badge": "GPT-4o · Claude 3.5",
+        "details": ["Görev grafiği ayrıştırma", "Paralel alt ajan oluşturma", "Otomatik deneme + geri dönüş"]
+      },
+      "control": {
+        "title": "Tam İşletim Sistemi Kontrolü",
+        "desc": "Ajanlar kabuğunuza, dosya sisteminize ve git'inize doğrudan erişebilir. Tek bir doğal dil talimatıyla komut çalıştırabilir, dosyaları okuyup yamayabilir, değişiklikleri kaydedebilir, PR açabilir ve oturumlar arası araç çağrılarını zincirleyebilirler.",
+        "badge": "shell · git · fs",
+        "details": ["Kabuk komutu yürütme", "Dosya okuma / yazma / yama", "Git commit, push, PR oluşturma"]
+      },
+      "privacy": {
+        "title": "Önce Gizlilik",
+        "desc": "Her düğüm kurulum sırasında bir Ed25519 anahtar çifti oluşturur. Yürütme yerel kalır; model ağırlıkları donanımınızda çalışır, araç çağrıları makinenizden asla çıkmaz. Telemetri yok, veri saklama yok. Bulut senkronizasyonu isteğe bağlıdır ve uçtan uca imzalıdır.",
+        "badge": "yerel-öncelikli · sıfır-veri",
+        "details": ["Ed25519 kimliği, yerel anahtar üretimi", "Telemetri yok, veri saklama yok", "Bulut senkronizasyonu isteğe bağlı ve imzalı"]
+      }
+    }
+  },
+  "pricing": {
+    "title": "Fiyatlandırma",
+    "subtitle": "Sınırları aşan otonomi.",
+    "desc": "Hobi projelerinden devasa kurumsal mimarilere kadar her ölçekte zeka ve performans.",
+    "plans": {
+      "free": {
+        "title": "Must-b Free",
+        "tagline": "Otonom Dünyaya İlk Adım",
+        "desc": "Sistemin temellerini test etmeniz için tasarlanmış, kısıtlı ve tek ajanlı giriş katmanı.",
+        "features": [
+          "Temel Terminal Otonomisi: Klasör ve git işlemleri.",
+          "Kısıtlı İşlem Hacmi: Günlük $2 kullanım hakkı.",
+          "Tek Ajanlı Yürütme: Görevleri sırayla işler.",
+          "Oturum Bazlı Hafıza: Kapatıldığında bağlamı unutur.",
+          "Sınırlı Yetenek Erişimi: Sadece çekirdek araçlar aktiftir."
+        ],
+        "button": "Ücretsiz Başla"
+      },
+      "pro": {
+        "title": "Must-b Pro",
+        "tagline": "Dijital İş Ortağınız",
+        "desc": "Tüm angaryayı ona bırakın. Bilgisayarınızın kontrolünü ele alan tam yetkili asistan.",
+        "badge": "EN POPÜLER",
+        "features": [
+          "Günlük $20 Otonom İşlem Hacmi: Kesintisiz geliştirme.",
+          "Yüzlerce Sistem Yeteneği: İşletim sistemine entegre.",
+          "Otonom Tarayıcı Motoru: İnsan gibi gezinir ve analiz eder.",
+          "Ghost Mode (Fiziksel Kontrol): Fare ve klavyeye hükmeder.",
+          "Kalıcı Bilişsel Hafıza (Bulut LTM): Geçmişi asla unutmaz."
+        ],
+        "button": "Pro'ya Yükselt"
+      },
+      "elite": {
+        "title": "Must-b Elite",
+        "tagline": "Otonom Yazılım Fabrikası",
+        "desc": "Eşzamanlı ajan ordusuyla, dev projeleri saniyeler içinde ayağa kaldıran üst düzey güç.",
+        "features": [
+          "Günlük $100 Dev İşlem Hacmi: Ağır mimari kurulumlar.",
+          "Dinamik Ajan Sürüsü (Swarm): Onlarca paralel ajan mimarisi.",
+          "Gelişmiş AI Erişimi: Otomatik olarak en zeki modellere kilitlenir.",
+          "Kendi Kendini Onaran Sistem (Auto-Fix): Hataları anında çözer.",
+          "Derin Otonom Görevler: Müdahalesiz tasarım ve teslimat."
+        ],
+        "button": "Elite Ol"
+      },
+      "local": {
+        "title": "Must-b Local",
+        "tagline": "Bilişsel Egemenlik",
+        "desc": "Bulut bağlantısını kesin. Verilerini kilitlemek ve sınırsız güce ulaşmak isteyenler için.",
+        "features": [
+          "Sıfır API Faturası: Kendi API anahtarlarınızı (BYOK) kullanın.",
+          "100% Air-Gapped (Çevrimdışı): Sıfır telemetri verisi.",
+          "Sınırsız Token ve İşlem: Kredi kısıtlaması yok.",
+          "Kurumsal Veri İndeksleme: Tüm kod tabanını lokal öğretin.",
+          "Özel Skill SDK: Kurumun iç ağına özel yetenekler geliştirin."
+        ],
+        "button": "Yerel Gücü Kullan"
+      }
+    },
+    "enterprise": {
+      "badge": "KURUMSAL (B2B & B2G)",
+      "title": "SAVUNMA SANAYİİ VE KURUMLAR İÇİN MİLLİ BİLİŞSEL ALTYAPI",
+      "desc": "Must-b Local, sadece bir yazılım değildir; kurumunuzun dış dünyadan izole, kendi kendine yeten zekasıdır. KVKK yükümlülüklerini sıfırlayın, ithal bulut API'lerine olan bağımlılığı bitirin.",
+      "features": {
+        "onPrem": { "title": "Yerinde Kurulum", "desc": "Ekibimiz sisteminizi kendi kapalı sunucularınıza kurar." },
+        "airGapped": { "title": "Hava Boşluklu Güvenlik", "desc": "Must-b, internet kablosunu çektiğinizde bile üretmeye devam eder." },
+        "independence": { "title": "Bağımlılığın Bitirilmesi", "desc": "Yabancı bulut API'lerine olan bağımlılığı yerel modellerle ortadan kaldırın." },
+        "customRd": { "title": "Özel Eğitim ve Ar-Ge", "desc": "Kurumunuzun iç verilerine göre eğitilmiş özel otonom ajanlar." }
+      },
+      "button": "Özel Teklif Alın"
+    },
+    "matrix": {
+      "title": "Detaylı Özellik Karşılaştırması",
+      "version": "V1.72.40 — Stratejik Yetenek Matrisi",
+      "features": "Özellikler",
+      "categories": {
+        "autonomous": "Otonom Yetenekler",
+        "memory": "Bağlam ve Hafıza",
+        "security": "Güvenlik ve Altyapı"
+      },
+      "items": {
+        "volume": "Günlük İşlem Hacmi",
+        "architecture": "Ajan Mimarisi",
+        "artifacts": "Görsel Paneller (Artifacts)",
+        "autofix": "Hata Çözme (Auto-Fix)",
+        "memoryType": "Hafıza Tipi",
+        "indexing": "Dosya Okuma ve İndeksleme",
+        "research": "Deep Research & Scrape",
+        "privacy": "Veri Gizliliği",
+        "offline": "Çevrimdışı Çalışma",
+        "byok": "API Bağımsızlığı",
+        "skillstore": "Full Skill Store Erişimi"
+      },
+      "values": {
+        "unlimited": "∞ (Limitsiz)",
+        "single": "Tek Ajan",
+        "hybrid": "Hibrit",
+        "swarm": "13+ Paralel Swarm",
+        "customizable": "Özel Yapılandırılabilir",
+        "advanced": "✅ (Gelişmiş)",
+        "manual": "Manuel",
+        "autonomous": "Otonom",
+        "autonomousPlus": "Otonom+",
+        "archLevel": "Mimari Seviye",
+        "deviceBased": "Cihaz Bazlı",
+        "cloudSync": "Bulut Sync",
+        "dataCenter": "Özel Veri Merkezi",
+        "files": "5 Dosya",
+        "sirus": "Sınırsız",
+        "partial": "Kısmi",
+        "standard": "Standart",
+        "optional": "Opsiyonel",
+        "zeroTelemetry": "💎 Zero-Telemetry",
+        "airGapped": "💎 Air-Gapped",
+        "byok": "💎 BYOK / Local LLM"
+      }
+    }
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "email": "E-posta adresi",
+    "password": "Şifre",
+    "fullName": "Ad Soyad",
+    "backToHome": "Ana Sayfaya Dön",
+    "welcomeBack": "Tekrar Hoş Geldiniz",
+    "createAccount": "Hesap Oluştur",
+    "checkEmail": "E-postanızı Kontrol Edin",
+    "accessHub": "Küresel komuta merkezinize erişin.",
+    "getStarted": "Başlamak için bilgilerinizi girin.",
+    "sentCode": "{{email}} adresine 8 haneli bir kod gönderdik",
+    "verifyCode": "Kodu Doğrula",
+    "verifySuccess": "Hesabınız doğrulandı! İçeri alınıyorsunuz...",
+    "didntReceive": "Kod gelmedi mi?",
+    "goBack": "Geri git",
+    "orContinue": "Veya şununla devam et",
+    "alreadyHave": "Zaten hesabınız var mı?",
+    "dontHave": "Hesabınız yok mu?",
+    "fillAll": "Lütfen tüm alanları doldurun.",
+    "fillName": "Lütfen adınızı ve soyadınızı girin.",
+    "codeSent": "Doğrulama kodu e-postanıza gönderildi!",
+    "errorOccurred": "Bir hata oluştu.",
+    "invalidCode": "Geçersiz veya süresi dolmuş kod. Lütfen tekrar deneyin.",
+    "enter8Digit": "Lütfen 8 haneli kodu eksiksiz girin.",
+    "copied": "Token kopyalandı!"
+  },
+  "cliBridge": {
+    "connecting": "CLI Bağlantısı Kuruluyor",
+    "transferring": "Güvenli token aktarımı yapılıyor, lütfen bekleyin...",
+    "noToken": "API Access Token bulunamadı. Lütfen önce Dashboard'dan bir token oluşturun.",
+    "error": "Bağlantı kurulurken bir hata oluştu."
+  },
+  "terms": {
+    "title": "Hizmet Şartları",
+    "lastUpdated": "Son Güncelleme: 13 Mayıs 2026",
+    "sections": [
+      {
+        "title": "1. Şartların Kabulü",
+        "content": "must-b platformuna, CLI'sına veya hizmetlerine (\"Hizmet\") erişerek veya bunları kullanarak, bu Hizmet Şartlarına bağlı kalmayı kabul edersiniz. Bu şartları kabul etmiyorsanız, lütfen Hizmetimizi kullanmayın."
+      },
+      {
+        "title": "2. Abonelik ve Ödemeler",
+        "content": "Sipariş sürecimiz çevrimiçi satıcımız Lemon Squeezy tarafından yürütülmektedir. Lemon Squeezy, tüm siparişlerimiz için Kayıtlı Satıcıdır. Tüm müşteri hizmetleri sorularını sağlarlar ve iadeleri gerçekleştirirler. Abonelikler, yinelenen bir şekilde önceden faturalandırılır. Aboneliğinizi ve ödeme yöntemlerinizi kontrol paneliniz üzerinden yönetebilirsiniz."
+      },
+      {
+        "title": "3. İade Politikası",
+        "content": "İadeler, Lemon Squeezy'nin standart politikalarına göre gerçekleştirilir. Satın alma işleminizle ilgili sorunlarla karşılaşırsanız lütfen Lemon Squeezy veya destek ekibimizle iletişime geçin. Genel olarak, kullanılmamış krediler için satın alma tarihinden itibaren 14 gün içinde iade mümkündür."
+      },
+      {
+        "title": "4. Kullanım Sınırları ve Bilişsel Krediler",
+        "content": "Must-b hizmetleri, abonelik planınız tarafından tanımlanan kullanım sınırlarına tabidir. \"Bilişsel Krediler\", API işlemleri ve yapay zeka işleme için tüketilir. Günlük limitiniz aşılırsa, bir sonraki sıfırlama dönemine kadar hizmet geçici olarak yavaşlatılabilir veya durdurulabilir."
+      },
+      {
+        "title": "5. Fikri Mülkiyet",
+        "content": "Hizmet ve orijinal içeriği, özellikleri ve işlevselliği must-b'nin münhasır mülkiyetindedir ve öyle kalacaktır. CLI'mız ve yazılımımız telif hakkı ve ticari sır yasalarıyla korunmaktadır. Tersine mühendislik kesinlikle yasaktır."
+      },
+      {
+        "title": "6. Sorumluluğun Sınırlandırılması",
+        "content": "must-b veya yöneticileri, çalışanları veya ortakları hiçbir durumda kâr, veri veya diğer maddi olmayan kayıplar dahil ancak bunlarla sınırlı olmamak üzere dolaylı, arızi, özel, sonuçsal veya cezai zararlardan sorumlu tutulamaz."
+      },
+      {
+        "title": "7. Bize Ulaşın",
+        "content": "Bu Şartlar hakkında herhangi bir sorunuz varsa, lütfen legal@must-b.com adresinden bizimle iletişime geçin."
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Gizlilik Politikası",
+    "lastUpdated": "Son Güncelleme: 13 Mayıs 2026",
+    "sections": [
+      {
+        "title": "1. Giriş",
+        "content": "must-b olarak gizliliğinizi ciddiye alıyoruz. Bu Gizlilik Politikası, otonom yapay zeka aracılarımızı ve ilgili hizmetlerimizi kullandığınızda kişisel bilgilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu açıklar."
+      },
+      {
+        "title": "2. Topladığımız Bilgiler",
+        "content": "Hesap Verileri: Kayıt olduğunuzda, Supabase Auth aracılığıyla e-posta adresinizi ve temel profil bilgilerinizi toplarız. Ödeme Verileri: Tüm ödeme bilgileri Lemon Squeezy tarafından güvenli bir şekilde işlenir. Kredi kartı bilgilerinizi sunucularımızda saklamayız. Operasyonel Veriler: Kullanım sınırlarını yönetmek ve sistem istikrarını sağlamak için CLI kullanımı ve API tüketimi ile ilgili meta verileri toplarız."
+      },
+      {
+        "title": "3. Bilgileri Nasıl Kullanıyoruz",
+        "content": "Bilgilerinizi Hizmeti sağlamak ve sürdürmek, Lemon Squeezy aracılığıyla ödemeleri işlemek, Supabase aracılığıyla hesabınızı yönetmek ve güncellemeleri veya güvenlik uyarılarını iletmek için kullanırız."
+      },
+      {
+        "title": "4. Veri Güvenliği",
+        "content": "Verilerinizi korumak için endüstri standardı güvenlik önlemleri uyguluyoruz. Supabase, verilerinizin şifrelenmesini ve yalnızca yetkili varlıklar tarafından erişilebilir olmasını sağlayarak arka uç güvenlik altyapımızı sağlar."
+      },
+      {
+        "title": "5. Çerezler ve Takip",
+        "content": "Kimlik doğrulama ve oturum yönetimi için temel çerezleri kullanıyoruz. Takip pikselleri veya müdahaleci reklam çerezleri kullanmıyoruz."
+      },
+      {
+        "title": "6. Üçüncü Taraf Hizmetleri",
+        "content": "Hizmetimizi sunmak için üçüncü taraf sağlayıcılara güveniyoruz: Supabase (Yetkilendirme/Veritabanı), Lemon Squeezy (Ödemeler) ve Vercel (Barındırma)."
+      },
+      {
+        "title": "7. Haklarınız",
+        "content": "Kişisel verilerinize erişme, bunları güncelleme veya silme hakkına sahipsiniz. Profil ayarlarınızı kontrol panelinden yönetebilir veya veri silme talepleri için privacy@must-b.com adresinden bizimle iletişime geçebilirsiniz."
+      }
+    ]
+  },
+  "faq": {
+    "title": "SSS",
+    "subtitle": "Sıkça Sorulan Sorular",
+    "desc": "Must-b hakkında en çok merak edilen konuları sizin için yanıtladık.",
+    "items": {
+      "localModels": {
+        "q": "Must-b yerel modelleri nasıl kullanıyor?",
+        "a": "Must-b, donanım gücünüzü tam kapasiteyle kullanabilmeniz için Ollama gibi yerel LLM çalışma zamanlarıyla entegre çalışır. Llama 3 veya Mistral gibi modelleri doğrudan bağlayabilirsiniz. Verileriniz asla dışarı çıkmaz."
+      },
+      "apiKeys": {
+        "q": "API anahtarlarımı kendim mi sağlamalıyım?",
+        "a": "Plana göre değişir. Pro ve Elite paketlerinde API erişimi dahildir. Local ve Lite paketlerinde kendi anahtarlarınızı kullanabilir veya yerel modellerle maliyeti sıfırlayabilirsiniz."
+      },
+      "offline": {
+        "q": "Kurumsal sürümde internet bağlantısı zorunlu mu?",
+        "a": "Hayır. Enterprise sürümü savunma ve bankacılık gibi sektörler için Air-Gapped (internetsiz) çalışacak şekilde tasarlanmıştır. Sıfır telemetri ile tam güvenlik sağlar."
+      },
+      "swarm": {
+        "q": "Multi-Agent Swarm mimarisi ne işe yarar?",
+        "a": "İşi uzmanlıklara bölen teknolojimizdir. Bir ajan veritabanıyla ilgilenirken diğeri UI kodlar, bir diğeri ise hataları otonom çözer (Auto-Fix)."
+      },
+      "cancel": {
+        "q": "Aboneliğimi istediğim zaman iptal edebilir miyim?",
+        "a": "Evet. Bireysel planlarda taahhüt yoktur, panelden tek tıkla iptal edebilirsiniz. Tüm kodlar ve mimariler %100 sizin mülkiyetinizde kalır."
+      }
+    },
+    "moreQuestions": "Başka bir sorunuz mu var?",
+    "discord": "Discord topluluğumuza katılın veya bize yazın →"
+  },
+  "docs": {
+    "sidebar": {
+      "groups": {
+        "overview": "Genel Bakış",
+        "gettingStarted": "Başlangıç",
+        "capabilities": "Bilişsel Yetenekler",
+        "architecture": "Mimari ve Güvenlik",
+        "ecosystem": "Ekosistem ve Yasal"
+      },
+      "items": {
+        "introduction": "Giriş",
+        "philosophy": "Temel Felsefe",
+        "prerequisites": "Gereksinimler",
+        "installation": "Kurulum",
+        "firstBoot": "İlk Başlatma",
+        "ghostMode": "Ghost Mode",
+        "browsing": "API'siz Yerel Gezinme",
+        "terminal": "Terminal Hakimiyeti",
+        "fortress": "Cyber Fortress",
+        "memory": "Omni-Context Hafıza",
+        "orchestrator": "Orkestra Motoru",
+        "nodes": "Platformlar Arası Düğümler",
+        "viewDetails": "Detayları gör →"
+      }
+    },
+    "install": {
+      "copy": "Kopyala",
+      "copied": "Kopyalandı",
+      "copyTitle": "Panoya kopyala",
+      "afterInstall": "Kurulumdan sonra",
+      "toWake": "komutunu çalıştırarak Fox'u uyandır.",
+      "nodeRequired": "Node 18+ gereklidir",
+      "viewNpm": "npm'de görüntüle"
+    },
+    "terminal": {
+      "addedPackages": "4 saniyede 268 paket eklendi",
+      "welcome": "◆  Must-b'ye hoş geldiniz! Haydi kurulumu yapalım.",
+      "promptName": "Adınız ('User' için Enter'a basın):  ",
+      "languages": "Dil:  [1] English  [2] Türkçe  [3] Deutsch",
+      "promptChoice": "Seçiminiz (1/2/3, varsayılan 1):  ",
+      "setupComplete": "✓ Kurulum tamamlandı. Merhaba, {{name}}!",
+      "professionalOS": "           Profesyonel Yapay Zeka İşletim Sistemi",
+      "tagline": "         ⚡ Otonom · Hassas · Her An Açık",
+      "activeSkills": "✓ Aktif Yetenekler: Tarayıcı Otomasyonu, Terminal, Hafıza, Dosya Sistemi",
+      "healthCheck": "Sistem sağlık kontrolü çalıştırılıyor..."
+    }
+  },
+  "dashboard": {
+    "commandCenter": "Komuta Merkezi",
+    "welcome": "Operasyonel merkezinize hoş geldiniz.",
+    "newAgent": "Yeni Ajan Başlat",
+    "stats": {
+      "health": "Sistem Sağlığı",
+      "online": "Çevrimiçi",
+      "activeAgents": "Aktif Ajanlar",
+      "deployed": "Yayında",
+      "memoryVault": "Hafıza Kasası",
+      "gbIndexed": "GB İndekslendi",
+      "currentPlan": "Mevcut Paket",
+      "active": "Aktif",
+      "dailyUsage": "Günlük Kullanım",
+      "limit": "Limit",
+      "apiToken": "API Erişim Anahtarı",
+      "language": "Dil"
+    },
+    "liveTasks": "Canlı Görev Atamaları",
+    "realtimeFeed": "Gerçek Zamanlı Akış",
+    "noAgents": {
+      "title": "Henüz ajan dağıtılmadı",
+      "desc": "Sisteme ilk otonom ajanınızı dahil edin. Sürü emrinizi bekliyor.",
+      "button": "İlk ajanınızı başlatın →"
+    }
+  },
+  "login": {
+    "backHome": "Ana Sayfaya Dön",
+    "welcomeBack": "Tekrar Hoş Geldiniz",
+    "createAccount": "Hesap Oluştur",
+    "checkEmail": "E-postanızı Kontrol Edin",
+    "signinDesc": "Küresel komuta merkezinize erişin.",
+    "signupDesc": "Başlamak için bilgilerinizi girin.",
+    "verifyDesc": "{{email}} adresine 8 haneli bir kod gönderdik.",
+    "fullName": "Ad Soyad",
+    "email": "E-posta adresi",
+    "password": "Şifre",
+    "signIn": "Giriş Yap",
+    "signUp": "Kayıt Ol",
+    "verify": "Kodu Doğrula",
+    "orContinue": "Veya şununla devam et",
+    "alreadyAccount": "Zaten hesabınız var mı?",
+    "noAccount": "Hesabınız yok mu?",
+    "resend": "Kod gelmedi mi?",
+    "goBack": "Geri dön"
+  },
+  "cliLogin": {
+    "bridgeTitle": "CLI Köprüsü Bağlanıyor",
+    "bridgeDesc": "Anahtarlar güvenli şekilde aktarılıyor, lütfen bekleyin..."
+  },
+  "legal": {
+    "lastUpdated": "Son Güncelleme: 13 Mayıs 2026",
+    "tos": {
+      "title": "Hizmet Şartları",
+      "s1": { "title": "1. Şartların Kabulü", "text": "must-b platformuna, CLI'sına veya hizmetlerine erişerek bu Hizmet Şartlarına bağlı kalmayı kabul etmiş olursunuz. Şartları kabul etmiyorsanız lütfen hizmeti kullanmayın." },
+      "s2": { "title": "2. Abonelik ve Ödemeler", "p1": "Sipariş sürecimiz çevrimiçi satıcımız Lemon Squeezy tarafından yürütülmektedir. Lemon Squeezy tüm siparişlerin kayıtlı satıcısıdır (Merchant of Record).", "p2": "Abonelikler periyodik olarak önceden faturalandırılır. Aboneliğinizi panel üzerinden yönetebilirsiniz." },
+      "s3": { "title": "3. İade Politikası", "text": "İadeler Lemon Squeezy'nin standart politikalarına göre yapılır. Kullanılmayan krediler için genellikle 14 gün içinde iade imkanı sunulur." },
+      "s4": { "title": "4. Kullanım Sınırları ve Bilişsel Krediler", "text": "Hizmetler planınıza göre belirlenen limitlere tabidir. API işlemleri ve yapay zeka işlemleri için 'Bilişsel Krediler' tüketilir." },
+      "s5": { "title": "5. Fikri Mülkiyet", "text": "Hizmet ve orijinal içeriği must-b'nin münhasır mülkiyetindedir. Yazılımımız telif hakları ve ticari sır yasalarıyla korunmaktadır." },
+      "s6": { "title": "6. Sorumluluk Sınırlandırması", "text": "must-b hiçbir durumda kar kaybı veya veri kaybı dahil dolaylı zararlardan sorumlu tutulamaz." },
+      "s7": { "title": "7. İletişim", "text": "Sorularınız için legal@must-b.com adresinden bize ulaşabilirsiniz." }
+    },
+    "privacy": {
+      "title": "Gizlilik Politikası",
+      "s1": { "title": "1. Giriş", "text": "must-b olarak gizliliğinizi ciddiye alıyoruz. Bu politika, verilerinizi nasıl topladığımızı ve koruduğumuzu açıklar." },
+      "s2": { "title": "2. Topladığımız Bilgiler", "p1": "Hesap Verileri: Kayıt sırasında Supabase Auth aracılığıyla e-posta adresinizi toplarız.", "p2": "Ödeme Verileri: Tüm ödeme bilgileri Lemon Squeezy tarafından güvenli bir şekilde işlenir.", "p3": "Operasyonel Veriler: Sistem kararlılığı için CLI kullanımı ve API tüketimi ile ilgili üst verileri toplarız." },
+      "s3": { "title": "3. Bilgilerin Kullanımı", "text": "Verilerinizi hizmeti sağlamak, ödemeleri işlemek ve güncellemeleri iletmek için kullanırız." },
+      "s4": { "title": "4. Veri Güvenliği", "text": "Verilerinizi korumak için endüstri standardı güvenlik önlemleri uyguluyoruz. Altyapımız Supabase tarafından korunmaktadır." },
+      "s5": { "title": "5. Çerezler", "text": "Oturum yönetimi için zorunlu çerezler kullanıyoruz. İzinsiz takip çerezleri kullanmıyoruz." },
+      "s6": { "title": "6. Üçüncü Taraf Hizmetleri", "text": "Hizmeti sunmak için şu sağlayıcılara güveniyoruz:", "li1": "Supabase: Kimlik doğrulama ve veritabanı.", "li2": "Lemon Squeezy: Güvenli ödeme işlemleri.", "li3": "Vercel: Barındırma." },
+      "s7": { "title": "7. Haklarınız", "text": "Verilerinize erişme veya silme hakkına sahipsiniz. privacy@must-b.com adresinden bize ulaşabilirsiniz." }
+    }
+  }
+}

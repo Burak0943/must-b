@@ -5,10 +5,12 @@ import { Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
 import Login from "./Login";
+import { useTranslation } from "react-i18next";
 
 export default function CliLogin() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<any>(null);
 
@@ -54,7 +56,7 @@ export default function CliLogin() {
 
       if (error) throw error;
       if (!profile?.api_access_token) {
-        toast.error("API Access Token bulunamadı. Lütfen önce Dashboard'dan bir token oluşturun.");
+        toast.error(t('cliBridge.noToken'));
         return;
       }
 
@@ -71,7 +73,7 @@ export default function CliLogin() {
       window.location.href = url.toString();
     } catch (err: any) {
       console.error("Bridge Error:", err);
-      toast.error("Bağlantı kurulurken bir hata oluştu.");
+      toast.error(t('cliBridge.error'));
     } finally {
       setLoading(false);
     }
@@ -83,8 +85,8 @@ export default function CliLogin() {
         <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
           <Loader2 className="w-8 h-8 text-primary animate-spin" />
         </div>
-        <h1 className="text-2xl font-bold text-white mb-2">CLI Bağlantısı Kuruluyor</h1>
-        <p className="text-white/60">Güvenli token aktarımı yapılıyor, lütfen bekleyin...</p>
+        <h1 className="text-2xl font-bold text-white mb-2">{t('cliBridge.connecting')}</h1>
+        <p className="text-white/60">{t('cliBridge.transferring')}</p>
       </div>
     );
   }

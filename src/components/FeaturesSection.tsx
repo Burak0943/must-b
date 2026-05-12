@@ -1,45 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { Shield, BrainCircuit, Terminal } from "lucide-react";
 import { useRef } from "react";
-
-const features = [
-  {
-    icon: BrainCircuit,
-    title: "Autonomous Planning",
-    desc: "must-b uses GPT-4o and Claude 3.5 Sonnet as its reasoning layer. Given a goal, it decomposes the work into a directed task graph — spawning specialized sub-agents per node, resolving dependencies, retrying failures, and collapsing results back into a final output. Zero manual orchestration.",
-    badge: "GPT-4o · Claude 3.5",
-    gradient: "from-indigo-500/20 to-indigo-600/5",
-    detail: [
-      "Task graph decomposition",
-      "Parallel sub-agent spawning",
-      "Automatic retry + fallback",
-    ],
-  },
-  {
-    icon: Terminal,
-    title: "Full OS Control",
-    desc: "Agents have direct access to your shell, filesystem, and git. They can run arbitrary commands, read and patch files, commit changes, open PRs, and chain tool calls across sessions — all from a single natural-language instruction.",
-    badge: "shell · git · fs",
-    gradient: "from-violet-500/20 to-violet-600/5",
-    detail: [
-      "Shell command execution",
-      "File read / write / patch",
-      "Git commit, push, PR creation",
-    ],
-  },
-  {
-    icon: Shield,
-    title: "Privacy First",
-    desc: "Every node generates an Ed25519 key pair at install time. Execution stays local — model weights run on your hardware, tool calls never leave your machine. Zero telemetry, zero data retention. Cloud sync is opt-in, end-to-end signed.",
-    badge: "local-first · zero-data",
-    gradient: "from-emerald-500/20 to-emerald-600/5",
-    detail: [
-      "Ed25519 identity, local keygen",
-      "No telemetry, no data retention",
-      "Cloud sync is opt-in & signed",
-    ],
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const staggerContainer = {
   hidden: {},
@@ -61,7 +23,7 @@ const fadeInUp = {
   },
 };
 
-const FeatureCard = ({ feature }: { feature: typeof features[0] }) => {
+const FeatureCard = ({ feature }: { feature: any }) => {
   return (
     <motion.div
       variants={fadeInUp}
@@ -92,7 +54,7 @@ const FeatureCard = ({ feature }: { feature: typeof features[0] }) => {
 
         {/* Detail list */}
         <ul className="space-y-1.5 pt-1 border-t border-white/[0.05]">
-          {feature.detail.map((item) => (
+          {feature.detail.map((item: string) => (
             <li key={item} className="flex items-center gap-2 text-xs text-muted-foreground/70 font-mono">
               <span className="w-1 h-1 rounded-full bg-primary/60 shrink-0" />
               {item}
@@ -105,11 +67,39 @@ const FeatureCard = ({ feature }: { feature: typeof features[0] }) => {
 };
 
 const FeaturesSection = () => {
+  const { t } = useTranslation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   const headingRef = useRef(null);
   const isHeadingInView = useInView(headingRef, { once: true, margin: "-80px" });
+
+  const features = [
+    {
+      icon: BrainCircuit,
+      title: t('features.items.planning.title'),
+      desc: t('features.items.planning.desc'),
+      badge: t('features.items.planning.badge'),
+      gradient: "from-indigo-500/20 to-indigo-600/5",
+      detail: t('features.items.planning.details', { returnObjects: true }) as string[],
+    },
+    {
+      icon: Terminal,
+      title: t('features.items.control.title'),
+      desc: t('features.items.control.desc'),
+      badge: t('features.items.control.badge'),
+      gradient: "from-violet-500/20 to-violet-600/5",
+      detail: t('features.items.control.details', { returnObjects: true }) as string[],
+    },
+    {
+      icon: Shield,
+      title: t('features.items.privacy.title'),
+      desc: t('features.items.privacy.desc'),
+      badge: t('features.items.privacy.badge'),
+      gradient: "from-emerald-500/20 to-emerald-600/5",
+      detail: t('features.items.privacy.details', { returnObjects: true }) as string[],
+    },
+  ];
 
   return (
     <section id="features" className="py-24 md:py-32 px-6 relative">
@@ -130,13 +120,13 @@ const FeaturesSection = () => {
             transition={{ delay: 0.1 }}
             className="inline-block text-xs font-mono text-primary uppercase tracking-[0.2em] mb-4"
           >
-            Features
+            {t('features.title')}
           </motion.span>
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-            Built for autonomous work.
+            {t('features.subtitle')}
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            A framework where agents plan, delegate, and execute — locally, privately, and at scale.
+            {t('features.desc')}
           </p>
         </motion.div>
 

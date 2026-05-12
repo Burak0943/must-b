@@ -9,6 +9,7 @@ import InstallPanel from "@/components/InstallPanel";
 import OnboardingTerminal from "@/components/OnboardingTerminal";
 import { Workflow, Network, Building2, Rocket } from "lucide-react";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 // ── Scroll-reveal wrapper ─────────────────────────────────────────────────
 
@@ -37,34 +38,34 @@ const ScrollReveal = ({
   );
 };
 
-// ── Data ──────────────────────────────────────────────────────────────────
-
-const roadmapSteps = [
-  {
-    icon: Workflow,
-    phase: "Phase 1: Visual Automations",
-    text: "No-code, drag-and-drop trigger pipelines.",
-  },
-  {
-    icon: Network,
-    phase: "Phase 2: Multi-Agent Swarms",
-    text: "Specialized AI agents collaborating.",
-  },
-  {
-    icon: Building2,
-    phase: "Phase 3: B2B Enterprise Employees",
-    text: "SAP/Salesforce corporate network deployment.",
-  },
-  {
-    icon: Rocket,
-    phase: "Phase 4: The Must-b Marketplace",
-    text: "Global App Store for custom AI skills.",
-  }
-];
-
 // ── Page ──────────────────────────────────────────────────────────────────
 
 const Index = () => {
+  const { t } = useTranslation();
+
+  const roadmapSteps = [
+    {
+      icon: Workflow,
+      phase: t('roadmap.steps.1.phase'),
+      text: t('roadmap.steps.1.text'),
+    },
+    {
+      icon: Network,
+      phase: t('roadmap.steps.2.phase'),
+      text: t('roadmap.steps.2.text'),
+    },
+    {
+      icon: Building2,
+      phase: t('roadmap.steps.3.phase'),
+      text: t('roadmap.steps.3.text'),
+    },
+    {
+      icon: Rocket,
+      phase: t('roadmap.steps.4.phase'),
+      text: t('roadmap.steps.4.text'),
+    }
+  ];
+
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -108,16 +109,15 @@ const Index = () => {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 glass rounded-full text-xs font-mono text-muted-foreground mb-6">
               <span className="pulse-dot" />
-              <span>v1.2.2 — Now Available</span>
+              <span>{t('hero.version')}</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-5 text-gradient-hero leading-[1.08]">
-              Cloud Brain,<br />Local Muscle.
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-5 text-gradient-hero leading-[1.08] whitespace-pre-line">
+              {t('hero.title')}
             </h1>
 
             <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              An autonomous agent framework that runs AI locally on your hardware,
-              delegates tasks to a multi-tier swarm, and syncs identity globally.
+              {t('hero.subtitle')}
             </p>
           </motion.div>
         </div>
@@ -129,10 +129,10 @@ const Index = () => {
         <div className="max-w-3xl mx-auto">
           <ScrollReveal className="text-center mb-8">
             <span className="inline-block text-xs font-mono text-primary uppercase tracking-[0.2em] mb-3">
-              Get Started
+              {t('nav.getStarted')}
             </span>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Deploy in one command.
+              {t('getStarted.title')}
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
@@ -147,13 +147,13 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="text-center mb-24">
             <span className="inline-block text-xs font-mono text-cyan-400 uppercase tracking-[0.2em] mb-4">
-              B2B Roadmap
+              {t('roadmap.title')}
             </span>
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-              Evolution of the Swarm.
+              {t('roadmap.subtitle')}
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              From individual trigger pipelines to enterprise-wide cognitive networks.
+              {t('roadmap.desc')}
             </p>
           </ScrollReveal>
           
@@ -220,13 +220,13 @@ const Index = () => {
         <div className="max-w-5xl mx-auto">
           <ScrollReveal className="text-center mb-12">
             <span className="inline-block text-xs font-mono text-primary uppercase tracking-[0.2em] mb-4">
-              Live Demo
+              {t('demo.title')}
             </span>
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-              See it in action.
+              {t('demo.subtitle')}
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              The real must-b onboarding — from install to a live local agent in under 30 seconds.
+              {t('demo.desc')}
             </p>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>

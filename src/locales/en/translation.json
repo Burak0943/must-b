@@ -1,0 +1,444 @@
+{
+  "nav": {
+    "hub": "Hub",
+    "docs": "Docs",
+    "pricing": "Pricing",
+    "dashboard": "Dashboard",
+    "signOut": "Sign Out",
+    "login": "Login",
+    "getStarted": "Get Started"
+  },
+  "footer": {
+    "tagline": "Autonomous AI agents that run locally, think globally, and execute privately.",
+    "resources": "Resources",
+    "legal": "Legal",
+    "newsletter": {
+      "title": "Stay in the loop",
+      "desc": "Agent updates, model support releases, and World-Mode news.",
+      "success": "You're in. Watch your inbox.",
+      "placeholder": "name@company.com",
+      "button": "Subscribe"
+    },
+    "rights": "© 2026 must-b. All rights reserved.",
+    "proprietary": "Proprietary Software"
+  },
+  "getStarted": {
+    "title": "Deploy in one command."
+  },
+  "demo": {
+    "title": "Live Demo",
+    "subtitle": "See it in action.",
+    "desc": "The real must-b onboarding — from install to a live local agent in under 30 seconds."
+  },
+  "hero": {
+    "version": "v1.2.2 — Now Available",
+    "title": "Cloud Brain,\nLocal Muscle.",
+    "subtitle": "An autonomous agent framework that runs AI locally on your hardware, delegates tasks to a multi-tier swarm, and syncs identity globally."
+  },
+  "roadmap": {
+    "title": "B2B Roadmap",
+    "subtitle": "Evolution of the Swarm.",
+    "desc": "From individual trigger pipelines to enterprise-wide cognitive networks.",
+    "steps": {
+      "1": { "phase": "Phase 1: Visual Automations", "text": "No-code, drag-and-drop trigger pipelines." },
+      "2": { "phase": "Phase 2: Multi-Agent Swarms", "text": "Specialized AI agents collaborating." },
+      "3": { "phase": "Phase 3: B2B Enterprise Employees", "text": "SAP/Salesforce corporate network deployment." },
+      "4": { "phase": "Phase 4: The Must-b Marketplace", "text": "Global App Store for custom AI skills." }
+    }
+  },
+  "features": {
+    "title": "Features",
+    "subtitle": "Built for autonomous work.",
+    "desc": "A framework where agents plan, delegate, and execute — locally, privately, and at scale.",
+    "items": {
+      "planning": {
+        "title": "Autonomous Planning",
+        "desc": "must-b uses GPT-4o and Claude 3.5 Sonnet as its reasoning layer. Given a goal, it decomposes the work into a directed task graph — spawning specialized sub-agents per node, resolving dependencies, retrying failures, and collapsing results back into a final output. Zero manual orchestration.",
+        "badge": "GPT-4o · Claude 3.5",
+        "details": ["Task graph decomposition", "Parallel sub-agent spawning", "Automatic retry + fallback"]
+      },
+      "control": {
+        "title": "Full OS Control",
+        "desc": "Agents have direct access to your shell, filesystem, and git. They can run arbitrary commands, read and patch files, commit changes, open PRs, and chain tool calls across sessions — all from a single natural-language instruction.",
+        "badge": "shell · git · fs",
+        "details": ["Shell command execution", "File read / write / patch", "Git commit, push, PR creation"]
+      },
+      "privacy": {
+        "title": "Privacy First",
+        "desc": "Every node generates an Ed25519 key pair at install time. Execution stays local — model weights run on your hardware, tool calls never leave your machine. Zero telemetry, zero data retention. Cloud sync is opt-in, end-to-end signed.",
+        "badge": "local-first · zero-data",
+        "details": ["Ed25519 identity, local keygen", "No telemetry, no data retention", "Cloud sync is opt-in & signed"]
+      }
+    }
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Autonomy that exceeds limits.",
+    "desc": "Intelligence and performance at every scale, from hobby projects to massive enterprise architectures.",
+    "plans": {
+      "free": {
+        "title": "Must-b Free",
+        "tagline": "First Step into Autonomous World",
+        "desc": "Limited single-agent entry level designed for testing system fundamentals.",
+        "features": [
+          "Basic Terminal Autonomy: Folder and git operations.",
+          "Limited Transaction Volume: Daily $2 usage limit.",
+          "Single-Agent Execution: Executes tasks sequentially.",
+          "Session-Based Memory: Forgets context when closed.",
+          "Limited Skill Access: Only core tools active."
+        ],
+        "button": "Start Free"
+      },
+      "pro": {
+        "title": "Must-b Pro",
+        "tagline": "Your Digital Partner",
+        "desc": "Leave all the drudgery to it. A fully authorized assistant that takes control of your computer.",
+        "badge": "MOST POPULAR",
+        "features": [
+          "Daily $20 Autonomous Transaction Volume: Continuous development.",
+          "Hundreds of System Skills: Integrated with the OS.",
+          "Autonomous Browser Engine: Navigates and analyzes like a human.",
+          "Ghost Mode (Physical Control): Controls mouse and keyboard.",
+          "Persistent Cognitive Memory (Cloud LTM): Never forgets the past."
+        ],
+        "button": "Upgrade to Pro"
+      },
+      "elite": {
+        "title": "Must-b Elite",
+        "tagline": "Autonomous Software Factory",
+        "desc": "High-level power that builds massive projects in seconds with a concurrent agent army.",
+        "features": [
+          "Daily $100 Huge Transaction Volume: Heavy architecture setups.",
+          "Dynamic Agent Swarm: Dozens of parallel agent architectures.",
+          "Advanced AI Access: Automatically locks onto the smartest models.",
+          "Self-Healing System (Auto-Fix): Resolves errors instantly.",
+          "Deep Autonomous Tasks: Design and delivery without intervention."
+        ],
+        "button": "Go Elite"
+      },
+      "local": {
+        "title": "Must-b Local",
+        "tagline": "Cognitive Sovereignty",
+        "desc": "Cut the cloud connection. For those who want to lock their data and reach unlimited power.",
+        "features": [
+          "Zero API Billing: Use your own API keys (BYOK).",
+          "100% Air-Gapped (Offline): Zero telemetry data.",
+          "Unlimited Tokens and Transactions: No credit restrictions.",
+          "Enterprise Data Indexing: Teach your entire codebase locally.",
+          "Custom Skill SDK: Develop specific skills for corporate intranets."
+        ],
+        "button": "Use Local Power"
+      }
+    },
+    "enterprise": {
+      "badge": "ENTERPRISE (B2B & B2G)",
+      "title": "National Cognitive Infrastructure for Defense and Institutions",
+      "desc": "Must-b Local is not just software; it's your institution's self-sufficient intelligence isolated from the outside world. Eliminate KVKK obligations, end dependence on imported cloud APIs.",
+      "features": {
+        "onPrem": { "title": "On-Premise Installation", "desc": "Our team installs your system on your closed servers." },
+        "airGapped": { "title": "Air-Gapped Security", "desc": "Must-b continues producing even when you pull the internet cable." },
+        "independence": { "title": "End of Dependency", "desc": "Eliminate dependency on foreign cloud APIs with local models." },
+        "customRd": { "title": "Custom Training and R&D", "desc": "Custom autonomous agents trained according to your institution's internal data." }
+      },
+      "button": "Get Custom Offer"
+    },
+    "matrix": {
+      "title": "Detailed Feature Comparison",
+      "version": "V1.72.40 — Strategic Ability Matrix",
+      "features": "Features",
+      "categories": {
+        "autonomous": "Autonomous Capabilities",
+        "memory": "Context and Memory",
+        "security": "Security and Infrastructure"
+      },
+      "items": {
+        "volume": "Daily Transaction Volume",
+        "architecture": "Agent Architecture",
+        "artifacts": "Visual Panels (Artifacts)",
+        "autofix": "Error Solving (Auto-Fix)",
+        "memoryType": "Memory Type",
+        "indexing": "File Reading and Indexing",
+        "research": "Deep Research & Scrape",
+        "privacy": "Data Privacy",
+        "offline": "Offline Operation",
+        "byok": "API Independence",
+        "skillstore": "Full Skill Store Access"
+      },
+      "values": {
+        "unlimited": "∞ (Unlimited)",
+        "single": "Single Agent",
+        "hybrid": "Hybrid",
+        "swarm": "13+ Parallel Swarm",
+        "customizable": "Custom Configurable",
+        "advanced": "✅ (Advanced)",
+        "manual": "Manual",
+        "autonomous": "Autonomous",
+        "autonomousPlus": "Autonomous+",
+        "archLevel": "Architecture Level",
+        "deviceBased": "Device Based",
+        "cloudSync": "Cloud Sync",
+        "dataCenter": "Private Data Center",
+        "files": "5 Files",
+        "sirus": "Sirus",
+        "partial": "Partial",
+        "standard": "Standard",
+        "optional": "Optional",
+        "zeroTelemetry": "💎 Zero-Telemetry",
+        "airGapped": "💎 Air-Gapped",
+        "byok": "💎 BYOK / Local LLM"
+      }
+    }
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Sign Up",
+    "email": "Email address",
+    "password": "Password",
+    "fullName": "Full Name",
+    "backToHome": "Back to Home",
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create an Account",
+    "checkEmail": "Check your Email",
+    "accessHub": "Access your global command center.",
+    "getStarted": "Enter your details to get started.",
+    "sentCode": "We sent an 8-digit code to {{email}}",
+    "verifyCode": "Verify Code",
+    "verifySuccess": "Your account has been verified! Taking you in...",
+    "didntReceive": "Didn't receive it?",
+    "goBack": "Go back",
+    "orContinue": "Or continue with",
+    "alreadyHave": "Already have an account?",
+    "dontHave": "Don't have an account?",
+    "fillAll": "Please fill in all fields.",
+    "fillName": "Please enter your full name.",
+    "codeSent": "Verification code sent to your email!",
+    "errorOccurred": "An error occurred.",
+    "invalidCode": "Invalid or expired code. Please try again.",
+    "enter8Digit": "Please enter the 8-digit code completely.",
+    "copied": "Token copied!"
+  },
+  "cliBridge": {
+    "connecting": "Establishing CLI Connection",
+    "transferring": "Securely transferring token, please wait...",
+    "noToken": "API Access Token not found. Please create a token from the Dashboard first.",
+    "error": "An error occurred while establishing the connection."
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last Updated: May 13, 2026",
+    "sections": [
+      {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing or using the must-b platform, CLI, or services (the \"Service\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our Service."
+      },
+      {
+        "title": "2. Subscription and Payments",
+        "content": "Our order process is conducted by our online reseller Lemon Squeezy. Lemon Squeezy is the Merchant of Record for all our orders. They provide all customer service inquiries and handle returns. Subscriptions are billed in advance on a recurring basis. You can manage your subscription and payment methods through your dashboard."
+      },
+      {
+        "title": "3. Refund Policy",
+        "content": "Refunds are handled according to Lemon Squeezy's standard policies. Please contact Lemon Squeezy or our support team if you encounter issues with your purchase. Generally, refunds are available within 14 days of purchase for unused credits."
+      },
+      {
+        "title": "4. Usage Limits and Cognitive Credits",
+        "content": "Must-b services are subject to usage limits defined by your subscription plan. \"Cognitive Credits\" are consumed for API operations and AI processing. If your daily limit is exceeded, service may be temporarily throttled or halted until the next reset period."
+      },
+      {
+        "title": "5. Intellectual Property",
+        "content": "The Service and its original content, features, and functionality are and will remain the exclusive property of must-b. Our CLI and software are protected by copyright and trade secret laws. Reverse engineering is strictly prohibited."
+      },
+      {
+        "title": "6. Limitation of Liability",
+        "content": "In no event shall must-b, nor its directors, employees, or partners, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, or other intangible losses."
+      },
+      {
+        "title": "7. Contact Us",
+        "content": "If you have any questions about these Terms, please contact us at legal@must-b.com."
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last Updated: May 13, 2026",
+    "sections": [
+      {
+        "title": "1. Introduction",
+        "content": "At must-b, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information when you use our autonomous AI agents and related services."
+      },
+      {
+        "title": "2. Information We Collect",
+        "content": "Account Data: When you register, we collect your email address and basic profile information through Supabase Auth. Payment Data: All payment information is processed securely by Lemon Squeezy. We do not store your credit card details on our servers. Operational Data: We collect metadata related to CLI usage and API consumption to manage usage limits and ensure system stability."
+      },
+      {
+        "title": "3. How We Use Information",
+        "content": "We use your information to provide and maintain the Service, process payments via Lemon Squeezy, manage your account through Supabase, and communicate updates or security alerts."
+      },
+      {
+        "title": "4. Data Security",
+        "content": "We implement industry-standard security measures to protect your data. Supabase provides our backend security infrastructure, ensuring your data is encrypted and accessible only to authorized entities."
+      },
+      {
+        "title": "5. Cookies and Tracking",
+        "content": "We use essential cookies for authentication and session management. We do not use tracking pixels or intrusive advertising cookies."
+      },
+      {
+        "title": "6. Third-Party Services",
+        "content": "We rely on third-party providers to deliver our Service: Supabase (Auth/Database), Lemon Squeezy (Payments), and Vercel (Hosting)."
+      },
+      {
+        "title": "7. Your Rights",
+        "content": "You have the right to access, update, or delete your personal data. You can manage your profile settings in the dashboard or contact us at privacy@must-b.com for data deletion requests."
+      }
+    ]
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Frequently Asked Questions",
+    "desc": "We answered the most curious topics about Must-b for you.",
+    "items": {
+      "localModels": {
+        "q": "How does Must-b use local models?",
+        "a": "Must-b works 100% integrated with local LLM runtimes like Ollama to use the full hardware power (especially GPU) of your computer. You can connect Llama 3, Mistral, or any open-source model you've trained directly. This ensures your code and project files never leave your machine, providing maximum security and zero API costs."
+      },
+      "apiKeys": {
+        "q": "Do I need to provide my own API keys?",
+        "a": "It depends on your plan. Must-b Pro and Elite include access to GPT-4o and Claude 3.5. Must-b Lite and Local allow you to use your own keys (BYOK) or local models to eliminate API costs."
+      },
+      "offline": {
+        "q": "Is internet connection mandatory in the enterprise version?",
+        "a": "No. Must-b Enterprise is designed to work in Air-Gapped environments for sectors like defense, banking, and healthcare where data privacy is critical. It performs zero telemetry and works fully on-premise."
+      },
+      "swarm": {
+        "q": "What is the Multi-Agent Swarm architecture?",
+        "a": "It's our core technology that turns AI into an autonomous software factory. It divides complex tasks among specialized agents working in parallel—handling UI, database, and terminal operations simultaneously."
+      },
+      "cancel": {
+        "q": "Can I cancel my subscription anytime?",
+        "a": "Yes. Individual and Professional plans can be cancelled anytime with one click. You retain ownership of all code and architectures created by Must-b forever."
+      }
+    },
+    "moreQuestions": "Have another question?",
+    "discord": "Join our Discord community or write to us →"
+  },
+  "docs": {
+    "sidebar": {
+      "groups": {
+        "overview": "Overview",
+        "gettingStarted": "Getting Started",
+        "capabilities": "Cognitive Capabilities",
+        "architecture": "Architecture & Security",
+        "ecosystem": "Ecosystem & Legal"
+      },
+      "items": {
+        "introduction": "Introduction",
+        "philosophy": "Core Philosophy",
+        "prerequisites": "Prerequisites",
+        "installation": "Installation",
+        "firstBoot": "First Boot",
+        "ghostMode": "Ghost Mode",
+        "browsing": "API-less Native Browsing",
+        "terminal": "Terminal Supremacy",
+        "fortress": "Cyber Fortress",
+        "memory": "Omni-Context Memory",
+        "orchestrator": "Orchestrator Engine",
+        "nodes": "Cross-Platform Nodes",
+        "license": "Proprietary License",
+        "viewDetails": "View details →"
+      }
+    },
+    "install": {
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyTitle": "Copy to clipboard",
+      "afterInstall": "After install, run",
+      "toWake": "to wake the Fox.",
+      "nodeRequired": "Node 18+ required",
+      "viewNpm": "View on npm"
+    },
+    "terminal": {
+      "addedPackages": "added 268 packages in 4s",
+      "welcome": "◆  Welcome to Must-b! Let's set things up.",
+      "promptName": "Your name (press Enter for 'User'):  ",
+      "languages": "Language:  [1] English  [2] Türkçe  [3] Deutsch",
+      "promptChoice": "Your choice (1/2/3, default 1):  ",
+      "setupComplete": "✓ Setup complete. Hello, {{name}}!",
+      "professionalOS": "           Professional AI Operating System",
+      "tagline": "         ⚡ Autonomous · Precise · Always On",
+      "activeSkills": "✓ Active Skills: Browser Automation, Terminal, Memory, Filesystem",
+      "healthCheck": "Running system health check..."
+    }
+  },
+  "dashboard": {
+    "commandCenter": "Command Center",
+    "welcome": "Welcome to your omni-context operational hub.",
+    "newAgent": "Initialize New Agent",
+    "stats": {
+      "health": "System Health",
+      "online": "Online",
+      "activeAgents": "Active Agents",
+      "deployed": "Deployed",
+      "memoryVault": "Memory Vault",
+      "gbIndexed": "GB Indexed",
+      "currentPlan": "Current Plan",
+      "active": "Active",
+      "dailyUsage": "Daily Usage",
+      "limit": "Limit",
+      "apiToken": "API Access Token",
+      "language": "Language"
+    },
+    "liveTasks": "Live Task Delegation",
+    "realtimeFeed": "Realtime Feed",
+    "noAgents": {
+      "title": "No agents deployed yet",
+      "desc": "Activate your first autonomous agent into the Omni-Context system. The swarm awaits your command.",
+      "button": "Initialize your first agent →"
+    }
+  },
+  "login": {
+    "backHome": "Back to Home",
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create an Account",
+    "checkEmail": "Check your Email",
+    "signinDesc": "Access your global command center.",
+    "signupDesc": "Enter your details to get started.",
+    "verifyDesc": "We sent an 8-digit code to {{email}}",
+    "fullName": "Full Name",
+    "email": "Email address",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "verify": "Verify Code",
+    "orContinue": "Or continue with",
+    "alreadyAccount": "Already have an account?",
+    "noAccount": "Don't have an account?",
+    "resend": "Didn't receive it?",
+    "goBack": "Go back"
+  },
+  "cliLogin": {
+    "bridgeTitle": "CLI Bridge Connecting",
+    "bridgeDesc": "Securely transferring tokens, please wait..."
+  },
+  "legal": {
+    "lastUpdated": "Last Updated: May 13, 2026",
+    "tos": {
+      "title": "Terms of Service",
+      "s1": { "title": "1. Acceptance of Terms", "text": "By accessing or using the must-b platform, CLI, or services (the \"Service\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our Service." },
+      "s2": { "title": "2. Subscription and Payments", "p1": "Our order process is conducted by our online reseller Lemon Squeezy. Lemon Squeezy is the Merchant of Record for all our orders. They provide all customer service inquiries and handle returns.", "p2": "Subscriptions are billed in advance on a recurring basis. You can manage your subscription and payment methods through your dashboard." },
+      "s3": { "title": "3. Refund Policy", "text": "Refunds are handled according to Lemon Squeezy's standard policies. Please contact Lemon Squeezy or our support team if you encounter issues with your purchase. Generally, refunds are available within 14 days of purchase for unused credits." },
+      "s4": { "title": "4. Usage Limits and Cognitive Credits", "text": "Must-b services are subject to usage limits defined by your subscription plan. \"Cognitive Credits\" are consumed for API operations and AI processing. If your daily limit is exceeded, service may be temporarily throttled or halted until the next reset period." },
+      "s5": { "title": "5. Intellectual Property", "text": "The Service and its original content, features, and functionality are and will remain the exclusive property of must-b. Our CLI and software are protected by copyright and trade secret laws. Reverse engineering is strictly prohibited." },
+      "s6": { "title": "6. Limitation of Liability", "text": "In no event shall must-b, nor its directors, employees, or partners, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, or other intangible losses." },
+      "s7": { "title": "7. Contact Us", "text": "If you have any questions about these Terms, please contact us at legal@must-b.com." }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "s1": { "title": "1. Introduction", "text": "At must-b, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information when you use our autonomous AI agents and related services." },
+      "s2": { "title": "2. Information We Collect", "p1": "Account Data: When you register, we collect your email address and basic profile information through Supabase Auth.", "p2": "Payment Data: All payment information is processed securely by Lemon Squeezy. We do not store your credit card details on our servers.", "p3": "Operational Data: We collect metadata related to CLI usage and API consumption to manage usage limits and ensure system stability." },
+      "s3": { "title": "3. How We Use Information", "text": "We use your information to provide and maintain the Service, process payments via Lemon Squeezy, manage your account through Supabase, and communicate updates or security alerts." },
+      "s4": { "title": "4. Data Security", "text": "We implement industry-standard security measures to protect your data. Supabase provides our backend security infrastructure, ensuring your data is encrypted and accessible only to authorized entities." },
+      "s5": { "title": "5. Cookies and Tracking", "text": "We use essential cookies for authentication and session management. We do not use tracking pixels or intrusive advertising cookies." },
+      "s6": { "title": "6. Third-Party Services", "text": "We rely on third-party providers to deliver our Service:", "li1": "Supabase: For authentication and database management.", "li2": "Lemon Squeezy: For secure payment processing and reseller services.", "li3": "Vercel: For hosting our web platform." },
+      "s7": { "title": "7. Your Rights", "text": "You have the right to access, update, or delete your personal data. You can manage your profile settings in the dashboard or contact us at privacy@must-b.com for data deletion requests." }
+    }
+  }
+}

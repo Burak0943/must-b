@@ -51,12 +51,12 @@ type Instr =
   | { op: "wait";   ms: number }
   | { op: "clear" };
 
-const SCRIPT: Instr[] = [
+const getScript = (t: any): Instr[] => [
   // ── npm install ──────────────────────────────────────────────────────
   { op: "type",   text: "> npm install -g @must-b/must-b@latest", type: "command", speed: 36 },
   { op: "wait",   ms: 920 },
   { op: "print",  text: "", type: "blank" },
-  { op: "print",  text: "added 268 packages in 4s", type: "dim" },
+  { op: "print",  text: t('terminal.addedPackages') || "added 268 packages in 4s", type: "dim" },
   { op: "wait",   ms: 680 },
   { op: "print",  text: "", type: "blank" },
 
@@ -64,19 +64,19 @@ const SCRIPT: Instr[] = [
   { op: "type",   text: "> must-b gateway", type: "command", speed: 50 },
   { op: "wait",   ms: 820 },
   { op: "print",  text: "", type: "blank" },
-  { op: "print",  text: "◆  Welcome to Must-b! Let's set things up.", type: "info" },
+  { op: "print",  text: t('terminal.welcome') || "◆  Welcome to Must-b! Let's set things up.", type: "info" },
   { op: "print",  text: "", type: "blank" },
 
   // ── Interactive prompts ───────────────────────────────────────────────
-  { op: "inline", prompt: "Your name (press Enter for 'User'):  ", answer: "aytaç", speed: 115 },
+  { op: "inline", prompt: t('terminal.promptName') || "Your name (press Enter for 'User'):  ", answer: "aytaç", speed: 115 },
   { op: "wait",   ms: 340 },
-  { op: "print",  text: "Language:  [1] English  [2] Türkçe  [3] Deutsch", type: "output" },
+  { op: "print",  text: t('terminal.languages') || "Language:  [1] English  [2] Türkçe  [3] Deutsch", type: "output" },
   { op: "print",  text: "", type: "blank" },
-  { op: "inline", prompt: "Your choice (1/2/3, default 1):  ", answer: "2", speed: 230 },
+  { op: "inline", prompt: t('terminal.promptChoice') || "Your choice (1/2/3, default 1):  ", answer: "2", speed: 230 },
   { op: "wait",   ms: 460 },
 
   // ── Setup done ───────────────────────────────────────────────────────
-  { op: "print",  text: "✓ Setup complete. Hello, aytaç!", type: "success" },
+  { op: "print",  text: t('terminal.setupComplete', { name: 'aytaç' }) || "✓ Setup complete. Hello, aytaç!", type: "success" },
   { op: "wait",   ms: 520 },
   { op: "print",  text: "", type: "blank" },
 
@@ -90,17 +90,17 @@ const SCRIPT: Instr[] = [
   { op: "print",  text: "", type: "blank" },
 
   // ── Sub-headline ─────────────────────────────────────────────────────
-  { op: "print",  text: "           Professional AI Operating System", type: "subtitle" },
+  { op: "print",  text: t('terminal.professionalOS') || "           Professional AI Operating System", type: "subtitle" },
   { op: "print",  text: "", type: "blank" },
-  { op: "print",  text: "         ⚡ Autonomous · Precise · Always On", type: "tagline" },
+  { op: "print",  text: t('terminal.tagline') || "         ⚡ Autonomous · Precise · Always On", type: "tagline" },
   { op: "print",  text: "", type: "blank" },
 
   // ── Active skills ────────────────────────────────────────────────────
-  { op: "print",  text: "✓ Active Skills: Browser Automation, Terminal, Memory, Filesystem", type: "success" },
+  { op: "print",  text: t('terminal.activeSkills') || "✓ Active Skills: Browser Automation, Terminal, Memory, Filesystem", type: "success" },
   { op: "print",  text: "", type: "blank" },
 
   // ── Health check ─────────────────────────────────────────────────────
-  { op: "print",  text: "Running system health check...", type: "dim" },
+  { op: "print",  text: t('terminal.healthCheck') || "Running system health check...", type: "dim" },
   { op: "wait",   ms: 620 },
   { op: "print",  text: "✓ Node.js v24.14.0", type: "success" },
   { op: "wait",   ms: 240 },
@@ -223,6 +223,7 @@ const Cursor = () => (
 const OnboardingTerminal = () => {
   const [display, setDisplay] = useState<Display>({ lines: [], active: null });
   const bodyRef = useRef<HTMLDivElement>(null);
+  const { t, i18n } = useTranslation();
 
   // Auto-scroll to bottom as content grows
   useEffect(() => {
@@ -235,6 +236,8 @@ const OnboardingTerminal = () => {
     let alive    = true;
     let timer:   ReturnType<typeof setTimeout> | null = null;
     let idSeq    = 0;
+
+    const SCRIPT = getScript(t);
 
     function sched(fn: () => void, ms: number) {
       timer = setTimeout(() => { if (alive) fn(); }, ms);

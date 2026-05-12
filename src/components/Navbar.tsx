@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, LayoutDashboard, LogOut } from "lucide-react";
+import { Menu, X, LayoutDashboard, LogOut, Globe } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
-import { useEffect } from "react";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [session, setSession] = useState<any>(null);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === "en" ? "tr" : "en";
+    i18n.changeLanguage(newLang);
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -46,19 +52,19 @@ const Navbar = () => {
       {/* Desktop pill nav */}
       <div className="hidden md:flex items-center gap-6 bg-black/40 border border-white/10 rounded-full py-1.5 px-2 backdrop-blur-md">
         <Link to="/ecosystem" className="text-sm font-medium text-white/70 hover:text-white transition-colors pl-2">
-          Hub
+          {t('nav.hub')}
         </Link>
         <Link to="/docs" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-          Docs
+          {t('nav.docs')}
         </Link>
         <Link to="/pricing" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-          Pricing
+          {t('nav.pricing')}
         </Link>
         
         {session ? (
           <>
             <Link to="/dashboard" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Dashboard
+              {t('nav.dashboard')}
             </Link>
             <button
               onClick={handleSignOut}
@@ -66,23 +72,33 @@ const Navbar = () => {
                          hover:bg-white/10 hover:text-white transition-all flex items-center gap-2"
             >
               <LogOut className="w-3 h-3" />
-              Sign Out
+              {t('nav.signOut')}
             </button>
           </>
         ) : (
           <>
             <Link to="/login" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Login
+              {t('nav.login')}
             </Link>
             <button
               onClick={() => navigate("/login?mode=signup")}
               className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold
                          hover:bg-primary/90 transition-all shadow-[0_0_16px_hsl(192_91%_43%/0.35)]"
             >
-              Get Started
+              {t('nav.getStarted')}
             </button>
           </>
         )}
+
+        <div className="w-px h-4 bg-white/10 mx-1" />
+        
+        <button
+          onClick={toggleLanguage}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full hover:bg-white/5 transition-colors text-xs font-mono font-bold text-white/60 hover:text-white"
+        >
+          <Globe className="w-3.5 h-3.5" />
+          {i18n.language?.toUpperCase().split('-')[0]}
+        </button>
       </div>
 
       {/* Mobile toggle */}
@@ -102,15 +118,15 @@ const Navbar = () => {
           >
             <Link to="/ecosystem" onClick={() => setMobileOpen(false)}
               className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl">
-              Hub
+              {t('nav.hub')}
             </Link>
             <Link to="/docs" onClick={() => setMobileOpen(false)}
               className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl">
-              Docs
+              {t('nav.docs')}
             </Link>
             <Link to="/pricing" onClick={() => setMobileOpen(false)}
               className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl">
-              Pricing
+              {t('nav.pricing')}
             </Link>
             <div className="h-px w-full bg-white/10 mb-2" />
             
@@ -119,30 +135,42 @@ const Navbar = () => {
                 <Link to="/dashboard" onClick={() => setMobileOpen(false)}
                   className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl flex items-center gap-2">
                   <LayoutDashboard className="w-4 h-4" />
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Link>
                 <button
                   onClick={() => { setMobileOpen(false); handleSignOut(); }}
                   className="py-2.5 px-4 text-sm font-medium text-red-400 hover:bg-red-400/5 transition-all rounded-xl flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
-                  Sign Out
+                  {t('nav.signOut')}
                 </button>
               </>
             ) : (
               <>
                 <Link to="/login" onClick={() => setMobileOpen(false)}
                   className="py-2.5 text-center text-sm font-medium text-white/70 border border-white/10 rounded-xl hover:bg-white/5 hover:text-white transition-all">
-                  Login
+                  {t('nav.login')}
                 </Link>
                 <button
                   onClick={() => { setMobileOpen(false); navigate("/login?mode=signup"); }}
                   className="py-2.5 text-sm font-bold bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all"
                 >
-                  Get Started
+                  {t('nav.getStarted')}
                 </button>
               </>
             )}
+            
+            <div className="h-px w-full bg-white/10 my-2" />
+            <button
+              onClick={toggleLanguage}
+              className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                {t('dashboard.stats.language') || 'Language'}
+              </div>
+              <span className="font-mono font-bold text-primary">{i18n.language?.toUpperCase().split('-')[0]}</span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

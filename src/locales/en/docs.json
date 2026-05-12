@@ -1,0 +1,39 @@
+{
+  "introduction": {
+    "title": "Introduction",
+    "mainTitle": "Must-b: Autonomous AI Operating System 🚀",
+    "p1": "Must-b is a next-generation, locally hosted autonomous AI agent ecosystem. It transitions AI from being a passive chatbot in a browser tab to an active, autonomous digital workforce operating directly on your machine.",
+    "paradigmShift": "The Paradigm Shift: Why Must-b?",
+    "orchestratorDesc": "Must-b changes the game by acting as the Orchestrator of your entire workflow. You provide a high-level goal. Must-b dynamically spawns a swarm of specialized AI agents, maps out a parallel execution graph, controls your terminal, edits your local files, navigates the web via automated browsers, and enforces strict security protocols—all without human intervention.",
+    "coreArchitecture": "Core Architecture & Features",
+    "features": [
+      "Multi-Agent Swarms (SwarmCoordinator): Spawns isolated PM, Frontend, Backend, and QA agents that work in parallel and communicate natively.",
+      "DAG Workflow Engine: Executes complex plans with parallel branching, rollback capabilities, and fault tolerance.",
+      "The Shield Protocol (Hookify): Write natural language rules (e.g., 'never delete databases') that instantly convert to runtime execution blocks.",
+      "200+ Native & Assimilated Skills: Ships with a massive arsenal of tools for GitHub PR reviews, codebase indexing, web scraping, and terminal execution.",
+      "Memory & Lifecycle: HNSW-backed vector store (LTM) with semantic search, plus Ghost Guard (RAM/CPU monitoring) and Night Owl (background execution).",
+      "8-Language UI: Fluent in English, Turkish, German, French, Spanish, Portuguese, Japanese, and Chinese."
+    ],
+    "corePhilosophy": {
+      "title": "Core Philosophy",
+      "p1": "Must-b is built on a singular, uncompromising premise: Artificial Intelligence should not be a passive conversational partner trapped in a browser tab; it must be a sovereign digital workforce integrated directly into your operating system.",
+      "p2": "To achieve zero latency in thought and absolute sovereignty in execution, Must-b employs a strict \"Cloud Brain, Local Muscle\" architectural paradigm.",
+      "cloudBrain": {
+        "title": "1. The Cloud Brain (Cognitive Offloading)",
+        "p1": "Complex reasoning, multi-step execution planning, high-dimensional token processing, and Omni-Context memory retrieval are entirely offloaded to decentralized LLM infrastructures.",
+        "list": [
+          "Dynamic Neural Routing: Must-b automatically routes tasks to the most capable model based on the context (e.g., Claude 3.5 Sonnet for deep code synthesis, Groq for rapid, low-latency decision trees).",
+          "DAG Generation: A high-level human intent is mathematically broken down into a Directed Acyclic Graph (DAG) of parallel sub-tasks, ensuring fault-tolerant, concurrent execution."
+        ]
+      },
+      "localMuscle": {
+        "title": "2. The Local Muscle (Bare-Metal Execution)",
+        "p1": "The physical manifestation of tasks occurs strictly on the host machine via the highly privileged Must-b Daemon.",
+        "list": [
+          "OS-Level Domination: Hardware-level mouse event simulation via Win32/Quartz APIs, keystroke injection, and background binary execution.",
+          "Stateful Manipulation: Direct read/write access to local file systems, Git repositories, terminal sessions, and legacy GUI software without requiring restrictive APIs."
+        ]
+      }
+    }
+  }
+}

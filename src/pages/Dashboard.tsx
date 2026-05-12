@@ -1,18 +1,13 @@
-import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info, LogOut, Shield, Zap, Key, Copy, Eye, EyeOff, Check } from "lucide-react";
+import { Activity, Database, Cable, Settings, Plus, Server, Cpu, DatabaseZap, Loader2, Info, LogOut, Shield, Zap, Key, Copy, Eye, EyeOff, Check, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-
-const navItems = [
-  { icon: Activity, label: "Overview", href: "/dashboard" },
-  { icon: Database, label: "Vector Vault", href: "/vector-vault" },
-  { icon: Cable, label: "The Bridge", href: "/the-bridge" },
-  { icon: Settings, label: "Settings", href: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState("Overview");
   const [loading, setLoading] = useState(true);
   
@@ -22,9 +17,21 @@ const Dashboard = () => {
   const [showToken, setShowToken] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const navItems = [
+    { icon: Activity, label: t('dashboard.stats.health'), href: "/dashboard" },
+    { icon: Database, label: "Vector Vault", href: "/vector-vault" },
+    { icon: Cable, label: "The Bridge", href: "/the-bridge" },
+    { icon: Settings, label: "Settings", href: "#" },
+  ];
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/login');
+  };
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === "en" ? "tr" : "en";
+    i18n.changeLanguage(newLang);
   };
 
   useEffect(() => {
@@ -82,10 +89,6 @@ const Dashboard = () => {
     );
   }
 
-  const activeAgentsCount = agents.filter(a => a.status && a.status.toLowerCase() !== 'offline').length;
-  const totalMemoryRaw = agents.reduce((acc, agent) => acc + (parseFloat(agent.memory_usage) || 0), 0);
-  const totalMemory = totalMemoryRaw > 0 ? totalMemoryRaw.toFixed(1) : "0.0";
-
   return (
     <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans">
       
@@ -121,13 +124,20 @@ const Dashboard = () => {
           })}
         </nav>
 
-        <div className="mt-auto">
+        <div className="mt-auto space-y-2">
+          <button
+            onClick={toggleLanguage}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 text-gray-400 hover:text-primary hover:bg-primary/5 hover:border-primary/10 border border-transparent"
+          >
+            <Globe className="w-4 h-4" />
+            {i18n.language === 'en' ? 'Türkçe' : 'English'}
+          </button>
           <button
             onClick={handleSignOut}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 text-gray-400 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 hover:border-[#06b6d4]/10 border border-transparent"
           >
             <LogOut className="w-4 h-4" />
-            Sign Out
+            {t('nav.signOut')}
           </button>
         </div>
       </aside>
@@ -142,9 +152,9 @@ const Dashboard = () => {
                 animate={{ opacity: 1, x: 0 }}
                 className="text-3xl font-bold tracking-tight text-white mb-2"
               >
-                Command Center
+                {t('dashboard.commandCenter')}
               </motion.h1>
-              <p className="text-gray-400 text-sm">Welcome to your omni-context operational hub.</p>
+              <p className="text-gray-400 text-sm">{t('dashboard.welcome')}</p>
             </div>
             
             <motion.button 
@@ -153,7 +163,7 @@ const Dashboard = () => {
               className="flex items-center gap-2 bg-[#06b6d4] hover:bg-[#0891b2] text-black px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-[0_0_15px_rgba(6,182,212,0.25)] border border-[#06b6d4]/30"
             >
               <Plus className="w-4 h-4" />
-              Initialize New Agent
+              {t('dashboard.newAgent')}
             </motion.button>
           </header>
 
@@ -163,31 +173,31 @@ const Dashboard = () => {
             transition={{ duration: 0.4 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10"
           >
-            {/* CARD 1: Mevcut Paket */}
+            {/* CARD 1: Current Plan */}
             <div className="bg-[#0a0a0a] border border-[#1f2937] p-6 rounded-2xl relative overflow-hidden group hover:border-[#06b6d4]/40 transition-colors">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <Shield className="w-16 h-16 text-[#06b6d4]" />
               </div>
               <div className="flex items-center gap-3 mb-4">
                 <Zap className="w-5 h-5 text-[#06b6d4]" />
-                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Mevcut Paket</span>
+                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('dashboard.stats.currentPlan')}</span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-3xl font-bold text-white tracking-tight">{profile?.plan || 'Free'}</span>
                 <span className="text-xs px-2 py-0.5 rounded bg-[#06b6d4]/10 text-[#06b6d4] border border-[#06b6d4]/20 font-mono uppercase">
-                  Active
+                  {t('dashboard.stats.active')}
                 </span>
               </div>
             </div>
 
-            {/* CARD 2: Günlük Kullanım */}
+            {/* CARD 2: Daily Usage */}
             <div className="bg-[#0a0a0a] border border-[#1f2937] p-6 rounded-2xl relative overflow-hidden group hover:border-[#06b6d4]/40 transition-colors">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <Activity className="w-16 h-16 text-[#06b6d4]" />
               </div>
               <div className="flex items-center gap-3 mb-4">
                 <DatabaseZap className="w-5 h-5 text-[#06b6d4]" />
-                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">Günlük Kullanım</span>
+                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('dashboard.stats.dailyUsage')}</span>
               </div>
               <div className="space-y-3">
                 <div className="flex justify-between items-end">
@@ -195,7 +205,7 @@ const Dashboard = () => {
                     ${profile?.used_credit_today?.toFixed(2) || '0.00'}
                   </span>
                   <span className="text-xs text-gray-500 mb-1">
-                    Limit: ${profile?.daily_credit_limit?.toFixed(2) || '2.00'}
+                    {t('dashboard.stats.limit')}: ${profile?.daily_credit_limit?.toFixed(2) || '2.00'}
                   </span>
                 </div>
                 <div className="w-full h-1.5 bg-[#1f2937] rounded-full overflow-hidden">
@@ -215,7 +225,7 @@ const Dashboard = () => {
               </div>
               <div className="flex items-center gap-3 mb-4">
                 <Key className="w-5 h-5 text-[#06b6d4]" />
-                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">API Access Token</span>
+                <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('dashboard.stats.apiToken')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="flex-1 bg-black/50 border border-[#1f2937] px-3 py-2 rounded-lg font-mono text-xs overflow-hidden text-ellipsis whitespace-nowrap text-gray-400">
@@ -232,7 +242,7 @@ const Dashboard = () => {
                     if (profile?.api_access_token) {
                       navigator.clipboard.writeText(profile.api_access_token);
                       setCopied(true);
-                      toast.success("Token kopyalandı!");
+                      toast.success(i18n.language === 'tr' ? "Token kopyalandı!" : "Token copied!");
                       setTimeout(() => setCopied(false), 2000);
                     }
                   }}
@@ -251,9 +261,9 @@ const Dashboard = () => {
             className="bg-[#0a0a0a] border border-[#1f2937] rounded-3xl p-8"
           >
             <div className="flex items-center justify-between mb-8 border-b border-[#1f2937] pb-4">
-              <h2 className="text-xl font-bold text-white tracking-tight">Live Task Delegation</h2>
+              <h2 className="text-xl font-bold text-white tracking-tight">{t('dashboard.liveTasks')}</h2>
               <span className="text-xs font-mono text-[#06b6d4]/70 uppercase tracking-widest px-4 py-1.5 bg-[#06b6d4]/10 rounded-full border border-[#06b6d4]/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]">
-                Realtime Feed
+                {t('dashboard.realtimeFeed')}
               </span>
             </div>
 
@@ -263,12 +273,12 @@ const Dashboard = () => {
                   <div className="w-16 h-16 rounded-2xl bg-[#06b6d4]/10 border border-[#06b6d4]/20 flex items-center justify-center mb-6 text-[#06b6d4]">
                     <Activity className="w-8 h-8 opacity-75" />
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">No agents deployed yet</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2">{t('dashboard.noAgents.title')}</h3>
                   <p className="text-gray-500 text-sm max-w-md mx-auto mb-6">
-                    Activate your first autonomous agent into the Omni-Context system. The swarm awaits your command.
+                    {t('dashboard.noAgents.desc')}
                   </p>
                   <button className="text-[#06b6d4] hover:text-[#0891b2] text-sm font-semibold transition-colors">
-                    Initialize your first agent →
+                    {t('dashboard.noAgents.button')}
                   </button>
                 </div>
               ) : tasks.length === 0 && agents.length > 0 ? (

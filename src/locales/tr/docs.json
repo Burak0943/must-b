@@ -1,0 +1,39 @@
+{
+  "introduction": {
+    "title": "Giriş",
+    "mainTitle": "Must-b: Otonom Yapay Zeka İşletim Sistemi 🚀",
+    "p1": "Must-b, yeni nesil, yerel olarak barındırılan otonom bir yapay zeka ajan ekosistemidir. Yapay zekayı bir tarayıcı sekmesindeki pasif bir sohbet robotu olmaktan çıkarıp, doğrudan makinenizde çalışan aktif, otonom bir dijital iş gücüne dönüştürür.",
+    "paradigmShift": "Paradigma Değişimi: Neden Must-b?",
+    "orchestratorDesc": "Must-b, tüm iş akışınızın Orkestratörü olarak hareket ederek oyunu değiştirir. Siz üst düzey bir hedef belirlersiniz. Must-b dinamik olarak uzmanlaşmış bir yapay zeka ajan sürüsü oluşturur, paralel bir yürütme grafiği çıkarır, terminalinizi kontrol eder, yerel dosyalarınızı düzenler, otomatik tarayıcılar aracılığıyla web'de gezinir ve katı güvenlik protokollerini uygular - hem de insan müdahalesi olmadan.",
+    "coreArchitecture": "Çekirdek Mimari ve Özellikler",
+    "features": [
+      "Çoklu Ajan Sürüleri (SwarmCoordinator): Paralel çalışan ve yerel olarak iletişim kuran izole PM, Frontend, Backend ve QA ajanları oluşturur.",
+      "DAG İş Akışı Motoru: Paralel dallanma, geri alma yetenekleri ve hata toleransı ile karmaşık planları yürütür.",
+      "Kalkan Protokolü (Hookify): Anında çalışma zamanı yürütme bloklarına dönüşen doğal dilde kurallar (örneğin, 'veritabanlarını asla silme') yazın.",
+      "200+ Yerel ve Özümsenmiş Yetenek: GitHub PR incelemeleri, kod tabanı indeksleme, web kazıma ve terminal yürütme için devasa bir araç cephanesiyle birlikte gelir.",
+      "Hafıza ve Yaşam Döngüsü: Semantik arama özelliğine sahip HNSW destekli vektör deposu (LTM), ayrıca Ghost Guard (RAM/CPU izleme) ve Night Owl (arka plan yürütme).",
+      "8 Dilde Kullanıcı Arayüzü: İngilizce, Türkçe, Almanca, Fransızca, İspanyolca, Portekizce, Japonca ve Çince dillerinde akıcıdır."
+    ],
+    "corePhilosophy": {
+      "title": "Temel Felsefe",
+      "p1": "Must-b tek ve tavizsiz bir önerme üzerine kuruludur: Yapay Zeka bir tarayıcı sekmesine hapsolmuş pasif bir konuşma ortağı olmamalıdır; doğrudan işletim sisteminize entegre edilmiş egemen bir dijital iş gücü olmalıdır.",
+      "p2": "Düşüncede sıfır gecikme ve yürütmede mutlak egemenlik sağlamak için Must-b katı bir \"Bulut Beyin, Yerel Kas\" mimari paradigmasını benimser.",
+      "cloudBrain": {
+        "title": "1. Bulut Beyin (Bilişsel Yük Boşaltma)",
+        "p1": "Karmaşık akıl yürütme, çok adımlı yürütme planlaması, yüksek boyutlu token işleme ve Omni-Context bellek geri çağırma işlemleri tamamen merkezi olmayan LLM altyapılarına aktarılır.",
+        "list": [
+          "Dinamik Sinirsel Yönlendirme: Must-b, görevleri bağlama dayalı olarak en yetenekli modele otomatik olarak yönlendirir (örneğin, derin kod sentezi için Claude 3.5 Sonnet, hızlı karar ağaçları için Groq).",
+          "DAG Oluşturma: Üst düzey bir insan niyeti, matematiksel olarak paralel alt görevlerden oluşan bir Yönlendirilmiş Asiklik Grafiğe (DAG) bölünerek hata toleranslı ve eşzamanlı yürütme sağlanır."
+        ]
+      },
+      "localMuscle": {
+        "title": "2. Yerel Kas (Bare-Metal Yürütme)",
+        "p1": "Görevlerin fiziksel tezahürü, yüksek ayrıcalıklı Must-b Daemon aracılığıyla kesinlikle ana makinede gerçekleşir.",
+        "list": [
+          "İşletim Sistemi Seviyesinde Hakimiyet: Win32/Quartz API'leri aracılığıyla donanım düzeyinde fare olayı simülasyonu, tuş vuruşu enjeksiyonu ve arka plan ikili yürütme.",
+          "Durumsal Manipülasyon: Kısıtlayıcı API'lere gerek duymadan yerel dosya sistemlerine, Git depolarına, terminal oturumlarına ve eski GUI yazılımlarına doğrudan okuma/yazma erişimi."
+        ]
+      }
+    }
+  }
+}

@@ -3,66 +3,35 @@ import { BookOpen, Shield, Cpu, Terminal, Layers, Globe, Scale, Database } from 
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import { useTranslation } from "react-i18next";
 
-// ── Sidebar menu structure ────────────────────────────────────────────────
-
-const SIDEBAR = [
-  {
-    group: "Overview",
-    items: ["Introduction", "Core Philosophy"],
-  },
-  {
-    group: "Getting Started",
-    items: ["Prerequisites", "Installation", "First Boot"],
-  },
-  {
-    group: "Cognitive Capabilities",
-    items: ["Ghost Mode", "API-less Native Browsing", "Terminal Supremacy"],
-  },
-  {
-    group: "Architecture & Security",
-    items: ["Cyber Fortress", "Omni-Context Memory", "Orchestrator Engine"],
-  },
-  {
-    group: "Ecosystem & Legal",
-    items: ["Cross-Platform Nodes", "Proprietary License"],
-  },
-];
-
-// ── Documentation Data ───────────────────────────────────────────────────
-
-const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon: any }> = {
+const getDocsData = (t: any): Record<string, { title: string; content: React.ReactNode; icon: any }> => ({
   "Introduction": {
-    title: "Introduction",
+    title: t('docs:introduction.title'),
     icon: BookOpen,
     content: (
       <>
-        <h1 className="text-4xl font-bold text-white mb-4">Must-b: Autonomous AI Operating System 🚀</h1>
+        <h1 className="text-4xl font-bold text-white mb-4">{t('docs:introduction.mainTitle')}</h1>
         <p className="text-gray-300 mb-6">
-          <strong>Must-b</strong> is a next-generation, locally hosted autonomous AI agent ecosystem. It transitions AI from being a passive chatbot in a browser tab to an active, autonomous digital workforce operating directly on your machine.
+          {t('docs:introduction.p1')}
         </p>
         <p className="text-gray-300 mb-8">
-          🌐 <strong>Official Website:</strong>{" "}
+          🌐 <strong>{t('footer.brand.tagline')}</strong>{" "}
           <a href="https://must-b.com" className="text-cyan-400 hover:underline">must-b.com</a>
-          {" "}| 📚 <strong>Documentation:</strong>{" "}
-          <a href="https://must-b.com/docs" className="text-cyan-400 hover:underline">must-b.com/docs</a>
         </p>
 
         <hr className="border-gray-800 my-8" />
 
-        <h2 className="text-2xl font-bold text-white mb-4">🌟 The Paradigm Shift: Why Must-b?</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">🌟 {t('docs:introduction.paradigmShift')}</h2>
         <p className="text-gray-300 mb-8">
-          Must-b changes the game by acting as the <strong>Orchestrator of your entire workflow</strong>. You provide a high-level goal. Must-b dynamically spawns a swarm of specialized AI agents, maps out a parallel execution graph, controls your terminal, edits your local files, navigates the web via automated browsers, and enforces strict security protocols—all without human intervention.
+          {t('docs:introduction.orchestratorDesc')}
         </p>
 
-        <h2 className="text-2xl font-bold text-white mb-4">🏗️ Core Architecture &amp; Features</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">🏗️ {t('docs:introduction.coreArchitecture')}</h2>
         <ul className="list-disc pl-5 space-y-2 text-gray-300 mb-8">
-          <li><strong>Multi-Agent Swarms (SwarmCoordinator):</strong> Spawns isolated PM, Frontend, Backend, and QA agents that work in parallel and communicate natively.</li>
-          <li><strong>DAG Workflow Engine:</strong> Executes complex plans with parallel branching, rollback capabilities, and fault tolerance.</li>
-          <li><strong>The Shield Protocol (Hookify):</strong> Write natural language rules (e.g., 'never delete databases') that instantly convert to runtime execution blocks.</li>
-          <li><strong>200+ Native &amp; Assimilated Skills:</strong> Ships with a massive arsenal of tools for GitHub PR reviews, codebase indexing, web scraping, and terminal execution.</li>
-          <li><strong>Memory &amp; Lifecycle:</strong> HNSW-backed vector store (LTM) with semantic search, plus Ghost Guard (RAM/CPU monitoring) and Night Owl (background execution).</li>
-          <li><strong>8-Language UI:</strong> Fluent in English, Turkish, German, French, Spanish, Portuguese, Japanese, and Chinese.</li>
+          {(t('docs:introduction.features', { returnObjects: true }) as string[]).map((feature, idx) => (
+            <li key={idx}>{feature}</li>
+          ))}
         </ul>
 
         <hr className="border-gray-800 my-8" />
@@ -154,30 +123,36 @@ const DOCS_DATA: Record<string, { title: string; content: React.ReactNode; icon:
     )
   },
   "Core Philosophy": {
-    title: "Core Philosophy",
+    title: t('docs:introduction.corePhilosophy.title'),
     icon: Layers,
     content: (
       <>
-        {/* ── Opening premise ──────────────────────────────── */}
         <p className="text-gray-300 mb-4 leading-relaxed">
-          Must-b is built on a singular, uncompromising premise: <strong className="text-white">Artificial Intelligence should not be a passive conversational partner trapped in a browser tab; it must be a sovereign digital workforce integrated directly into your operating system.</strong>
+          {t('docs:introduction.corePhilosophy.p1')}
         </p>
         <p className="text-gray-300 mb-8 leading-relaxed">
-          To achieve zero latency in thought and absolute sovereignty in execution, Must-b employs a strict <strong className="text-cyan-400">"Cloud Brain, Local Muscle"</strong> architectural paradigm.
+          {t('docs:introduction.corePhilosophy.p2')}
         </p>
 
-        {/* ── Cloud Brain ──────────────────────────────────── */}
-        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧠 1. The Cloud Brain (Cognitive Offloading)</h2>
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🧠 {t('docs:introduction.corePhilosophy.cloudBrain.title')}</h2>
         <p className="text-gray-300 mb-4 leading-relaxed">
-          Complex reasoning, multi-step execution planning, high-dimensional token processing, and Omni-Context memory retrieval are entirely offloaded to decentralized LLM infrastructures.
+          {t('docs:introduction.corePhilosophy.cloudBrain.p1')}
         </p>
         <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
-          <li className="leading-relaxed"><strong className="text-white">Dynamic Neural Routing:</strong> Must-b automatically routes tasks to the most capable model based on the context (e.g., Claude 3.5 Sonnet for deep code synthesis, Groq for rapid, low-latency decision trees).</li>
-          <li className="leading-relaxed"><strong className="text-white">DAG Generation:</strong> A high-level human intent is mathematically broken down into a <strong className="text-white">Directed Acyclic Graph (DAG)</strong> of parallel sub-tasks, ensuring fault-tolerant, concurrent execution.</li>
+          {(t('docs:introduction.corePhilosophy.cloudBrain.list', { returnObjects: true }) as string[]).map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
         </ul>
 
-        {/* ── Local Muscle ─────────────────────────────────── */}
-        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🦾 2. The Local Muscle (Bare-Metal Execution)</h2>
+        <h2 className="text-xl font-semibold text-white mt-8 mb-4">🦾 {t('docs:introduction.corePhilosophy.localMuscle.title')}</h2>
+        <p className="text-gray-300 mb-4 leading-relaxed">
+          {t('docs:introduction.corePhilosophy.localMuscle.p1')}
+        </p>
+        <ul className="list-disc pl-5 space-y-3 text-gray-300 mb-8">
+          {(t('docs:introduction.corePhilosophy.localMuscle.list', { returnObjects: true }) as string[]).map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
+        </ul>
         <p className="text-gray-300 mb-4 leading-relaxed">
           The physical manifestation of tasks occurs strictly on the host machine via the highly privileged Must-b Daemon.
         </p>
@@ -1654,11 +1629,6 @@ async function executeAgnosticIntent(intent: SystemIntent) {
           Must-b Cognitive OS is classified as strictly <strong className="text-white">PROPRIETARY AND CLOSED SOURCE</strong> software. The architectural paradigms, cognitive routing algorithms, Ghost Mode neuromotor simulations, and OS-level telemetry infrastructures contained within this ecosystem represent significant, highly sensitive proprietary engineering.
         </p>
         <p className="text-gray-300 mb-8 leading-relaxed">
-          Because Must-b operates with bare-metal System Supremacy, open-sourcing the core daemon would introduce unacceptable global cybersecurity risks. The source code is classified as corporate intellectual property.
-        </p>
-
-        <hr className="border-gray-800 my-8" />
-
         {/* ── 1. Prohibitions ──────────────────────────────── */}
         <h2 className="text-xl font-semibold text-white mt-8 mb-4">🚫 1. Explicit Prohibitions (Zero-Tolerance Policy)</h2>
         <p className="text-gray-300 mb-4 leading-relaxed">
@@ -1723,11 +1693,11 @@ async function executeAgnosticIntent(intent: SystemIntent) {
       </>
     )
   },
-};
+});
 
 // ── Sidebar Component ─────────────────────────────────────────────────────
 
-function Sidebar({ activeDoc, setActiveDoc }: { activeDoc: string, setActiveDoc: (doc: string) => void }) {
+function Sidebar({ activeDoc, setActiveDoc, sidebarData }: { activeDoc: string, setActiveDoc: (doc: string) => void, sidebarData: any[] }) {
   return (
     <aside className="w-72 shrink-0 hidden lg:flex flex-col gap-6 border-r border-[#1f2937] bg-[#050505] px-6 py-8 sticky top-0 h-screen overflow-y-auto">
       {/* Brand */}
@@ -1736,31 +1706,31 @@ function Sidebar({ activeDoc, setActiveDoc }: { activeDoc: string, setActiveDoc:
           MB
         </div> 
         <span className="text-sm font-bold text-white/80 group-hover:text-cyan-400 transition-colors uppercase tracking-widest">
-          Manifesto
+          must-b
         </span>
       </Link>
 
       {/* Nav groups */}
       <nav className="space-y-8 flex-1">
-        {SIDEBAR.map(({ group, items }) => (
+        {sidebarData.map(({ group, items }) => (
           <div key={group}>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400/50 mb-3 px-2">
               {group}
             </p>
             <ul className="space-y-1">
-              {items.map((item) => {
-                const isActive = activeDoc === item;
+              {items.map((item: any) => {
+                const isActive = activeDoc === item.id;
                 return (
-                  <li key={item}>
+                  <li key={item.id}>
                     <button
-                      onClick={() => setActiveDoc(item)}
+                      onClick={() => setActiveDoc(item.id)}
                       className={`w-full text-left flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-300 ${
                         isActive
                           ? "bg-[#06b6d4]/10 text-cyan-400 font-semibold border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]"
                           : "text-white/40 hover:text-white/90 hover:bg-white/5 border border-transparent"
                       }`}
                     >
-                      {item}
+                      {item.label}
                     </button>
                   </li>
                 );
@@ -1783,8 +1753,8 @@ function Sidebar({ activeDoc, setActiveDoc }: { activeDoc: string, setActiveDoc:
 
 // ── Document Viewer ───────────────────────────────────────────────────────
 
-function DocumentViewer({ activeDoc }: { activeDoc: string }) {
-  const doc = DOCS_DATA[activeDoc] || DOCS_DATA["Introduction"];
+function DocumentViewer({ activeDoc, docsData }: { activeDoc: string, docsData: any }) {
+  const doc = docsData[activeDoc] || docsData["Introduction"];
   const Icon = doc.icon;
 
   return (
@@ -1816,14 +1786,59 @@ function DocumentViewer({ activeDoc }: { activeDoc: string }) {
 // ── Page ─────────────────────────────────────────────────────────────────
 
 export default function DocsPage() {
+  const { t } = useTranslation();
   const [activeDoc, setActiveDoc] = useState("Introduction");
+
+  // ── Sidebar menu structure ────────────────────────────────────────────────
+  const SIDEBAR_DATA = [
+    {
+      group: t('docs.sidebar.groups.overview'),
+      items: [
+        { id: "Introduction", label: t('docs.sidebar.items.introduction') },
+        { id: "Core Philosophy", label: t('docs.sidebar.items.philosophy') }
+      ],
+    },
+    {
+      group: t('docs.sidebar.groups.gettingStarted'),
+      items: [
+        { id: "Prerequisites", label: t('docs.sidebar.items.prerequisites') },
+        { id: "Installation", label: t('docs.sidebar.items.installation') },
+        { id: "First Boot", label: t('docs.sidebar.items.firstBoot') }
+      ],
+    },
+    {
+      group: t('docs.sidebar.groups.capabilities'),
+      items: [
+        { id: "Ghost Mode", label: t('docs.sidebar.items.ghostMode') },
+        { id: "API-less Native Browsing", label: t('docs.sidebar.items.browsing') },
+        { id: "Terminal Supremacy", label: t('docs.sidebar.items.terminal') }
+      ],
+    },
+    {
+      group: t('docs.sidebar.groups.architecture'),
+      items: [
+        { id: "Cyber Fortress", label: t('docs.sidebar.items.fortress') },
+        { id: "Omni-Context Memory", label: t('docs.sidebar.items.memory') },
+        { id: "Orchestrator Engine", label: t('docs.sidebar.items.orchestrator') }
+      ],
+    },
+    {
+      group: t('docs.sidebar.groups.ecosystem'),
+      items: [
+        { id: "Cross-Platform Nodes", label: t('docs.sidebar.items.nodes') },
+        { id: "Proprietary License", label: t('docs.sidebar.items.license') }
+      ],
+    },
+  ];
+
+  const docsData = getDocsData(t);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       <Navbar />
       <div className="flex">
-        <Sidebar activeDoc={activeDoc} setActiveDoc={setActiveDoc} />
-        <DocumentViewer activeDoc={activeDoc} />
+        <Sidebar activeDoc={activeDoc} setActiveDoc={setActiveDoc} sidebarData={SIDEBAR_DATA} />
+        <DocumentViewer activeDoc={activeDoc} docsData={docsData} />
       </div>
     </div>
   );

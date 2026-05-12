@@ -5,6 +5,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeft, Loader2, Github, Facebo
 import { toast } from "sonner";
 import { supabase } from "../lib/supabase";
 import { cn } from "../lib/utils";
+import { useTranslation } from "react-i18next";
 
 // --- İç Input Bileşeni ---
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
@@ -25,6 +26,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
 export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t, i18n } = useTranslation();
   const emailInputRef = useRef<HTMLInputElement>(null);
   
   // State Yönetimi
@@ -37,7 +39,6 @@ export default function Login() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // YENİ: State 8 haneye çıkarıldı
   const [otp, setOtp] = useState(['', '', '', '', '', '', '', '']); 
   
   const [loading, setLoading] = useState(false);
@@ -75,8 +76,8 @@ export default function Login() {
   // Auth Logiği (Giriş ve Kayıt)
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return toast.error("Lütfen tüm alanları doldurun.");
-    if (isSignUp && !name) return toast.error("Lütfen adınızı ve soyadınızı girin.");
+    if (!email || !password) return toast.error(t('auth.fillAll'));
+    if (isSignUp && !name) return toast.error(t('auth.fillName'));
     
     setLoading(true);
     try {
@@ -93,7 +94,7 @@ export default function Login() {
         });
         if (error) throw error;
         
-        toast.success("Doğrulama kodu e-postanıza gönderildi!");
+        toast.success(t('auth.codeSent'));
         setIsVerifyStep(true);
       } else {
         // GİRİŞ YAP
@@ -103,7 +104,7 @@ export default function Login() {
         navigate('/dashboard');
       }
     } catch (error: any) {
-      toast.error(error.message || "Bir hata oluştu.");
+      toast.error(error.message || t('auth.errorOccurred'));
     } finally {
       setLoading(false);
     }
@@ -113,8 +114,7 @@ export default function Login() {
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     const otpCode = otp.join('');
-    // YENİ: Doğrulama sınırı 8 yapıldı
-    if (otpCode.length !== 8) return toast.error("Lütfen 8 haneli kodu eksiksiz girin.");
+    if (otpCode.length !== 8) return toast.error(t('auth.enter8Digit'));
 
     setLoading(true);
     try {
@@ -125,9 +125,9 @@ export default function Login() {
       });
       if (error) throw error;
       
-      toast.success("Hesabınız doğrulandı! İçeri alınıyorsunuz...");
+      toast.success(t('auth.verifySuccess'));
     } catch (error: any) {
-      toast.error("Geçersiz veya süresi dolmuş kod. Lütfen tekrar deneyin.");
+      toast.error(t('auth.invalidCode'));
     } finally {
       setLoading(false);
     }
@@ -142,7 +142,6 @@ export default function Login() {
     newOtp[index] = value;
     setOtp(newOtp);
     
-    // YENİ: İlerleme sınırı 7 yapıldı (8. kutu)
     if (value && index < 7) {
       document.getElementById(`otp-${index + 1}`)?.focus();
     }
@@ -156,18 +155,15 @@ export default function Login() {
 
   const handleOtpPaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    // YENİ: Kesme sınırı 8 yapıldı
     const pasteData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 8).split('');
     if (pasteData.length === 0) return;
     
     const newOtp = [...otp];
     pasteData.forEach((char, index) => {
-      // YENİ: Dağıtma sınırı 8 yapıldı
       if (index < 8) newOtp[index] = char;
     });
     setOtp(newOtp);
     
-    // YENİ: Focus sınırı 7 yapıldı
     const nextIndex = Math.min(pasteData.length, 7);
     document.getElementById(`otp-${nextIndex}`)?.focus();
   };
@@ -200,7 +196,7 @@ export default function Login() {
         className="absolute top-8 left-8 flex items-center gap-2 text-white/40 hover:text-white transition-colors text-sm font-medium z-50"
       >
         <ArrowLeft size={16} />
-        <span>Ana Sayfaya Dön</span>
+        <span>{t('auth.backToHome')}</span>
       </Link>
       <div className="absolute inset-0 bg-gradient-to-b from-purple-500/40 via-purple-700/50 to-black" />
       <div className="absolute inset-0 opacity-[0.03] mix-blend-soft-light" 
@@ -227,7 +223,7 @@ export default function Login() {
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}
                     className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
                   >
-                    {isVerifyStep ? "Check your Email" : isSignUp ? "Create an Account" : "Welcome Back"}
+                    {isVerifyStep ? t('auth.checkEmail') : isSignUp ? t('auth.createAccount') : t('auth.welcomeBack')}
                   </motion.h1>
                 </AnimatePresence>
 
@@ -238,10 +234,10 @@ export default function Login() {
                     className="text-white/60 text-xs"
                   >
                     {isVerifyStep 
-                      ? `We sent an 8-digit code to ${email}` // YENİ: Metin 8 haneli olarak güncellendi
+                      ? t('auth.sentCode', { email })
                       : isSignUp 
-                        ? "Enter your details to get started." 
-                        : "Access your global command center."
+                        ? t('auth.getStarted')
+                        : t('auth.accessHub')
                     }
                   </motion.p>
                 </AnimatePresence>
@@ -250,7 +246,6 @@ export default function Login() {
               <AnimatePresence mode="wait">
                 {isVerifyStep ? (
                   <motion.form key="otp-form" onSubmit={handleVerifyOtp} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
-                    {/* YENİ: Kutu boyutları 8 taneye sığacak şekilde daraltıldı (w-9 h-11 ve gap-1) */}
                     <div className="flex justify-between gap-1 mt-4">
                       {otp.map((digit, index) => (
                         <input 
@@ -268,10 +263,10 @@ export default function Login() {
                       ))}
                     </div>
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full relative group/button bg-white text-black font-medium h-10 rounded-lg flex items-center justify-center">
-                      {loading ? <Loader2 className="w-4 h-4 animate-spin text-black" /> : "Verify Code"}
+                      {loading ? <Loader2 className="w-4 h-4 animate-spin text-black" /> : t('auth.verifyCode')}
                     </motion.button>
                     <p className="text-center text-xs text-white/40">
-                      Didn't receive it? <span onClick={() => setIsVerifyStep(false)} className="text-white hover:underline cursor-pointer">Go back</span>
+                      {t('auth.didntReceive')} <span onClick={() => setIsVerifyStep(false)} className="text-white hover:underline cursor-pointer">{t('auth.goBack')}</span>
                     </p>
                   </motion.form>
                 ) : (
@@ -287,19 +282,19 @@ export default function Login() {
                             className="relative flex items-center overflow-hidden rounded-lg"
                           >
                             <User className="absolute left-3 w-4 h-4 text-white/40" />
-                            <Input type="text" required={isSignUp} placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-white/5 border border-white/10 focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3" />
+                            <Input type="text" required={isSignUp} placeholder={t('auth.fullName')} value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-white/5 border border-white/10 focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3" />
                           </motion.div>
                         )}
                       </AnimatePresence>
 
                       <div className="relative flex items-center overflow-hidden rounded-lg">
                         <Mail className="absolute left-3 w-4 h-4 text-white/40" />
-                        <Input ref={emailInputRef} type="email" required placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-white/5 border border-white/10 focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3" />
+                        <Input ref={emailInputRef} type="email" required placeholder={t('auth.email')} value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-white/5 border border-white/10 focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3" />
                       </div>
 
                       <div className="relative flex items-center overflow-hidden rounded-lg">
                         <Lock className="absolute left-3 w-4 h-4 text-white/40" />
-                        <Input type={showPassword ? "text" : "password"} required placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-white/5 border border-white/10 focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10" />
+                        <Input type={showPassword ? "text" : "password"} required placeholder={t('auth.password')} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-white/5 border border-white/10 focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10" />
                         <div onClick={() => setShowPassword(!showPassword)} className="absolute right-3 cursor-pointer">
                           {showPassword ? <EyeOff className="w-4 h-4 text-white/40 hover:text-white" /> : <Eye className="w-4 h-4 text-white/40 hover:text-white" />}
                         </div>
@@ -309,7 +304,7 @@ export default function Login() {
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full relative group/button mt-5 bg-white text-black font-medium h-10 rounded-lg flex items-center justify-center overflow-hidden">
                       {loading ? <Loader2 className="w-4 h-4 animate-spin text-black" /> : (
                         <span className="flex items-center justify-center gap-1 text-sm font-bold">
-                          {isSignUp ? "Sign Up" : "Sign In"}
+                          {isSignUp ? t('auth.register') : t('auth.login')}
                           <ArrowRight className="w-3 h-3 group-hover/button:translate-x-1 transition-transform" />
                         </span>
                       )}
@@ -317,7 +312,7 @@ export default function Login() {
 
                     <div className="relative mt-2 mb-4 flex items-center">
                       <div className="flex-grow border-t border-white/5"></div>
-                      <span className="mx-3 text-[10px] uppercase tracking-widest text-white/40 font-bold">Or continue with</span>
+                      <span className="mx-3 text-[10px] uppercase tracking-widest text-white/40 font-bold">{t('auth.orContinue')}</span>
                       <div className="flex-grow border-t border-white/5"></div>
                     </div>
 
@@ -334,9 +329,9 @@ export default function Login() {
                     </div>
 
                     <motion.p className="text-center text-xs text-white/60 mt-4 pt-2">
-                      {isSignUp ? "Already have an account?" : "Don't have an account?"}{' '}
+                      {isSignUp ? t('auth.alreadyHave') : t('auth.dontHave')}{' '}
                       <button type="button" onClick={() => { setIsSignUp(!isSignUp); setPassword(""); }} className="relative inline-block group/signup text-white hover:text-white/70 transition-colors duration-300 font-medium cursor-pointer">
-                        <span className="relative z-10">{isSignUp ? "Sign in" : "Sign up"}</span>
+                        <span className="relative z-10">{isSignUp ? t('auth.login') : t('auth.register')}</span>
                         <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-white group-hover/signup:w-full transition-all duration-300" />
                       </button>
                     </motion.p>
