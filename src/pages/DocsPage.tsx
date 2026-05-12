@@ -1628,7 +1628,6 @@ async function executeAgnosticIntent(intent: SystemIntent) {
         <p className="text-gray-300 mb-4 leading-relaxed">
           Must-b Cognitive OS is classified as strictly <strong className="text-white">PROPRIETARY AND CLOSED SOURCE</strong> software. The architectural paradigms, cognitive routing algorithms, Ghost Mode neuromotor simulations, and OS-level telemetry infrastructures contained within this ecosystem represent significant, highly sensitive proprietary engineering.
         </p>
-        <p className="text-gray-300 mb-8 leading-relaxed">
         {/* ── 1. Prohibitions ──────────────────────────────── */}
         <h2 className="text-xl font-semibold text-white mt-8 mb-4">🚫 1. Explicit Prohibitions (Zero-Tolerance Policy)</h2>
         <p className="text-gray-300 mb-4 leading-relaxed">
