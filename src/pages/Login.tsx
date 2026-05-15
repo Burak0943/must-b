@@ -169,9 +169,21 @@ export default function Login() {
   };
 
   const handleOAuth = async (provider: "github" | "google" | "facebook" | "apple" | "twitter") => {
+    // CLI akışı: OAuth başlamadan önce URL parametrelerini localStorage'a kaydet
+    const urlRedirectUri = searchParams.get('redirect_uri');
+    const urlState       = searchParams.get('state');
+
+    if (urlRedirectUri) localStorage.setItem('cli_redirect_uri', urlRedirectUri);
+    if (urlState)       localStorage.setItem('cli_state', urlState);
+
+    // Eğer CLI parametreleri varsa (ister URL'den, ister önceden kaydedilmiş),
+    // OAuth callback'ini /cli-login'e yönlendir ki bridge lojiği çalışabilsin.
+    const hasCli = !!(urlRedirectUri || localStorage.getItem('cli_redirect_uri'));
+    const callbackPath = hasCli ? '/cli-login' : nextUrl;
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: window.location.origin + nextUrl },
+      options: { redirectTo: window.location.origin + callbackPath },
     });
     if (error) toast.error(error.message);
   };
