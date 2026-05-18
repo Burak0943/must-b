@@ -54,9 +54,9 @@ const PLATFORM_CONTENT: Record<Platform, { shellLabel: string; lines: TermLine[]
   npm: {
     shellLabel: "bash / zsh / PowerShell",
     lines: [
-      { prompt: ">", cmd: "winget install OpenJS.NodeJS.LTS --silent", comment: "# if Node not installed" },
+      { prompt: "$", cmd: "winget install OpenJS.NodeJS.LTS --silent" },
       { prompt: "$", cmd: "npm install -g @must-b/must-b@latest" },
-      { prompt: "$", cmd: "must-b onboard" },
+      { prompt: "$", cmd: "must-b gateway" },
     ],
   },
   windows: {
