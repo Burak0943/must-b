@@ -1,8 +1,8 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import {
-  Download, ChevronRight, Terminal,
-  Cpu, Zap, Check, Copy, CheckCheck, ExternalLink,
+  Download, ChevronRight, Monitor, Apple, Terminal,
+  Cloud, Zap, Check, Copy, CheckCheck, ExternalLink,
 } from "lucide-react";
 
 // ── Step data ──────────────────────────────────────────────────────────────
@@ -10,33 +10,24 @@ import {
 const steps = [
   {
     step: "01",
-    title: "Install Node.js (If not installed)",
-    desc: "Bilgisayarınızda Node.js kurulu değilse, önce aşağıdaki komutu normal bir CMD ekranında çalıştırın. Kurulum bittikten sonra o CMD ekranını kapatıp YENİ bir terminal açmayı unutmayın.",
-    icon: Cpu,
-    detail: "winget install OpenJS.NodeJS.LTS --silent",
-    cmd: "winget install OpenJS.NodeJS.LTS --silent",
-    prompt: ">",
-    shellLabel: "CMD (Run as normal user)",
+    title: "Install via npm",
+    desc: "One command. No binaries to hunt down. npm installs the must-b CLI globally — works on macOS, Windows 11, and Linux.",
+    icon: Terminal,
+    detail: "npm install -g @must-b/must-b@latest",
   },
   {
     step: "02",
-    title: "Install must-b CLI",
-    desc: "Node.js kuruluysa, yeni bir terminal açarak must-b CLI'ı global olarak yükleyin. macOS, Windows ve Linux üzerinde çalışır.",
-    icon: Terminal,
-    detail: "npm install -g @must-b/must-b@latest",
-    cmd: "npm install -g @must-b/must-b@latest",
-    prompt: "$",
-    shellLabel: "bash / zsh / PowerShell",
+    title: "Sync Identity",
+    desc: "Run `must-b gateway` then connect your cloud profile from the browser. Your Ed25519 keys are generated locally — nothing leaves your machine.",
+    icon: Cloud,
+    detail: "Zero-knowledge authentication protocol.",
   },
   {
     step: "03",
-    title: "Run onboard",
-    desc: "Kurulum tamamlandıktan sonra onboard komutunu çalıştırın. Kimlik doğrulama ve ortam yapılandırması otomatik tamamlanır.",
+    title: "Execute",
+    desc: "Your agent is live. It runs locally, syncs globally via CloudAuth, and scales infinitely across the Must-b Worlds network.",
     icon: Zap,
-    detail: "must-b onboard",
-    cmd: "must-b onboard",
-    prompt: "$",
-    shellLabel: "bash / zsh / PowerShell",
+    detail: "Sub-millisecond latency. Always on.",
   },
 ];
 
@@ -48,6 +39,53 @@ const fadeInUp = {
     transition: { duration: 0.6, delay: i * 0.15, ease: [0.25, 0.1, 0.25, 1] },
   }),
 };
+
+// ── Platform tabs ──────────────────────────────────────────────────────────
+
+type Platform = "npm" | "windows" | "unix";
+
+interface TermLine {
+  prompt: string;
+  cmd: string;
+  comment?: string;
+}
+
+const PLATFORM_CONTENT: Record<Platform, { shellLabel: string; lines: TermLine[] }> = {
+  npm: {
+    shellLabel: "bash / zsh / PowerShell",
+    lines: [
+      { prompt: "$", cmd: "npm install -g @must-b/must-b@latest" },
+      { prompt: "$", cmd: "must-b gateway", comment: "# wake the Fox" },
+    ],
+  },
+  windows: {
+    shellLabel: "PowerShell",
+    lines: [
+      {
+        prompt: "PS>",
+        cmd: "irm https://must-b.com/install.ps1 | iex",
+        comment: "# one-line installer",
+      },
+      { prompt: "PS>", cmd: "must-b gateway", comment: "# wake the Fox" },
+    ],
+  },
+  unix: {
+    shellLabel: "bash / zsh",
+    lines: [
+      {
+        prompt: "$",
+        cmd: "curl -fsSL https://raw.githubusercontent.com/aytac43-0/must-b/main/install.sh | bash",
+      },
+      { prompt: "$", cmd: "must-b gateway", comment: "# wake the Fox" },
+    ],
+  },
+};
+
+const TABS: { id: Platform; label: string; Icon: React.ElementType }[] = [
+  { id: "npm",     label: "npm",          Icon: Terminal },
+  { id: "windows", label: "Windows",      Icon: Monitor  },
+  { id: "unix",    label: "Linux / macOS", Icon: Apple   },
+];
 
 // ── Copy button ────────────────────────────────────────────────────────────
 
@@ -96,17 +134,12 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-// ── Single-command terminal block ──────────────────────────────────────────
+// ── Terminal block ─────────────────────────────────────────────────────────
 
-function StepTerminal({
-  cmd,
-  prompt,
-  shellLabel,
-}: {
-  cmd: string;
-  prompt: string;
-  shellLabel: string;
-}) {
+function TerminalBlock({ platform }: { platform: Platform }) {
+  const { shellLabel, lines } = PLATFORM_CONTENT[platform];
+  const allCmds = lines.map((l) => l.cmd).join("\n");
+
   return (
     <div className="w-full rounded-xl overflow-hidden border border-white/[0.07] bg-[#0b0d11]">
       {/* Chrome bar */}
@@ -119,83 +152,35 @@ function StepTerminal({
         <span className="text-[10px] font-mono text-muted-foreground/50 tracking-widest uppercase">
           {shellLabel}
         </span>
-        <CopyButton text={cmd} />
+        <CopyButton text={allCmds} />
       </div>
 
-      {/* Command line */}
-      <div className="px-5 py-4">
-        <div className="flex items-start gap-2 font-mono text-sm leading-relaxed">
-          <span className="text-primary/50 shrink-0 select-none">{prompt}</span>
-          <span className="text-[#c9d1d9] break-all">{cmd}</span>
+      {/* Command lines */}
+      <div className="px-5 py-4 space-y-2.5">
+        {lines.map((line, i) => (
+          <div key={i} className="flex items-start gap-2 font-mono text-sm leading-relaxed">
+            <span className="text-primary/50 shrink-0 select-none">{line.prompt}</span>
+            <span className="text-[#c9d1d9] break-all">
+              {line.cmd}
+              {line.comment && (
+                <span className="text-muted-foreground/35 ml-2">{line.comment}</span>
+              )}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Post-install next step */}
+      <div className="px-5 pb-4">
+        <div className="flex items-center gap-2 pt-3 border-t border-white/[0.05]">
+          <Zap className="w-3 h-3 text-amber-400 shrink-0" />
+          <span className="text-[11px] font-mono text-muted-foreground/55">
+            After install, run{" "}
+            <span className="text-amber-400/80 font-semibold">must-b gateway</span>
+            {" "}to wake the Fox.
+          </span>
         </div>
       </div>
-    </div>
-  );
-}
-
-// ── Right-panel: all 3 steps stacked ──────────────────────────────────────
-
-function InstallStepsPanel({ activeStep }: { activeStep: number }) {
-  return (
-    <div className="flex flex-col gap-5">
-      {steps.map((s, i) => (
-        <motion.div
-          key={s.step}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: i * 0.1 }}
-          className={`rounded-2xl border transition-all duration-300 ${
-            activeStep === i
-              ? "border-primary/30 bg-primary/5"
-              : "border-white/[0.06] bg-white/[0.02]"
-          }`}
-        >
-          {/* Step header */}
-          <div className="flex items-center gap-3 px-5 pt-4 pb-3">
-            <span
-              className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 font-mono text-xs font-bold transition-colors duration-300 ${
-                activeStep > i
-                  ? "bg-emerald-500/15 text-emerald-400"
-                  : activeStep === i
-                  ? "bg-primary/20 text-primary"
-                  : "bg-white/[0.04] text-muted-foreground"
-              }`}
-            >
-              {activeStep > i ? <Check className="w-3.5 h-3.5" /> : s.step}
-            </span>
-            <span
-              className={`text-sm font-semibold transition-colors duration-300 ${
-                activeStep === i ? "text-foreground" : "text-muted-foreground"
-              }`}
-            >
-              {s.title}
-            </span>
-          </div>
-
-          {/* Terminal */}
-          <div className="px-4 pb-4">
-            <StepTerminal
-              cmd={s.cmd}
-              prompt={s.prompt}
-              shellLabel={s.shellLabel}
-            />
-          </div>
-        </motion.div>
-      ))}
-
-      {/* Node.js note */}
-      <p className="text-xs text-muted-foreground/50 font-mono text-center pt-1">
-        Node 18+ required &nbsp;·&nbsp;{" "}
-        <a
-          href="https://nodejs.org/en/download"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-primary transition-colors"
-        >
-          nodejs.org
-          <ExternalLink className="inline w-2.5 h-2.5 ml-0.5 -mt-0.5" />
-        </a>
-      </p>
     </div>
   );
 }
@@ -206,6 +191,7 @@ const DownloadSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [activeStep, setActiveStep] = useState(0);
+  const [activePlatform, setActivePlatform] = useState<Platform>("npm");
 
   return (
     <section id="download" className="py-24 md:py-32 relative">
@@ -259,36 +245,22 @@ const DownloadSection = () => {
                 />
 
                 {/* Step number / check */}
-                <div
-                  className={`relative w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-500 ${
-                    activeStep === i
-                      ? "bg-primary/20"
-                      : activeStep > i
-                      ? "bg-emerald-500/10"
-                      : "bg-white/[0.03]"
-                  }`}
-                >
+                <div className={`relative w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-500 ${
+                  activeStep === i
+                    ? "bg-primary/20"
+                    : activeStep > i
+                    ? "bg-emerald-500/10"
+                    : "bg-white/[0.03]"
+                }`}>
                   <AnimatePresence mode="wait">
                     {activeStep > i ? (
-                      <motion.div
-                        key="check"
-                        initial={{ scale: 0, rotate: -90 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        exit={{ scale: 0 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                      >
+                      <motion.div key="check" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }}
+                        exit={{ scale: 0 }} transition={{ type: "spring", stiffness: 300 }}>
                         <Check className="w-5 h-5 text-emerald-500" />
                       </motion.div>
                     ) : (
-                      <motion.span
-                        key="number"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0 }}
-                        className={`font-mono text-sm font-bold ${
-                          activeStep === i ? "text-primary" : "text-muted-foreground"
-                        }`}
-                      >
+                      <motion.span key="number" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className={`font-mono text-sm font-bold ${activeStep === i ? "text-primary" : "text-muted-foreground"}`}>
                         {item.step}
                       </motion.span>
                     )}
@@ -296,20 +268,14 @@ const DownloadSection = () => {
                 </div>
 
                 <div className="flex-1">
-                  <h4
-                    className={`font-semibold mb-1 transition-colors duration-300 ${
-                      activeStep === i ? "text-foreground" : "text-muted-foreground"
-                    }`}
-                  >
+                  <h4 className={`font-semibold mb-1 transition-colors duration-300 ${
+                    activeStep === i ? "text-foreground" : "text-muted-foreground"
+                  }`}>
                     {item.title}
                   </h4>
-                  <p
-                    className={`text-sm leading-relaxed transition-colors duration-300 ${
-                      activeStep === i
-                        ? "text-muted-foreground"
-                        : "text-muted-foreground/60"
-                    }`}
-                  >
+                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${
+                    activeStep === i ? "text-muted-foreground" : "text-muted-foreground/60"
+                  }`}>
                     {item.desc}
                   </p>
 
@@ -342,10 +308,9 @@ const DownloadSection = () => {
                     className="h-1 rounded-full cursor-pointer"
                     animate={{
                       width: activeStep === i ? 32 : 8,
-                      backgroundColor:
-                        activeStep >= i
-                          ? "hsl(239 84% 67%)"
-                          : "hsl(217 33% 20%)",
+                      backgroundColor: activeStep >= i
+                        ? "hsl(239 84% 67%)"
+                        : "hsl(217 33% 20%)",
                     }}
                     transition={{ duration: 0.3 }}
                     onClick={() => setActiveStep(i)}
@@ -355,7 +320,7 @@ const DownloadSection = () => {
             </div>
           </div>
 
-          {/* Right — stacked install steps card */}
+          {/* Right — terminal install card */}
           <motion.div
             initial={{ opacity: 0, x: 40, scale: 0.95 }}
             animate={isInView ? { opacity: 1, x: 0, scale: 1 } : {}}
@@ -365,17 +330,19 @@ const DownloadSection = () => {
             <div className="glass p-7 md:p-8 rounded-outer flex flex-col relative z-10">
 
               {/* Card header */}
-              <div className="flex items-start justify-between mb-6">
+              <div className="flex items-start justify-between mb-5">
                 <div>
-                  <h3 className="text-xl font-bold text-foreground">Install must-b</h3>
+                  <h3 className="text-xl font-bold text-foreground">must-b CLI</h3>
                   <p className="text-muted-foreground text-sm mt-0.5">macOS · Windows · Linux</p>
                 </div>
                 <div className="flex flex-col items-end gap-1.5">
+                  {/* Stable badge */}
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono
                                    bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     v1.2.2 — Latest Stable
                   </span>
+                  {/* npm registry link */}
                   <a
                     href="https://www.npmjs.com/package/@must-b/must-b"
                     target="_blank"
@@ -389,23 +356,85 @@ const DownloadSection = () => {
                 </div>
               </div>
 
-              {/* Stacked step terminals */}
-              <InstallStepsPanel activeStep={activeStep} />
+              {/* Platform tabs */}
+              <div className="flex gap-1 p-1 rounded-lg bg-white/[0.03] border border-white/[0.06] mb-4">
+                {TABS.map(({ id, label, Icon }) => (
+                  <button
+                    key={id}
+                    onClick={() => setActivePlatform(id)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md
+                                text-xs font-mono font-medium transition-all duration-200 ${
+                      activePlatform === id
+                        ? "bg-primary/20 text-primary border border-primary/20"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                    }`}
+                  >
+                    <Icon className="w-3 h-3" />
+                    {label}
+                  </button>
+                ))}
+              </div>
 
-              {/* Footer CTA */}
-              <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-end">
-                <motion.a
-                  href="https://www.npmjs.com/package/@must-b/must-b"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.03, boxShadow: "0 0 28px hsl(239 84% 67% / 0.4)" }}
-                  whileTap={{ scale: 0.97 }}
-                  className="btn-primary-glow flex items-center gap-2 text-sm px-5 py-2.5"
+              {/* Animated terminal swap */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activePlatform}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <Download className="w-4 h-4" />
-                  View on npm
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </motion.a>
+                  <TerminalBlock platform={activePlatform} />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Footer — direct installers + npm CTA */}
+              <div className="mt-5 pt-4 border-t border-white/[0.06] space-y-3">
+                {/* Direct raw-file download links (verified 200) */}
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://raw.githubusercontent.com/aytac43-0/must-b/main/install.sh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-white/10
+                               text-xs font-mono text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all"
+                  >
+                    <Download className="w-3 h-3" /> install.sh
+                  </a>
+                  <a
+                    href="https://raw.githubusercontent.com/aytac43-0/must-b/main/install.ps1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-white/10
+                               text-xs font-mono text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all"
+                  >
+                    <Download className="w-3 h-3" /> install.ps1
+                  </a>
+                  <a
+                    href="https://raw.githubusercontent.com/aytac43-0/must-b/main/install.cmd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-white/10
+                               text-xs font-mono text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all"
+                  >
+                    <Download className="w-3 h-3" /> install.cmd
+                  </a>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-xs text-muted-foreground/50 font-mono">Node 18+ required</p>
+                  <motion.a
+                    href="https://www.npmjs.com/package/@must-b/must-b"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.03, boxShadow: "0 0 28px hsl(239 84% 67% / 0.4)" }}
+                    whileTap={{ scale: 0.97 }}
+                    className="btn-primary-glow flex items-center gap-2 text-sm px-5 py-2.5"
+                  >
+                    <Download className="w-4 h-4" />
+                    View on npm
+                    <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </motion.a>
+                </div>
               </div>
 
             </div>
