@@ -51,20 +51,16 @@ async function boot() {
   console.log('[Boot] Session:', !!session, '| CLI URI:', cliRedirectUri);
 
   if (session?.access_token && cliRedirectUri) {
-    console.log('[Boot] CLI login detected — intercepting before React mounts.');
+    console.log('[Boot] CLI login detected — routing to authorization screen.');
 
-    // localStorage'ı temizle (tekrar tetiklenmesin)
-    localStorage.removeItem('cli_redirect_uri');
-    localStorage.removeItem('cli_state');
+    // Onay ekranına yönlendir; parametreleri URL'de taşı
+    // (localStorage'da zaten var, ama URL'de de taşımak daha güvenli)
+    const authUrl = new URL('/cli-login', window.location.origin);
+    authUrl.searchParams.set('redirect_uri', cliRedirectUri);
+    if (cliState) authUrl.searchParams.set('state', cliState);
 
-    // Token'ı CLI adresine ekle ve sayfayı değiştir
-    const dest = new URL(cliRedirectUri);
-    dest.searchParams.set('token', session.access_token);
-    if (cliState) dest.searchParams.set('state', cliState);
-
-    const finalUrl = dest.toString();
-    console.log('[Boot] Redirecting to:', finalUrl);
-    window.location.replace(finalUrl);
+    console.log('[Boot] → Authorization screen:', authUrl.toString());
+    window.location.replace(authUrl.toString());
     return; // React ASLA mount edilmez — Router müdahale edemez
   }
 
