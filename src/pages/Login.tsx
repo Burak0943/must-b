@@ -166,6 +166,7 @@ export default function Login() {
         if (!redirected) {
           navigate(nextUrl, { replace: true });
         }
+      }
     } catch (error: any) {
       toast.error(error.message || t('auth.errorOccurred'));
     } finally {
