@@ -60,6 +60,7 @@ const App = () => {
             <Route path="/docs/setup" element={<Navigate to="/docs" replace />} />
             
             {/* Giriş yapmışsa Login'e gidemez, Dashboard'a fırlatılır */}
+            {/* Not: CLI akışı main.tsx boot() tarafından React öncesinde yakalanır */}
             <Route 
               path="/login" 
               element={!session ? <Login /> : <Navigate to="/dashboard" replace />} 

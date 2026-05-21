@@ -46,31 +46,53 @@ export default function Login() {
   const nextUrl = searchParams.get("next") ?? "/dashboard";
 
   // CLI redirect yardımcı fonksiyonu
-  // Önce URL'deki parametreleri, yoksa localStorage'ı kontrol eder.
-  // URL'de parametreler varsa onları localStorage'a da yazar (OAuth redirect sonrası kaybolmasın diye).
-  const resolvePostAuthDestination = (session: any): string => {
-    // URL'deki parametreler her zaman en yüksek önceliğe sahiptir
-    const urlRedirectUri = searchParams.get('redirect_uri');
-    const urlState       = searchParams.get('state');
+  // Öncelik sırası:
+  //   1. window.location.search (React Router state henüz dolmamış olabilir)
+  //   2. localStorage (OAuth provider redirect sonrası URL temizlendiyse)
+  // CLI hedefi bulunursa window.location.replace ile yönlendirir ve true döner.
+  // Yönlendirme yapılmadıysa false döner → normal React navigate() akışı.
+  const resolvePostAuthDestination = (session: any): boolean => {
+    // --- DEBUG ---
+    console.log('[Auth] URL Search:', window.location.search);
 
-    // URL'de CLI parametreleri varsa localStorage'a yaz (sonraki adımlar için)
+    // 1. Tarayıcı URL'sini doğrudan oku (React Router state'e güvenme)
+    const rawParams    = new URLSearchParams(window.location.search);
+    const urlRedirectUri = rawParams.get('redirect_uri');
+    const urlState       = rawParams.get('state');
+
+    // URL'de CLI parametreleri varsa localStorage'a yaz
     if (urlRedirectUri) localStorage.setItem('cli_redirect_uri', urlRedirectUri);
     if (urlState)       localStorage.setItem('cli_state', urlState);
 
-    // Şimdi localStorage'ı oku (ya az önce yazıldı ya da daha önce yazılmıştı)
-    const cliUri   = localStorage.getItem('cli_redirect_uri');
-    const cliState = localStorage.getItem('cli_state');
+    // 2. localStorage'dan oku (ya az önce yazıldı ya da önceki OAuth adımında yazıldı)
+    const cliRedirectUri = localStorage.getItem('cli_redirect_uri');
+    const cliState       = localStorage.getItem('cli_state');
 
-    if (cliUri && session?.access_token) {
+    // --- DEBUG ---
+    console.log('[Auth] CLI Check:', {
+      redirectUri: cliRedirectUri,
+      state: cliState,
+      tokenExists: !!session?.access_token,
+    });
+
+    if (cliRedirectUri && session?.access_token) {
       // CLI akışı: token'ı URI'ya ekle, localStorage'ı temizle
-      const dest = new URL(cliUri);
+      const dest = new URL(cliRedirectUri);
       dest.searchParams.set('token', session.access_token);
       if (cliState) dest.searchParams.set('state', cliState);
       localStorage.removeItem('cli_redirect_uri');
       localStorage.removeItem('cli_state');
-      return dest.toString();
+
+      const finalUrl = dest.toString();
+      // --- DEBUG ---
+      console.log('[Auth] Redirecting to:', finalUrl);
+
+      // Sayfayı değiştir ve React Router'ın başka bir şey yapmasını engelle
+      window.location.replace(finalUrl);
+      return true; // yönlendirme yapıldı
     }
-    return nextUrl; // normal web akışı
+
+    return false; // yönlendirme yapılmadı, normal akış devam eder
   };
 
   // YÖNLENDİRME BEYNİ
@@ -79,11 +101,11 @@ export default function Login() {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session && mounted) {
-        const dest = resolvePostAuthDestination(session);
-        if (dest.startsWith('http')) {
-          window.location.href = dest;
-        } else {
-          navigate(dest, { replace: true });
+        // resolvePostAuthDestination CLI hedefi bulursa window.location.replace yapar ve true döner.
+        // true döndüyse başka hiçbir şey yapma — sayfa zaten değişiyor.
+        const redirected = resolvePostAuthDestination(session);
+        if (!redirected) {
+          navigate(nextUrl, { replace: true });
         }
       }
     };
@@ -91,11 +113,9 @@ export default function Login() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session && mounted && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
-        const dest = resolvePostAuthDestination(session);
-        if (dest.startsWith('http')) {
-          window.location.href = dest;
-        } else {
-          navigate(dest, { replace: true });
+        const redirected = resolvePostAuthDestination(session);
+        if (!redirected) {
+          navigate(nextUrl, { replace: true });
         }
       }
     });
@@ -142,13 +162,10 @@ export default function Login() {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
-        const dest = resolvePostAuthDestination(data.session);
-        if (dest.startsWith('http')) {
-          window.location.href = dest;
-        } else {
-          navigate(dest, { replace: true });
+        const redirected = resolvePostAuthDestination(data.session);
+        if (!redirected) {
+          navigate(nextUrl, { replace: true });
         }
-      }
     } catch (error: any) {
       toast.error(error.message || t('auth.errorOccurred'));
     } finally {
