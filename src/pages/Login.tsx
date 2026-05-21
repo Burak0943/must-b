@@ -46,9 +46,21 @@ export default function Login() {
   const nextUrl = searchParams.get("next") ?? "/dashboard";
 
   // CLI redirect yardımcı fonksiyonu
+  // Önce URL'deki parametreleri, yoksa localStorage'ı kontrol eder.
+  // URL'de parametreler varsa onları localStorage'a da yazar (OAuth redirect sonrası kaybolmasın diye).
   const resolvePostAuthDestination = (session: any): string => {
+    // URL'deki parametreler her zaman en yüksek önceliğe sahiptir
+    const urlRedirectUri = searchParams.get('redirect_uri');
+    const urlState       = searchParams.get('state');
+
+    // URL'de CLI parametreleri varsa localStorage'a yaz (sonraki adımlar için)
+    if (urlRedirectUri) localStorage.setItem('cli_redirect_uri', urlRedirectUri);
+    if (urlState)       localStorage.setItem('cli_state', urlState);
+
+    // Şimdi localStorage'ı oku (ya az önce yazıldı ya da daha önce yazılmıştı)
     const cliUri   = localStorage.getItem('cli_redirect_uri');
     const cliState = localStorage.getItem('cli_state');
+
     if (cliUri && session?.access_token) {
       // CLI akışı: token'ı URI'ya ekle, localStorage'ı temizle
       const dest = new URL(cliUri);
