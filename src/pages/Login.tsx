@@ -45,18 +45,46 @@ export default function Login() {
 
   const nextUrl = searchParams.get("next") ?? "/dashboard";
 
+  // CLI redirect yardımcı fonksiyonu
+  const resolvePostAuthDestination = (session: any): string => {
+    const cliUri   = localStorage.getItem('cli_redirect_uri');
+    const cliState = localStorage.getItem('cli_state');
+    if (cliUri && session?.access_token) {
+      // CLI akışı: token'ı URI'ya ekle, localStorage'ı temizle
+      const dest = new URL(cliUri);
+      dest.searchParams.set('token', session.access_token);
+      if (cliState) dest.searchParams.set('state', cliState);
+      localStorage.removeItem('cli_redirect_uri');
+      localStorage.removeItem('cli_state');
+      return dest.toString();
+    }
+    return nextUrl; // normal web akışı
+  };
+
   // YÖNLENDİRME BEYNİ
   useEffect(() => {
     let mounted = true;
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session && mounted) navigate(nextUrl, { replace: true });
+      if (session && mounted) {
+        const dest = resolvePostAuthDestination(session);
+        if (dest.startsWith('http')) {
+          window.location.href = dest;
+        } else {
+          navigate(dest, { replace: true });
+        }
+      }
     };
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session && mounted && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
-        navigate(nextUrl, { replace: true });
+        const dest = resolvePostAuthDestination(session);
+        if (dest.startsWith('http')) {
+          window.location.href = dest;
+        } else {
+          navigate(dest, { replace: true });
+        }
       }
     });
 
@@ -64,6 +92,7 @@ export default function Login() {
       mounted = false;
       subscription.unsubscribe();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, nextUrl]);
 
   // Mod Değişikliğini Dinle
@@ -98,10 +127,15 @@ export default function Login() {
         setIsVerifyStep(true);
       } else {
         // GİRİŞ YAP
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        
-        navigate('/dashboard');
+
+        const dest = resolvePostAuthDestination(data.session);
+        if (dest.startsWith('http')) {
+          window.location.href = dest;
+        } else {
+          navigate(dest, { replace: true });
+        }
       }
     } catch (error: any) {
       toast.error(error.message || t('auth.errorOccurred'));
