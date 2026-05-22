@@ -50,18 +50,26 @@ async function boot() {
 
   console.log('[Boot] Session:', !!session, '| CLI URI:', cliRedirectUri);
 
-  if (session?.access_token && cliRedirectUri) {
-    console.log('[Boot] CLI login detected — routing to authorization screen.');
-
-    // Onay ekranına yönlendir; parametreleri URL'de taşı
-    // (localStorage'da zaten var, ama URL'de de taşımak daha güvenli)
-    const authUrl = new URL('/cli-login', window.location.origin);
-    authUrl.searchParams.set('redirect_uri', cliRedirectUri);
-    if (cliState) authUrl.searchParams.set('state', cliState);
-
-    console.log('[Boot] → Authorization screen:', authUrl.toString());
-    window.location.replace(authUrl.toString());
-    return; // React ASLA mount edilmez — Router müdahale edemez
+  if (cliRedirectUri) {
+    if (session?.access_token) {
+      // Oturum VAR + CLI hedefi VAR → onay ekranına git
+      console.log('[Boot] CLI login detected + session exists → /cli-login');
+      const authUrl = new URL('/cli-login', window.location.origin);
+      authUrl.searchParams.set('redirect_uri', cliRedirectUri);
+      if (cliState) authUrl.searchParams.set('state', cliState);
+      window.location.replace(authUrl.toString());
+    } else {
+      // Oturum YOK + CLI hedefi VAR → login sayfasına gönder, CLI params URL'de taşı
+      // localStorage'ı temizle ki login sonrası döngüye girmesin
+      console.log('[Boot] CLI login detected + NO session → /login with CLI params in URL');
+      localStorage.removeItem('cli_redirect_uri');
+      localStorage.removeItem('cli_state');
+      const loginUrl = new URL('/login', window.location.origin);
+      loginUrl.searchParams.set('redirect_uri', cliRedirectUri);
+      if (cliState) loginUrl.searchParams.set('state', cliState);
+      window.location.replace(loginUrl.toString());
+    }
+    return; // React ASLA mount edilmez
   }
 
   // CLI hedefi yok → normal React uygulamasını başlat

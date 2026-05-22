@@ -18,17 +18,36 @@ import VectorVault from "./pages/VectorVault";
 import TheBridge from "./pages/TheBridge";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Security from "./pages/Security";
 import { CodeApprovalPanel } from "@/components/CodeApprovalPanel";
 
 const queryClient = new QueryClient();
 
+// /cli-login için guard: session yoksa CLI params'i URL'de taşıyarak /login'e yönlendir
+const CliLoginGuard = ({ session, loading }: { session: any; loading: boolean }) => {
+  if (loading) return null; // Session yüklenene kadar bekle — yanlış yönlendirme olmasın
+  if (!session) {
+    // CLI params'i URL'de taşı — localStorage'a dokunma
+    const sp = new URLSearchParams(window.location.search);
+    const uri   = sp.get('redirect_uri') ?? '';
+    const state = sp.get('state') ?? '';
+    const loginUrl = uri
+      ? `/login?redirect_uri=${encodeURIComponent(uri)}${state ? `&state=${encodeURIComponent(state)}` : ''}`
+      : '/login';
+    return <Navigate to={loginUrl} replace />;
+  }
+  return <CliLogin />;
+};
+
 const App = () => {
   const [session, setSession] = useState<any>(null);
+  const [sessionLoading, setSessionLoading] = useState(true);
 
   useEffect(() => {
     // 1. Mevcut session'ı kontrol et
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setSessionLoading(false);
     });
 
     // 2. Auth değişimlerini dinle
@@ -58,14 +77,28 @@ const App = () => {
             <Route path="/docs/skills" element={<Navigate to="/ecosystem" replace />} />
             <Route path="/docs/setup" element={<Navigate to="/docs" replace />} />
             
-            {/* Giriş yapmışsa Login'e gidemez, ana sayfaya yönlendirilir */}
-            {/* Not: CLI akışı main.tsx boot() tarafından React öncesinde yakalanır */}
+            {/* Giriş yapmamışsa Login'e gidemez değil, artık tam tersi:
+                Giriş yapmış + CLI params varsa /cli-login'e at, yoksa /login göster */}
             <Route 
-              path="/login" 
-              element={!session ? <Login /> : <Navigate to="/" replace />} 
+              path="/login"
+              element={
+                sessionLoading ? null : (
+                  !session
+                    ? <Login />
+                    : (() => {
+                        const sp = new URLSearchParams(window.location.search);
+                        const uri = sp.get('redirect_uri') ?? '';
+                        const state = sp.get('state') ?? '';
+                        return uri
+                          ? <Navigate to={`/cli-login?redirect_uri=${encodeURIComponent(uri)}${state ? `&state=${encodeURIComponent(state)}` : ''}`} replace />
+                          : <Navigate to="/" replace />;
+                      })()
+                )
+              }
             />
-            
-            <Route path="/cli-login" element={<CliLogin />} />
+
+            {/* /cli-login: oturum yoksa /login'e gönder (guard CliLoginGuard içinde) */}
+            <Route path="/cli-login" element={<CliLoginGuard session={session} loading={sessionLoading} />} />
 
             <Route 
               path="/vector-vault" 
@@ -79,6 +112,8 @@ const App = () => {
 
             <Route path="/setup" element={session ? <LocalSetup /> : <Navigate to="/login" />} />
             <Route path="/connect" element={session ? <AuthConnect /> : <Navigate to="/login" />} />
+            {/* Şifre değiştirme — sadece oturum açık kullanıcılar */}
+            <Route path="/security" element={session ? <Security /> : <Navigate to="/login" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

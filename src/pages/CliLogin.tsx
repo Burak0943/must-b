@@ -37,26 +37,19 @@ export default function CliLogin() {
 
   // ─── Mount: Session ve Profil Yükle ─────────────────────────────────────────
   useEffect(() => {
-    const { uri } = getCliParams();
-
-    // URL'deki parametreleri localStorage'a da yaz (güvenlik yedek)
+    // URL'deki parametreleri localStorage'a da yaz (OAuth callback sonrası yedek)
     const rawUri   = searchParams.get('redirect_uri');
     const rawState = searchParams.get('state');
     if (rawUri)   localStorage.setItem('cli_redirect_uri', rawUri);
     if (rawState) localStorage.setItem('cli_state', rawState);
 
-    if (!uri) {
-      // CLI parametresi yoksa buraya gelmemeliydi, dashboard'a gönder
-      window.location.replace('/dashboard');
-      return;
-    }
-
+    // Session yükle — oturum yoksa App.tsx guard /login'e yönlendirir, biz bir şey yapmayız
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
-        // Oturum yoksa login sayfasına gönder, orası geri buraya döndürecek
-        window.location.replace(
-          `/login?redirect_uri=${encodeURIComponent(uri)}&state=${encodeURIComponent(rawState ?? '')}`
-        );
+        // App.tsx'teki <Route path="/cli-login"> guardı zaten devreye girer.
+        // Burada window.location.replace KULLANMA — döngü yaratır.
+        setStage('error');
+        setErrorMsg('Oturum bulunamadı. Lütfen önce giriş yapın.');
         return;
       }
 
@@ -69,9 +62,9 @@ export default function CliLogin() {
       setStage('prompt');
     });
 
-    // Auth state değişimlerini de dinle (farklı hesapla giriş sonrası)
+    // Auth state değişimlerini dinle (farklı hesapla giriş sonrası)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session && stage !== 'prompt') {
+      if (session) {
         setProfile({
           email:       session.user.email ?? '',
           fullName:    session.user.user_metadata?.full_name ?? session.user.email ?? '',
@@ -129,7 +122,7 @@ export default function CliLogin() {
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/cli-login`,
-          queryParams: { prompt: 'select_account' },
+          queryParams: { prompt: 'consent select_account' },
         },
       });
 
