@@ -56,8 +56,12 @@ async function boot() {
 
   console.log('[Boot] Session:', !!session, '| CLI URI:', cliRedirectUri);
 
-  // Oturum VAR + CLI hedefi VAR → React mount olmadan doğrudan /cli-login'e git
-  if (session?.access_token && cliRedirectUri) {
+  // Oturum VAR + CLI hedefi VAR + zaten /cli-login'de DEĞİLSE → yönlendir
+  // Pathname kontrolü olmadan: /cli-login yüklenince main.tsx tekrar devreye girer,
+  // session + cliRedirectUri hâlâ görünür → tekrar replace → F5 döngüsü. Bunu engeller.
+  const isAlreadyOnCliLogin = window.location.pathname === '/cli-login';
+
+  if (session?.access_token && cliRedirectUri && !isAlreadyOnCliLogin) {
     console.log('[Boot] CLI login detected + session exists → /cli-login');
     const authUrl = new URL('/cli-login', window.location.origin);
     authUrl.searchParams.set('redirect_uri', cliRedirectUri);
