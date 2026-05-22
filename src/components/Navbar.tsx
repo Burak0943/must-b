@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, LayoutDashboard, LogOut, Globe } from "lucide-react";
+import { Menu, X, LogOut, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
 
@@ -63,9 +63,6 @@ const Navbar = () => {
         
         {session ? (
           <>
-            <Link to="/dashboard" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              {t('nav.dashboard')}
-            </Link>
             <button
               onClick={handleSignOut}
               className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 text-sm font-medium
@@ -132,11 +129,6 @@ const Navbar = () => {
             
             {session ? (
               <>
-                <Link to="/dashboard" onClick={() => setMobileOpen(false)}
-                  className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl flex items-center gap-2">
-                  <LayoutDashboard className="w-4 h-4" />
-                  {t('nav.dashboard')}
-                </Link>
                 <button
                   onClick={() => { setMobileOpen(false); handleSignOut(); }}
                   className="py-2.5 px-4 text-sm font-medium text-red-400 hover:bg-red-400/5 transition-all rounded-xl flex items-center gap-2"

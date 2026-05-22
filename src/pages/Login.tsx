@@ -43,7 +43,7 @@ export default function Login() {
   
   const [loading, setLoading] = useState(false);
 
-  const nextUrl = searchParams.get("next") ?? "/dashboard";
+  const nextUrl = searchParams.get("next") ?? "/";
 
   // CLI redirect yardımcı fonksiyonu
   // Öncelik sırası:

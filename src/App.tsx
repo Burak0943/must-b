@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
 import LocalSetup from "./pages/LocalSetup";
 import AuthConnect from "./pages/AuthConnect";
 import CliLogin from "./pages/CliLogin";
@@ -59,20 +58,14 @@ const App = () => {
             <Route path="/docs/skills" element={<Navigate to="/ecosystem" replace />} />
             <Route path="/docs/setup" element={<Navigate to="/docs" replace />} />
             
-            {/* Giriş yapmışsa Login'e gidemez, Dashboard'a fırlatılır */}
+            {/* Giriş yapmışsa Login'e gidemez, ana sayfaya yönlendirilir */}
             {/* Not: CLI akışı main.tsx boot() tarafından React öncesinde yakalanır */}
             <Route 
               path="/login" 
-              element={!session ? <Login /> : <Navigate to="/dashboard" replace />} 
+              element={!session ? <Login /> : <Navigate to="/" replace />} 
             />
             
             <Route path="/cli-login" element={<CliLogin />} />
-
-            {/* Giriş yapmamışsa Dashboard'a gidemez, Login'e fırlatılır */}
-            <Route 
-              path="/dashboard" 
-              element={session ? <Dashboard /> : <Navigate to="/login" replace />} 
-            />
 
             <Route 
               path="/vector-vault" 
