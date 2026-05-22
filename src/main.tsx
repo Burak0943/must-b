@@ -41,6 +41,12 @@ import { supabase } from "./lib/supabase";
 // ─────────────────────────────────────────────────────────────────────────────
 // AŞAMA 2 — ASYNC: Oturum varsa ve CLI hedefi varsa React'i hiç mount etme.
 // supabase.auth.getSession() burada BEKLENİR; React Router henüz sahneye çıkmadı.
+//
+// DÖNGÜ ÖNLEME KURALI:
+//   Yönlendirme (window.location.replace) YALNIZCA session VAR + CLI URI VAR
+//   durumunda yapılır. Session YOKSA → React'i mount et, React Router halleder.
+//   "Session yok → login'e at → login yükle → backupCliParams localStorage'a yazar
+//    → boot tekrar çalışır → session yok → login'e at → ∞" döngüsü bu sayede imkansız.
 // ─────────────────────────────────────────────────────────────────────────────
 async function boot() {
   const { data: { session } } = await supabase.auth.getSession();
@@ -50,29 +56,19 @@ async function boot() {
 
   console.log('[Boot] Session:', !!session, '| CLI URI:', cliRedirectUri);
 
-  if (cliRedirectUri) {
-    if (session?.access_token) {
-      // Oturum VAR + CLI hedefi VAR → onay ekranına git
-      console.log('[Boot] CLI login detected + session exists → /cli-login');
-      const authUrl = new URL('/cli-login', window.location.origin);
-      authUrl.searchParams.set('redirect_uri', cliRedirectUri);
-      if (cliState) authUrl.searchParams.set('state', cliState);
-      window.location.replace(authUrl.toString());
-    } else {
-      // Oturum YOK + CLI hedefi VAR → login sayfasına gönder, CLI params URL'de taşı
-      // localStorage'ı temizle ki login sonrası döngüye girmesin
-      console.log('[Boot] CLI login detected + NO session → /login with CLI params in URL');
-      localStorage.removeItem('cli_redirect_uri');
-      localStorage.removeItem('cli_state');
-      const loginUrl = new URL('/login', window.location.origin);
-      loginUrl.searchParams.set('redirect_uri', cliRedirectUri);
-      if (cliState) loginUrl.searchParams.set('state', cliState);
-      window.location.replace(loginUrl.toString());
-    }
+  // Oturum VAR + CLI hedefi VAR → React mount olmadan doğrudan /cli-login'e git
+  if (session?.access_token && cliRedirectUri) {
+    console.log('[Boot] CLI login detected + session exists → /cli-login');
+    const authUrl = new URL('/cli-login', window.location.origin);
+    authUrl.searchParams.set('redirect_uri', cliRedirectUri);
+    if (cliState) authUrl.searchParams.set('state', cliState);
+    window.location.replace(authUrl.toString());
     return; // React ASLA mount edilmez
   }
 
-  // CLI hedefi yok → normal React uygulamasını başlat
+  // Diğer tüm durumlar (session yok, CLI yok, ya da ikisi birden) →
+  // React'i normal başlat. App.tsx içindeki route guard'lar gerekli
+  // yönlendirmeleri React Router üzerinden güvenle yapar.
   createRoot(document.getElementById('root')!).render(<App />);
 }
 
