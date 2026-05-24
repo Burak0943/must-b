@@ -8,6 +8,14 @@
     "login": "Giriş Yap",
     "getStarted": "Başla"
   },
+  "changelog": {
+    "button": "Neler Yeni?",
+    "title": "Sürüm Notları",
+    "subtitle": "Güncellemeler ve yenilikler",
+    "latestStable": "Son Kararlı Sürüm",
+    "recentUpdates": "Son Güncellemeler",
+    "footer": "must-b haftalık güncellenir. Duyurular için bizi takip edin."
+  },
   "footer": {
     "tagline": "Yerel çalışan, küresel düşünen ve gizliliği esas alan otonom yapay zeka ajanları.",
     "resources": "Kaynaklar",

@@ -8,6 +8,14 @@
     "login": "Login",
     "getStarted": "Get Started"
   },
+  "changelog": {
+    "button": "What's New",
+    "title": "Changelog",
+    "subtitle": "Release notes & updates",
+    "latestStable": "Latest Stable",
+    "recentUpdates": "Recent Updates",
+    "footer": "must-b is updated weekly. Follow us for announcements."
+  },
   "footer": {
     "tagline": "Autonomous AI agents that run locally, think globally, and execute privately.",
     "resources": "Resources",

@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, LogOut, Globe } from "lucide-react";
+import { Menu, X, LogOut, Globe, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
+import ChangelogDrawer from "./ChangelogDrawer";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [changelogOpen, setChangelogOpen] = useState(false);
   const [session, setSession] = useState<any>(null);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -88,7 +90,27 @@ const Navbar = () => {
         )}
 
         <div className="w-px h-4 bg-white/10 mx-1" />
-        
+
+        {/* Changelog button */}
+        <motion.button
+          onClick={() => setChangelogOpen(true)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full
+                     text-xs font-mono font-semibold text-emerald-400/80
+                     hover:text-emerald-300 border border-emerald-500/20
+                     hover:border-emerald-400/40 bg-emerald-500/5 hover:bg-emerald-500/10
+                     transition-all duration-200 group"
+        >
+          {/* Glow pulse */}
+          <span className="absolute inset-0 rounded-full bg-emerald-400/10
+                           opacity-0 group-hover:opacity-100 blur-sm transition-opacity" />
+          <Sparkles className="w-3 h-3 relative z-10" />
+          <span className="relative z-10">{t('changelog.button')}</span>
+        </motion.button>
+
+        <div className="w-px h-4 bg-white/10 mx-1" />
+
         <button
           onClick={toggleLanguage}
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full hover:bg-white/5 transition-colors text-xs font-mono font-bold text-white/60 hover:text-white"
@@ -153,6 +175,18 @@ const Navbar = () => {
             )}
             
             <div className="h-px w-full bg-white/10 my-2" />
+
+            {/* Changelog — mobile */}
+            <button
+              onClick={() => { setMobileOpen(false); setChangelogOpen(true); }}
+              className="py-2.5 px-4 text-sm font-semibold text-emerald-400/80 hover:text-emerald-300
+                         hover:bg-emerald-500/5 transition-all rounded-xl flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              {t('changelog.button')}
+            </button>
+
+            <div className="h-px w-full bg-white/10 my-2" />
             <button
               onClick={toggleLanguage}
               className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl flex items-center justify-between"
@@ -166,6 +200,9 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Changelog drawer — rendered outside nav to avoid z-index conflicts */}
+      <ChangelogDrawer open={changelogOpen} onClose={() => setChangelogOpen(false)} />
     </nav>
   );
 };
