@@ -348,12 +348,14 @@
     },
     "install": {
       "copy": "Copy",
-      "copied": "Copied",
+      "copied": "Copied!",
       "copyTitle": "Copy to clipboard",
       "afterInstall": "After install, run",
       "toWake": "to wake the Fox.",
       "nodeRequired": "Node 18+ required",
-      "viewNpm": "View on npm"
+      "viewNpm": "View on NPM ↗",
+      "nodeHint": "If Node.js is already installed, simply run",
+      "nodeHintSuffix": "to get started."
     },
     "terminal": {
       "addedPackages": "added 268 packages in 4s",

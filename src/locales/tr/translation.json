@@ -347,12 +347,14 @@
     },
     "install": {
       "copy": "Kopyala",
-      "copied": "Kopyalandı",
+      "copied": "Kopyalandı!",
       "copyTitle": "Panoya kopyala",
       "afterInstall": "Kurulumdan sonra",
       "toWake": "komutunu çalıştırarak Fox'u uyandır.",
       "nodeRequired": "Node 18+ gereklidir",
-      "viewNpm": "npm'de görüntüle"
+      "viewNpm": "NPM'de Görüntüle ↗",
+      "nodeHint": "Eğer Node.js zaten yüklüyse, sadece",
+      "nodeHintSuffix": "komutunu çalıştırmanız yeterlidir."
     },
     "terminal": {
       "addedPackages": "4 saniyede 268 paket eklendi",
