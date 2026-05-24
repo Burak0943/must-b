@@ -42,7 +42,7 @@ const fadeInUp = {
 
 // ── Platform tabs ──────────────────────────────────────────────────────────
 
-type Platform = "npm" | "windows" | "unix";
+type Platform = "windows" | "macos" | "linux";
 
 interface TermLine {
   prompt: string;
@@ -51,41 +51,39 @@ interface TermLine {
 }
 
 const PLATFORM_CONTENT: Record<Platform, { shellLabel: string; lines: TermLine[] }> = {
-  npm: {
-    shellLabel: "bash / zsh / PowerShell",
-    lines: [
-      { prompt: "$", cmd: "winget install OpenJS.NodeJS.LTS --silent" },
-      { prompt: "$", cmd: "npm install -g @must-b/must-b@latest" },
-      { prompt: "$", cmd: "must-b gateway" },
-    ],
-  },
   windows: {
-    shellLabel: "PowerShell",
+    shellLabel: "PowerShell / winget",
     lines: [
       {
         prompt: "PS>",
-        cmd: "irm https://must-b.com/install.ps1 | iex",
-        comment: "# one-line installer",
+        cmd: "winget install OpenJS.NodeJS -e --silent && npm install -g npm@latest && npm install -g @must-b/must-b@latest && must-b gateway",
       },
-      { prompt: "PS>", cmd: "must-b gateway", comment: "# wake the Fox" },
     ],
   },
-  unix: {
-    shellLabel: "bash / zsh",
+  macos: {
+    shellLabel: "bash / zsh — Homebrew",
     lines: [
       {
         prompt: "$",
-        cmd: "curl -fsSL https://raw.githubusercontent.com/aytac43-0/must-b/main/install.sh | bash",
+        cmd: "brew install node && npm install -g npm@latest && npm install -g @must-b/must-b@latest && must-b gateway",
       },
-      { prompt: "$", cmd: "must-b gateway", comment: "# wake the Fox" },
+    ],
+  },
+  linux: {
+    shellLabel: "bash — apt (Debian/Ubuntu)",
+    lines: [
+      {
+        prompt: "$",
+        cmd: "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs && sudo npm install -g npm@latest && sudo npm install -g @must-b/must-b@latest && must-b gateway",
+      },
     ],
   },
 };
 
 const TABS: { id: Platform; label: string; Icon: React.ElementType }[] = [
-  { id: "npm",     label: "npm",          Icon: Terminal },
-  { id: "windows", label: "Windows",      Icon: Monitor  },
-  { id: "unix",    label: "Linux / macOS", Icon: Apple   },
+  { id: "windows", label: "Windows", Icon: Monitor  },
+  { id: "macos",   label: "macOS",   Icon: Apple    },
+  { id: "linux",   label: "Linux",   Icon: Terminal },
 ];
 
 // ── Copy button ────────────────────────────────────────────────────────────
@@ -139,50 +137,50 @@ function CopyButton({ text }: { text: string }) {
 
 function TerminalBlock({ platform }: { platform: Platform }) {
   const { shellLabel, lines } = PLATFORM_CONTENT[platform];
-  const allCmds = lines.map((l) => l.cmd).join("\n");
+  const allCmds = lines.map((l) => l.cmd).join(" && ");
 
   return (
-    <div className="w-full rounded-xl overflow-hidden border border-white/[0.07] bg-[#0b0d11]">
-      {/* Chrome bar */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-white/[0.03] border-b border-white/[0.06]">
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-400/70" />
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
-        </div>
-        <span className="text-[10px] font-mono text-muted-foreground/50 tracking-widest uppercase">
-          {shellLabel}
-        </span>
-        <CopyButton text={allCmds} />
-      </div>
-
-      {/* Command lines */}
-      <div className="px-5 py-4 space-y-2.5">
-        {lines.map((line, i) => (
-          <div key={i} className="flex items-start gap-2 font-mono text-sm leading-relaxed">
-            <span className="text-primary/50 shrink-0 select-none">{line.prompt}</span>
-            <span className="text-[#c9d1d9] break-all">
-              {line.cmd}
-              {line.comment && (
-                <span className="text-muted-foreground/35 ml-2">{line.comment}</span>
-              )}
-            </span>
+    <>
+      <div className="w-full rounded-xl overflow-hidden border border-white/[0.07] bg-[#0b0d11]">
+        {/* Chrome bar */}
+        <div className="flex items-center justify-between px-4 py-2.5 bg-white/[0.03] border-b border-white/[0.06]">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400/70" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
           </div>
-        ))}
-      </div>
-
-      {/* Post-install next step */}
-      <div className="px-5 pb-4">
-        <div className="flex items-center gap-2 pt-3 border-t border-white/[0.05]">
-          <Zap className="w-3 h-3 text-amber-400 shrink-0" />
-          <span className="text-[11px] font-mono text-muted-foreground/55">
-            After install, run{" "}
-            <span className="text-amber-400/80 font-semibold">must-b gateway</span>
-            {" "}to wake the Fox.
+          <span className="text-[10px] font-mono text-muted-foreground/50 tracking-widest uppercase">
+            {shellLabel}
           </span>
+          <CopyButton text={allCmds} />
+        </div>
+
+        {/* Command lines */}
+        <div className="px-5 py-4 space-y-2.5">
+          {lines.map((line, i) => (
+            <div key={i} className="flex items-start gap-2 font-mono text-sm leading-relaxed">
+              <span className="text-primary/50 shrink-0 select-none">{line.prompt}</span>
+              <span className="text-[#c9d1d9] break-all">
+                {line.cmd}
+                {line.comment && (
+                  <span className="text-muted-foreground/35 ml-2">{line.comment}</span>
+                )}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+
+      {/* Node.js already installed hint */}
+      <div className="flex items-start gap-2 mt-3 px-1">
+        <Zap className="w-3 h-3 text-muted-foreground/40 shrink-0 mt-0.5" />
+        <p className="text-[11px] font-mono text-muted-foreground/40 leading-relaxed">
+          Eğer Node.js zaten yüklüyse, sadece{" "}
+          <span className="text-muted-foreground/60 font-semibold">npm install -g @must-b/must-b@latest</span>
+          {" "}komutunu çalıştırmanız yeterlidir.
+        </p>
+      </div>
+    </>
   );
 }
 
@@ -192,7 +190,7 @@ const DownloadSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [activeStep, setActiveStep] = useState(0);
-  const [activePlatform, setActivePlatform] = useState<Platform>("npm");
+  const [activePlatform, setActivePlatform] = useState<Platform>("windows");
 
   return (
     <section id="download" className="py-24 md:py-32 relative">
