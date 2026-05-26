@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import type { Database } from '@/types/supabase'
 
 // Vite projelerinde değişkenler import.meta.env ile çekilir
 const supabaseUrl     = import.meta.env.VITE_SUPABASE_URL     as string | undefined
@@ -14,7 +15,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 // Fall back to placeholder values so the app mounts even without env vars.
 // All auth calls will fail gracefully (network error) rather than crashing on init.
-export const supabase = createClient(
+export const supabase = createClient<Database>(
   supabaseUrl     ?? 'https://placeholder.supabase.co',
   supabaseAnonKey ?? 'placeholder-anon-key'
 )
