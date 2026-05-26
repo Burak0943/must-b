@@ -21,15 +21,27 @@ import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
 // ─────────────────────────────────────────────
-// Sabitler
+// Sabitler — Gerçek Lemon Squeezy Checkout URL'leri
 // ─────────────────────────────────────────────
 
-const LS_BASE = "https://must-b.lemonsqueezy.com/checkout/buy/PLACEHOLDER";
+/** Planın Lemon Squeezy checkout base URL'i (yıllık varyant için ayrı UUID gerekebilir) */
+const LS_URLS: Record<string, string> = {
+  core:  "https://must-b.lemonsqueezy.com/checkout/buy/38b534db-3a28-41ac-bb4d-31c52a172cfc",
+  pro:   "https://must-b.lemonsqueezy.com/checkout/buy/3e6d454b-a109-47f1-b990-e051eaedd9fd",
+  elite: "https://must-b.lemonsqueezy.com/checkout/buy/1f963aab-e970-4b6d-a5bc-c2695bf54efe",
+  local: "https://must-b.lemonsqueezy.com/checkout/buy/4c7a8bfe-3953-4da2-abc4-5212d12b930c",
+};
 
-function checkoutUrl(planId: string, user: User | null, isYearly: boolean): string {
-  const base = `${LS_BASE}-${planId}${isYearly ? "-yearly" : ""}`;
+/**
+ * Ücretli planlar için Lemon Squeezy checkout URL'i oluşturur.
+ * Kullanıcı giriş yapmışsa ?checkout[custom][user_id] parametresi eklenir —
+ * bu parametre webhook'un ödemeyi kime atayacağını belirler.
+ */
+function checkoutUrl(planId: string, user: User | null): string {
+  const base = LS_URLS[planId];
+  if (!base) throw new Error(`Bilinmeyen plan: ${planId}`);
   if (!user) return base;
-  return `${base}?checkout[custom][user_id]=${user.id}`;
+  return `${base}?checkout[custom][user_id]=${encodeURIComponent(user.id)}`;
 }
 
 // ─────────────────────────────────────────────
@@ -52,7 +64,7 @@ const MAIN_PLANS = [
       "Temel Vector Vault (512 MB)",
       "Topluluk desteği",
     ],
-    button: "Ücretsiz Başla",
+    button: "Hemen İndir",
     popular: false,
   },
   {
@@ -310,7 +322,7 @@ function CardInner({
   isPro?: boolean;
 }) {
   const Icon = plan.icon;
-  const href = plan.id === "free" ? "/login" : checkoutUrl(plan.id, user, isYearly);
+  const href = plan.id === "free" ? "/download" : checkoutUrl(plan.id, user);
 
   return (
     <div className="flex flex-col h-full p-7">
@@ -409,7 +421,7 @@ function EnterpriseCard({
 }) {
   const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
   const Icon = plan.icon;
-  const href = checkoutUrl(plan.id, user, isYearly);
+  const href = checkoutUrl(plan.id, user);
 
   return (
     <motion.div
