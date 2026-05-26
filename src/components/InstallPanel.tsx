@@ -16,34 +16,35 @@ interface TermLine {
   comment?: string;
 }
 
-// ── Platform content (combined && one-liners) ──────────────────────────────
+// ── Platform content (multiline — newline-separated for cross-shell compat) ──
 
 const PLATFORM_CONTENT: Record<Platform, { shellLabel: string; lines: TermLine[] }> = {
   windows: {
     shellLabel: "PowerShell / winget",
     lines: [
-      {
-        prompt: "PS>",
-        cmd: "winget install OpenJS.NodeJS -e --silent && npm install -g npm@latest && npm install -g @must-b/must-b@latest && must-b gateway",
-      },
+      { prompt: "PS>", cmd: "winget install OpenJS.NodeJS -e --silent" },
+      { prompt: "PS>", cmd: "npm install -g npm@latest" },
+      { prompt: "PS>", cmd: "npm install -g @must-b/must-b@latest" },
+      { prompt: "PS>", cmd: "must-b gateway" },
     ],
   },
   macos: {
     shellLabel: "bash / zsh — Homebrew",
     lines: [
-      {
-        prompt: "$",
-        cmd: "brew install node && npm install -g npm@latest && npm install -g @must-b/must-b@latest && must-b gateway",
-      },
+      { prompt: "$", cmd: "brew install node" },
+      { prompt: "$", cmd: "npm install -g npm@latest" },
+      { prompt: "$", cmd: "npm install -g @must-b/must-b@latest" },
+      { prompt: "$", cmd: "must-b gateway" },
     ],
   },
   linux: {
     shellLabel: "bash — apt (Debian/Ubuntu)",
     lines: [
-      {
-        prompt: "$",
-        cmd: "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs && sudo npm install -g npm@latest && sudo npm install -g @must-b/must-b@latest && must-b gateway",
-      },
+      { prompt: "$", cmd: "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -" },
+      { prompt: "$", cmd: "sudo apt-get install -y nodejs" },
+      { prompt: "$", cmd: "sudo npm install -g npm@latest" },
+      { prompt: "$", cmd: "sudo npm install -g @must-b/must-b@latest" },
+      { prompt: "$", cmd: "must-b gateway" },
     ],
   },
 };
@@ -99,7 +100,7 @@ function CopyButton({ text }: { text: string }) {
 function TerminalBlock({ platform }: { platform: Platform }) {
   const { t } = useTranslation();
   const { shellLabel, lines } = PLATFORM_CONTENT[platform];
-  const allCmds = lines.map((l) => l.cmd).join(" && ");
+  const allCmds = lines.map((l) => l.cmd).join("\n");
 
   return (
     <>
@@ -118,11 +119,11 @@ function TerminalBlock({ platform }: { platform: Platform }) {
         </div>
 
         {/* Command lines */}
-        <div className="px-5 py-4 space-y-2.5">
+        <div className="px-5 py-5 space-y-3">
           {lines.map((line, i) => (
-            <div key={i} className="flex items-start gap-2 font-mono text-sm leading-relaxed">
-              <span className="text-primary/50 shrink-0 select-none">{line.prompt}</span>
-              <span className="text-[#c9d1d9] break-all">
+            <div key={i} className="flex items-baseline gap-2.5 font-mono text-sm leading-relaxed">
+              <span className="text-primary/50 shrink-0 select-none pt-px">{line.prompt}</span>
+              <span className="text-[#c9d1d9] break-words min-w-0">
                 {line.cmd}
                 {line.comment && (
                   <span className="text-muted-foreground/35 ml-2">{line.comment}</span>
