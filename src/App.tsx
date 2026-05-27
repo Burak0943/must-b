@@ -19,6 +19,7 @@ import TheBridge from "./pages/TheBridge";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Security from "./pages/Security";
+import Download from "./pages/Download";
 import { CodeApprovalPanel } from "@/components/CodeApprovalPanel";
 
 const queryClient = new QueryClient();
@@ -72,6 +73,7 @@ const App = () => {
             <Route path="/ecosystem/:type/:id" element={<HubDetail />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/download" element={<Download />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/docs/skills" element={<Navigate to="/ecosystem" replace />} />
