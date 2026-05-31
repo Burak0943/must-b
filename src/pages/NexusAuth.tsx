@@ -14,7 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Terminal, Lock, Eye, EyeOff, ArrowRight,
-  Wifi, WifiOff, Shield, User, AtSign, Loader2,
+  Shield, User, AtSign, Loader2,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -112,7 +112,9 @@ function MatrixRain() {
 /** Terminal önyükleme animasyonu */
 function BootSequence({ onComplete }: { onComplete: () => void }) {
   const [lines, setLines] = useState<string[]>([]);
-  const [done, setDone]   = useState(false);
+  // onComplete'i ref'e alıyoruz — interval callback'i yeniden oluşturmasın
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
   useEffect(() => {
     let i = 0;
@@ -122,21 +124,18 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
         i++;
       } else {
         clearInterval(iv);
-        setTimeout(() => {
-          setDone(true);
-          setTimeout(onComplete, 400);
-        }, 300);
+        // Kısa bekleme → AnimatePresence exit'i devralır, form mount edilir
+        setTimeout(() => onCompleteRef.current(), 350);
       }
     }, 160);
     return () => clearInterval(iv);
-  }, [onComplete]);
+  // Sadece mount'ta çalışsın
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <motion.div
-      className="font-['Space_Mono'] text-[#00ff00] text-xs leading-relaxed space-y-1 p-1"
-      animate={done ? { opacity: 0, scale: 0.98 } : {}}
-      transition={{ duration: 0.4 }}
-    >
+    // ⚠ Kendi opacity animasyonu YOK — AnimatePresence exit prop'u bunu yönetir
+    <div className="font-['Space_Mono'] text-[#00ff00] text-xs leading-relaxed space-y-1 p-1 min-h-[280px]">
       {lines.map((line, idx) => (
         <motion.p
           key={idx}
@@ -153,7 +152,7 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
         animate={{ opacity: [1, 0] }}
         transition={{ repeat: Infinity, duration: 0.6 }}
       />
-    </motion.div>
+    </div>
   );
 }
 
@@ -483,18 +482,19 @@ export default function NexusAuth() {
                 {booting ? (
                   <motion.div
                     key="boot"
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="min-h-[320px] flex items-start"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, transition: { duration: 0.25 } }}
+                    className="flex items-start"
                   >
                     <BootSequence onComplete={handleBootComplete} />
                   </motion.div>
                 ) : (
                   <motion.div
                     key="form"
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
                   >
                     {/* Başlık */}
                     <div className="mb-6 space-y-1">
