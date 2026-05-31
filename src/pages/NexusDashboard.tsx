@@ -307,6 +307,14 @@ export default function NexusDashboard() {
     plan_level: string | null;
   } | null>(null);
 
+  // Profile Cache to prevent redundant profile fetches
+  const profileCache = useRef<Record<string, {
+    node_name: string | null;
+    avatar_url: string | null;
+    full_name: string | null;
+    email: string | null;
+  }>>({});
+
   const nodeName = profile?.node_name || "Root_Node";
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -339,64 +347,111 @@ export default function NexusDashboard() {
         .single();
         
       if (!error && profileData) {
+        const mappedName = profileData.node_name || profileData.full_name || user.email?.split("@")[0] || "Anon_Node";
         setProfile({
           id: profileData.id,
           email: profileData.email,
-          node_name: profileData.node_name || profileData.full_name || user.email?.split("@")[0] || "Anon_Node",
+          node_name: mappedName,
           avatar_url: profileData.avatar_url,
           plan_level: profileData.plan_level || profileData.active_plan || "Free",
         });
+
+        // Cache the current user's profile immediately
+        profileCache.current[user.id] = {
+          node_name: mappedName,
+          avatar_url: profileData.avatar_url,
+          full_name: profileData.full_name,
+          email: profileData.email,
+        };
       } else {
         // Fallback profile if profile row is missing or error
+        const mappedName = user.email?.split("@")[0] || "Anon_Node";
         setProfile({
           id: user.id,
           email: user.email || "",
-          node_name: user.email?.split("@")[0] || "Anon_Node",
+          node_name: mappedName,
           avatar_url: null,
           plan_level: "Free",
         });
+
+        profileCache.current[user.id] = {
+          node_name: mappedName,
+          avatar_url: null,
+          full_name: null,
+          email: user.email || "",
+        };
       }
     };
     
     checkUser();
   }, [navigate]);
 
-  // Fetch messages from database
+  // Fetch messages using Frontend Composition (Manual mapping)
   const fetchMessages = useCallback(async (channelId: string) => {
     try {
-      const { data, error } = await supabase
+      // 1. Fetch raw messages without relational join
+      const { data: rawMessages, error: msgError } = await supabase
         .from("nexus_messages")
-        .select("*, profiles(node_name, avatar_url, full_name, email)")
+        .select("*")
         .eq("channel_id", channelId)
         .order("created_at", { ascending: true });
 
-      if (error) {
-        console.error("Error fetching messages:", error.message);
+      if (msgError) {
+        console.error("Error fetching messages:", msgError.message);
         return;
       }
 
-      if (data) {
-        const mapped = data.map((msg: any) => {
-          const tsDate = new Date(msg.created_at);
-          const ts = isNaN(tsDate.getTime())
-            ? "00:00"
-            : `${String(tsDate.getHours()).padStart(2, "0")}:${String(tsDate.getMinutes()).padStart(2, "0")}`;
-          
-          const profilesObj = Array.isArray(msg.profiles) ? msg.profiles[0] : msg.profiles;
-          const displayUser = profilesObj?.node_name || profilesObj?.full_name || profilesObj?.email?.split("@")[0] || "Node_??";
-          
-          return {
-            id: msg.id,
-            ts,
-            user: displayUser,
-            text: msg.content,
-            system: !!msg.is_system,
-            user_id: msg.user_id,
-            avatar_url: profilesObj?.avatar_url || null,
-          };
-        });
-        setMessages(mapped);
+      if (!rawMessages) return;
+
+      // 2. Collect unique user_ids of senders
+      const userIds = Array.from(
+        new Set(rawMessages.map((m: any) => m.user_id).filter(Boolean))
+      ) as string[];
+
+      // 3. Find user_ids that are not yet in the profile cache
+      const missingUserIds = userIds.filter((id) => !profileCache.current[id]);
+
+      // 4. Fetch missing profiles in bulk
+      if (missingUserIds.length > 0) {
+        const { data: fetchedProfiles, error: profError } = await supabase
+          .from("profiles")
+          .select("id, node_name, avatar_url, full_name, email")
+          .in("id", missingUserIds);
+
+        if (!profError && fetchedProfiles) {
+          fetchedProfiles.forEach((p: any) => {
+            profileCache.current[p.id] = {
+              node_name: p.node_name,
+              avatar_url: p.avatar_url,
+              full_name: p.full_name,
+              email: p.email,
+            };
+          });
+        }
       }
+
+      // 5. Compose / Map raw messages with the profiles stored in cache
+      const mapped = rawMessages.map((msg: any) => {
+        const tsDate = new Date(msg.created_at);
+        const ts = isNaN(tsDate.getTime())
+          ? "00:00"
+          : `${String(tsDate.getHours()).padStart(2, "0")}:${String(tsDate.getMinutes()).padStart(2, "0")}`;
+        
+        const prof = msg.user_id ? profileCache.current[msg.user_id] : null;
+        const displayUser = prof?.node_name || prof?.full_name || prof?.email?.split("@")[0] || "Node_??";
+        
+        return {
+          id: msg.id,
+          ts,
+          user: displayUser,
+          text: msg.content,
+          system: !!msg.is_system,
+          user_id: msg.user_id,
+          avatar_url: prof?.avatar_url || null,
+        };
+      });
+
+      setMessages(mapped);
     } catch (err) {
       console.error("Failed to fetch messages:", err);
     }
@@ -420,22 +475,34 @@ export default function NexusDashboard() {
         },
         async (payload) => {
           const newMsg = payload.new;
-          
-          // Get sender's profile info
-          let senderProfile = null;
-          if (profile && newMsg.user_id === profile.id) {
-            senderProfile = {
-              node_name: profile.node_name,
-              avatar_url: profile.avatar_url,
-              plan_level: profile.plan_level,
-            };
-          } else {
-            const { data } = await supabase
-              .from("profiles")
-              .select("node_name, avatar_url, full_name, email, plan_level, active_plan")
-              .eq("id", newMsg.user_id)
-              .single();
-            senderProfile = data;
+          const senderId = newMsg.user_id;
+
+          if (senderId && !profileCache.current[senderId]) {
+            // Check if sender is the current user first to reuse
+            if (profile && senderId === profile.id) {
+              profileCache.current[senderId] = {
+                node_name: profile.node_name,
+                avatar_url: profile.avatar_url,
+                full_name: null,
+                email: profile.email,
+              };
+            } else {
+              // Fetch missing sender profile from database
+              const { data } = await supabase
+                .from("profiles")
+                .select("id, node_name, avatar_url, full_name, email")
+                .eq("id", senderId)
+                .single();
+              
+              if (data) {
+                profileCache.current[senderId] = {
+                  node_name: data.node_name,
+                  avatar_url: data.avatar_url,
+                  full_name: data.full_name,
+                  email: data.email,
+                };
+              }
+            }
           }
           
           const tsDate = new Date(newMsg.created_at);
@@ -443,7 +510,8 @@ export default function NexusDashboard() {
             ? "00:00"
             : `${String(tsDate.getHours()).padStart(2, "0")}:${String(tsDate.getMinutes()).padStart(2, "0")}`;
             
-          const displayUser = senderProfile?.node_name || senderProfile?.full_name || senderProfile?.email?.split("@")[0] || "Node_??";
+          const prof = senderId ? profileCache.current[senderId] : null;
+          const displayUser = prof?.node_name || prof?.full_name || prof?.email?.split("@")[0] || "Node_??";
 
           const mappedMsg: Message = {
             id: newMsg.id,
@@ -451,8 +519,8 @@ export default function NexusDashboard() {
             user: displayUser,
             text: newMsg.content,
             system: !!newMsg.is_system,
-            user_id: newMsg.user_id,
-            avatar_url: senderProfile?.avatar_url || null,
+            user_id: senderId,
+            avatar_url: prof?.avatar_url || null,
           };
           
           setMessages((prev) => {
