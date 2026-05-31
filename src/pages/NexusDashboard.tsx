@@ -235,10 +235,20 @@ function MessageRow({ msg, isOwn, showAvatar }: { msg: Message; isOwn: boolean; 
 // Ghost Protocol Input
 // ─────────────────────────────────────────────────────────
 
-function GhostInput() {
+function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
   const [val, setVal]         = useState("");
   const [focused, setFocused] = useState(false);
   const visible = focused || !!val;
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const code = val.trim();
+      if (code) {
+        onEnter(code);
+        setVal("");
+      }
+    }
+  };
 
   return (
     <div
@@ -257,6 +267,7 @@ function GhostInput() {
           onChange={(e) => setVal(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
+          onKeyDown={handleKeyDown}
           placeholder="Enter Node Code..."
           className="flex-1 bg-transparent text-xs outline-none w-full"
           style={{
@@ -266,7 +277,7 @@ function GhostInput() {
           }}
         />
         {val && (
-          <button onClick={() => setVal("")} style={{ color: C.textMuted }}>
+          <button onClick={() => { onEnter(val.trim()); setVal(""); }} style={{ color: C.textMuted }}>
             <ChevronRight className="w-3 h-3" />
           </button>
         )}
@@ -285,6 +296,7 @@ export default function NexusDashboard() {
   const [activeChannel, setActiveChannel] = useState(CHANNELS[0].id);
   const [messages, setMessages]           = useState<Message[]>([]);
   const [inputVal, setInputVal]           = useState("");
+  const [darkNodes, setDarkNodes]         = useState<string[]>([]);
   
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [profile, setProfile] = useState<{
@@ -354,7 +366,7 @@ export default function NexusDashboard() {
     try {
       const { data, error } = await supabase
         .from("nexus_messages")
-        .select("*, profiles(node_name, avatar_url)")
+        .select("*, profiles(node_name, avatar_url, full_name, email)")
         .eq("channel_id", channelId)
         .order("created_at", { ascending: true });
 
@@ -371,11 +383,12 @@ export default function NexusDashboard() {
             : `${String(tsDate.getHours()).padStart(2, "0")}:${String(tsDate.getMinutes()).padStart(2, "0")}`;
           
           const profilesObj = Array.isArray(msg.profiles) ? msg.profiles[0] : msg.profiles;
+          const displayUser = profilesObj?.node_name || profilesObj?.full_name || profilesObj?.email?.split("@")[0] || "Node_??";
           
           return {
             id: msg.id,
             ts,
-            user: profilesObj?.node_name || "Node_??",
+            user: displayUser,
             text: msg.content,
             system: !!msg.is_system,
             user_id: msg.user_id,
@@ -414,11 +427,12 @@ export default function NexusDashboard() {
             senderProfile = {
               node_name: profile.node_name,
               avatar_url: profile.avatar_url,
+              plan_level: profile.plan_level,
             };
           } else {
             const { data } = await supabase
               .from("profiles")
-              .select("node_name, avatar_url")
+              .select("node_name, avatar_url, full_name, email, plan_level, active_plan")
               .eq("id", newMsg.user_id)
               .single();
             senderProfile = data;
@@ -429,10 +443,12 @@ export default function NexusDashboard() {
             ? "00:00"
             : `${String(tsDate.getHours()).padStart(2, "0")}:${String(tsDate.getMinutes()).padStart(2, "0")}`;
             
+          const displayUser = senderProfile?.node_name || senderProfile?.full_name || senderProfile?.email?.split("@")[0] || "Node_??";
+
           const mappedMsg: Message = {
             id: newMsg.id,
             ts,
-            user: senderProfile?.node_name || "Node_??",
+            user: displayUser,
             text: newMsg.content,
             system: !!newMsg.is_system,
             user_id: newMsg.user_id,
@@ -489,6 +505,14 @@ export default function NexusDashboard() {
     await supabase.auth.signOut();
     navigate("/");
   };
+
+  const handleEnterDarkNode = useCallback((code: string) => {
+    setDarkNodes((prev) => {
+      if (prev.includes(code)) return prev;
+      return [...prev, code];
+    });
+    setActiveChannel(code);
+  }, []);
 
   const activeLabel = CHANNELS.find((c) => c.id === activeChannel)?.label ?? activeChannel;
 
@@ -569,7 +593,11 @@ export default function NexusDashboard() {
 
           {/* Orta — kanal */}
           <div className="flex items-center gap-1.5" style={{ color: C.textMuted }}>
-            <Hash className="w-3.5 h-3.5" />
+            {darkNodes.includes(activeChannel) ? (
+              <Lock className="w-3.5 h-3.5 text-red-500/80" style={{ color: C.accent }} />
+            ) : (
+              <Hash className="w-3.5 h-3.5" />
+            )}
             <span className="text-sm" style={{ color: C.textSecondary }}>{activeLabel}</span>
           </div>
 
@@ -693,6 +721,52 @@ export default function NexusDashboard() {
                 })}
               </div>
 
+              {/* Karanlık Odalar */}
+              {darkNodes.length > 0 && (
+                <>
+                  <div className="my-5 h-px mx-2" style={{ background: C.borderSub }} />
+                  <p
+                    className="text-[10px] font-semibold uppercase tracking-widest mb-2 px-2"
+                    style={{ color: C.textGhost, fontFamily: "'Space Mono', monospace" }}
+                  >
+                    Karanlık Odalar
+                  </p>
+                  <div className="space-y-0.5">
+                    {darkNodes.map((code) => {
+                      const isActive = code === activeChannel;
+                      return (
+                        <button
+                          key={code}
+                          onClick={() => setActiveChannel(code)}
+                          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150"
+                          style={{
+                            background: isActive ? C.accentDim : "transparent",
+                            border: isActive ? `1px solid ${C.accentBorder}` : "1px solid transparent",
+                          }}
+                        >
+                          <Lock
+                            className="w-3.5 h-3.5 shrink-0"
+                            style={{ color: isActive ? C.accent : "rgba(239, 68, 68, 0.6)" }}
+                          />
+                          <span
+                            className="text-sm flex-1 truncate font-mono tracking-wider"
+                            style={{
+                              color: isActive ? C.accent : C.textSecondary,
+                              fontWeight: isActive ? 600 : 400,
+                            }}
+                          >
+                            {code}
+                          </span>
+                          <span className="text-[10px]" style={{ color: C.textGhost }}>
+                            🔒
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+
               {/* Divider */}
               <div className="my-5 h-px mx-2" style={{ background: C.borderSub }} />
 
@@ -706,7 +780,7 @@ export default function NexusDashboard() {
                   Ghost Protocol
                 </p>
               </div>
-              <GhostInput />
+              <GhostInput onEnter={handleEnterDarkNode} />
             </div>
 
             {/* Alt kilit */}
@@ -733,7 +807,11 @@ export default function NexusDashboard() {
               style={{ borderBottom: `1px solid ${C.border}` }}
             >
               <div className="flex items-center gap-2.5">
-                <Hash className="w-4 h-4" style={{ color: C.accent }} />
+                {darkNodes.includes(activeChannel) ? (
+                  <Lock className="w-4 h-4 text-red-500/80" style={{ color: C.accent }} />
+                ) : (
+                  <Hash className="w-4 h-4" style={{ color: C.accent }} />
+                )}
                 <span className="text-sm font-semibold" style={{ color: C.textPrimary }}>
                   {activeLabel}
                 </span>
