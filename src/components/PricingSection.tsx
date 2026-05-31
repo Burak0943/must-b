@@ -26,10 +26,10 @@ import type { User } from "@supabase/supabase-js";
 
 /** Planın Lemon Squeezy checkout base URL'i (yıllık varyant için ayrı UUID gerekebilir) */
 const LS_URLS: Record<string, string> = {
-  core:  "https://must-b.lemonsqueezy.com/checkout/buy/38b534db-3a28-41ac-bb4d-31c52a172cfc",
-  pro:   "https://must-b.lemonsqueezy.com/checkout/buy/3e6d454b-a109-47f1-b990-e051eaedd9fd",
-  elite: "https://must-b.lemonsqueezy.com/checkout/buy/1f963aab-e970-4b6d-a5bc-c2695bf54efe",
-  local: "https://must-b.lemonsqueezy.com/checkout/buy/4c7a8bfe-3953-4da2-abc4-5212d12b930c",
+  core:  "https://must-b.lemonsqueezy.com/checkout/buy/64bcc013-d759-433d-aa71-beddeb5d3d3a",
+  pro:   "https://must-b.lemonsqueezy.com/checkout/buy/5ee23a9a-f4af-4a2b-82e6-ebcce5a62128",
+  elite: "https://must-b.lemonsqueezy.com/checkout/buy/17ac39fb-5bac-4e2d-a508-246628618a23",
+  local: "https://must-b.lemonsqueezy.com/checkout/buy/44ded753-dac8-487e-a02f-a46ba1160a60",
 };
 
 /**
