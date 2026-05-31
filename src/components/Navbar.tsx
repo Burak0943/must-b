@@ -85,6 +85,26 @@ const Navbar = () => {
           <Link to="/pricing" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
             {t("nav.pricing")}
           </Link>
+          <Link
+            to="/nexus"
+            className="relative text-sm font-semibold transition-all duration-300 group/nexus"
+            style={{ color: "rgba(0,220,0,0.75)" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.color = "#00ff00";
+              (e.currentTarget as HTMLAnchorElement).style.textShadow = "0 0 8px rgba(0,255,0,0.7), 0 0 20px rgba(0,255,0,0.3)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.color = "rgba(0,220,0,0.75)";
+              (e.currentTarget as HTMLAnchorElement).style.textShadow = "none";
+            }}
+          >
+            Nexus
+            {/* Küçük neon pulse dot */}
+            <span className="absolute -top-0.5 -right-2.5 flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00ff00] opacity-60" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00ff00]" />
+            </span>
+          </Link>
 
           {session ? (
             <button
@@ -189,6 +209,22 @@ const Navbar = () => {
               <Link to="/pricing" onClick={() => setMobileOpen(false)}
                 className="py-2.5 px-4 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all rounded-xl">
                 {t("nav.pricing")}
+              </Link>
+              <Link
+                to="/nexus"
+                onClick={() => setMobileOpen(false)}
+                className="py-2.5 px-4 text-sm font-semibold transition-all rounded-xl flex items-center gap-2"
+                style={{
+                  color: "#00dd00",
+                  background: "rgba(0,255,0,0.04)",
+                  border: "1px solid rgba(0,255,0,0.12)",
+                }}
+              >
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00ff00] opacity-60" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00ff00]" />
+                </span>
+                Nexus
               </Link>
               <div className="h-px w-full bg-white/10 mb-2" />
 
