@@ -34,6 +34,9 @@ export interface Profile {
   lemon_squeezy_customer_id: string | null
   created_at: string
   updated_at: string
+  node_name?: string | null
+  avatar_url?: string | null
+  plan_level?: string | null
 }
 
 /** public.user_usage – tek bir satırın tam hali */

@@ -47,11 +47,13 @@ const CHANNELS = [
 ];
 
 interface Message {
-  id: number;
+  id: string | number;
   ts: string;
   user: string;
   text: string;
   system: boolean;
+  user_id?: string;
+  avatar_url?: string | null;
 }
 
 const DEMO_MESSAGES: Message[] = [
@@ -81,6 +83,17 @@ const USER_COLORS: Record<string, string> = {
   "Elite_0x9A": "#38bdf8",
   "Anon_7f3c":  "#a3e635",
   Shadow_Relay: "#c084fc",
+};
+
+const getUserColor = (username: string) => {
+  if (USER_COLORS[username]) return USER_COLORS[username];
+  const colors = ["#22c55e", "#38bdf8", "#a3e635", "#c084fc", "#f43f5e", "#fb923c", "#eab308"];
+  let hash = 0;
+  for (let i = 0; i < username.length; i++) {
+    hash = username.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
 };
 
 // ─────────────────────────────────────────────────────────
@@ -141,7 +154,7 @@ function MessageRow({ msg, isOwn, showAvatar }: { msg: Message; isOwn: boolean; 
     );
   }
 
-  const userColor = isOwn ? C.accent : (USER_COLORS[msg.user] ?? C.textSecondary);
+  const userColor = isOwn ? C.accent : getUserColor(msg.user);
 
   return (
     <motion.div
@@ -153,17 +166,26 @@ function MessageRow({ msg, isOwn, showAvatar }: { msg: Message; isOwn: boolean; 
       {/* Avatar — sadece ilk mesajda */}
       <div className="w-8 shrink-0 mt-0.5">
         {showAvatar ? (
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-            style={{
-              background: `${userColor}18`,
-              border: `1px solid ${userColor}35`,
-              color: userColor,
-              fontFamily: "'Space Mono', monospace",
-            }}
-          >
-            {msg.user[0]}
-          </div>
+          msg.avatar_url ? (
+            <img
+              src={msg.avatar_url}
+              alt={msg.user}
+              className="w-8 h-8 rounded-full object-cover shrink-0"
+              style={{ border: `1px solid ${userColor}35` }}
+            />
+          ) : (
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+              style={{
+                background: `${userColor}18`,
+                border: `1px solid ${userColor}35`,
+                color: userColor,
+                fontFamily: "'Space Mono', monospace",
+              }}
+            >
+              {msg.user[0]}
+            </div>
+          )
         ) : (
           /* Hover'da saat göster */
           <span
@@ -261,9 +283,19 @@ export default function NexusDashboard() {
   const navigate = useNavigate();
 
   const [activeChannel, setActiveChannel] = useState(CHANNELS[0].id);
-  const [messages, setMessages]           = useState<Message[]>(DEMO_MESSAGES);
+  const [messages, setMessages]           = useState<Message[]>([]);
   const [inputVal, setInputVal]           = useState("");
-  const [nodeName]                        = useState("Root_Node");
+  
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [profile, setProfile] = useState<{
+    id: string;
+    email: string;
+    node_name: string | null;
+    avatar_url: string | null;
+    plan_level: string | null;
+  } | null>(null);
+
+  const nodeName = profile?.node_name || "Root_Node";
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef       = useRef<HTMLTextAreaElement>(null);
@@ -275,24 +307,179 @@ export default function NexusDashboard() {
 
   useEffect(() => { scrollBottom(); }, [messages, scrollBottom]);
 
+  // Auth check & load profile
   useEffect(() => {
-    supabase.auth.getSession().then(() => {
-      // TODO: if (!session) navigate("/auth", { replace: true });
-    });
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth", { replace: true });
+        return;
+      }
+      
+      const user = session.user;
+      setCurrentUser(user);
+      
+      // Fetch user's profile
+      const { data: profileData, error } = await supabase
+        .from("profiles")
+        .select("id, email, node_name, avatar_url, plan_level, full_name, active_plan")
+        .eq("id", user.id)
+        .single();
+        
+      if (!error && profileData) {
+        setProfile({
+          id: profileData.id,
+          email: profileData.email,
+          node_name: profileData.node_name || profileData.full_name || user.email?.split("@")[0] || "Anon_Node",
+          avatar_url: profileData.avatar_url,
+          plan_level: profileData.plan_level || profileData.active_plan || "Free",
+        });
+      } else {
+        // Fallback profile if profile row is missing or error
+        setProfile({
+          id: user.id,
+          email: user.email || "",
+          node_name: user.email?.split("@")[0] || "Anon_Node",
+          avatar_url: null,
+          plan_level: "Free",
+        });
+      }
+    };
+    
+    checkUser();
   }, [navigate]);
 
-  const sendMessage = useCallback(() => {
+  // Fetch messages from database
+  const fetchMessages = useCallback(async (channelId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("nexus_messages")
+        .select("*, profiles(node_name, avatar_url)")
+        .eq("channel_id", channelId)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching messages:", error.message);
+        return;
+      }
+
+      if (data) {
+        const mapped = data.map((msg: any) => {
+          const tsDate = new Date(msg.created_at);
+          const ts = isNaN(tsDate.getTime())
+            ? "00:00"
+            : `${String(tsDate.getHours()).padStart(2, "0")}:${String(tsDate.getMinutes()).padStart(2, "0")}`;
+          
+          const profilesObj = Array.isArray(msg.profiles) ? msg.profiles[0] : msg.profiles;
+          
+          return {
+            id: msg.id,
+            ts,
+            user: profilesObj?.node_name || "Node_??",
+            text: msg.content,
+            system: !!msg.is_system,
+            user_id: msg.user_id,
+            avatar_url: profilesObj?.avatar_url || null,
+          };
+        });
+        setMessages(mapped);
+      }
+    } catch (err) {
+      console.error("Failed to fetch messages:", err);
+    }
+  }, []);
+
+  // Subscribe to real-time events & fetch messages on channel change
+  useEffect(() => {
+    if (!activeChannel) return;
+    
+    fetchMessages(activeChannel);
+    
+    const channel = supabase
+      .channel(`nexus_messages_${activeChannel}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "nexus_messages",
+          filter: `channel_id=eq.${activeChannel}`,
+        },
+        async (payload) => {
+          const newMsg = payload.new;
+          
+          // Get sender's profile info
+          let senderProfile = null;
+          if (profile && newMsg.user_id === profile.id) {
+            senderProfile = {
+              node_name: profile.node_name,
+              avatar_url: profile.avatar_url,
+            };
+          } else {
+            const { data } = await supabase
+              .from("profiles")
+              .select("node_name, avatar_url")
+              .eq("id", newMsg.user_id)
+              .single();
+            senderProfile = data;
+          }
+          
+          const tsDate = new Date(newMsg.created_at);
+          const ts = isNaN(tsDate.getTime())
+            ? "00:00"
+            : `${String(tsDate.getHours()).padStart(2, "0")}:${String(tsDate.getMinutes()).padStart(2, "0")}`;
+            
+          const mappedMsg: Message = {
+            id: newMsg.id,
+            ts,
+            user: senderProfile?.node_name || "Node_??",
+            text: newMsg.content,
+            system: !!newMsg.is_system,
+            user_id: newMsg.user_id,
+            avatar_url: senderProfile?.avatar_url || null,
+          };
+          
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === mappedMsg.id)) return prev;
+            return [...prev, mappedMsg];
+          });
+          
+          setTimeout(scrollBottom, 100);
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [activeChannel, profile, fetchMessages, scrollBottom]);
+
+  // Insert message into database
+  const sendMessage = useCallback(async () => {
     const text = inputVal.trim();
-    if (!text) return;
-    const now = new Date();
-    const ts  = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-    setMessages((prev) => [...prev, { id: Date.now(), ts, user: nodeName, text, system: false }]);
+    if (!text || !profile) return;
+    
     setInputVal("");
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
-    setTimeout(scrollBottom, 50);
-  }, [inputVal, nodeName, scrollBottom]);
+    
+    try {
+      const { error } = await supabase
+        .from("nexus_messages")
+        .insert({
+          channel_id: activeChannel,
+          user_id: profile.id,
+          content: text
+        });
+        
+      if (error) {
+        console.error("Error inserting message:", error.message);
+      }
+    } catch (err) {
+      console.error("Failed to send message:", err);
+    }
+  }, [inputVal, profile, activeChannel]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -312,6 +499,21 @@ export default function NexusDashboard() {
       ? false
       : i === 0 || messages[i - 1].user !== msg.user || messages[i - 1].system,
   }));
+
+  const dynamicActiveNodes = ACTIVE_NODES.map((node) => {
+    if (node.id === "root") {
+      return {
+        ...node,
+        name: nodeName,
+        role: profile?.plan_level ? `${profile.plan_level} Node` : "Admin",
+        color: getUserColor(nodeName),
+      };
+    }
+    return {
+      ...node,
+      color: getUserColor(node.name),
+    };
+  });
 
   // ─── Render ─────────────────────────────────────────────
   return (
@@ -413,23 +615,32 @@ export default function NexusDashboard() {
               className="flex items-center gap-3 px-4 py-3.5 shrink-0"
               style={{ borderBottom: `1px solid ${C.borderSub}` }}
             >
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-                style={{
-                  background: `${C.accent}18`,
-                  border: `1.5px solid ${C.accent}40`,
-                  color: C.accent,
-                  fontFamily: "'Space Mono', monospace",
-                }}
-              >
-                {nodeName[0]}
-              </div>
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt={nodeName}
+                  className="w-8 h-8 rounded-full object-cover shrink-0"
+                  style={{ border: `1.5px solid ${getUserColor(nodeName)}40` }}
+                />
+              ) : (
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+                  style={{
+                    background: `${getUserColor(nodeName)}18`,
+                    border: `1.5px solid ${getUserColor(nodeName)}40`,
+                    color: getUserColor(nodeName),
+                    fontFamily: "'Space Mono', monospace",
+                  }}
+                >
+                  {nodeName[0]}
+                </div>
+              )}
               <div className="min-w-0">
                 <p className="text-sm font-semibold truncate" style={{ color: C.textPrimary }}>
                   {nodeName}
                 </p>
                 <p className="text-[10px] font-medium tracking-wide" style={{ color: C.textMuted }}>
-                  Admin Node
+                  {profile?.plan_level ? `${profile.plan_level} Node` : "Admin Node"}
                 </p>
               </div>
             </div>
@@ -652,7 +863,7 @@ export default function NexusDashboard() {
 
             {/* Node listesi */}
             <div className="flex-1 overflow-y-auto nx-scroll px-3 py-3 space-y-0.5">
-              {ACTIVE_NODES.map((node, idx) => (
+              {dynamicActiveNodes.map((node, idx) => (
                 <motion.div
                   key={node.id}
                   initial={{ opacity: 0, x: 6 }}
