@@ -21,6 +21,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Security from "./pages/Security";
 import Download from "./pages/Download";
 import NexusAuth from "./pages/NexusAuth";
+import NexusDashboard from "./pages/NexusDashboard";
 import { CodeApprovalPanel } from "@/components/CodeApprovalPanel";
 
 const queryClient = new QueryClient();
@@ -91,11 +92,19 @@ const App = () => {
             {/* /nexus ve /community — oturum yoksa /auth'a yönlendir */}
             <Route
               path="/nexus"
-              element={session ? <Navigate to="/" replace /> : <Navigate to="/auth" replace />}
+              element={
+                sessionLoading ? null : (
+                  session ? <NexusDashboard /> : <Navigate to="/auth" replace />
+                )
+              }
             />
             <Route
               path="/community"
-              element={session ? <Navigate to="/" replace /> : <Navigate to="/auth" replace />}
+              element={
+                sessionLoading ? null : (
+                  session ? <NexusDashboard /> : <Navigate to="/auth" replace />
+                )
+              }
             />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
