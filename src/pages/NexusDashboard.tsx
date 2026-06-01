@@ -17,6 +17,7 @@ import {
   Terminal, Radio, AlertTriangle,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { ProfileCard, type ProfileCardUser } from "@/components/ProfileCard";
 
 // ─────────────────────────────────────────────────────────
 // Design tokens
@@ -132,7 +133,17 @@ function E2EEBadge() {
 // Mesaj satırı
 // ─────────────────────────────────────────────────────────
 
-function MessageRow({ msg, isOwn, showAvatar }: { msg: Message; isOwn: boolean; showAvatar: boolean }) {
+function MessageRow({
+  msg,
+  isOwn,
+  showAvatar,
+  onAvatarClick,
+}: {
+  msg: Message;
+  isOwn: boolean;
+  showAvatar: boolean;
+  onAvatarClick?: (userId: string, username: string, avatarUrl: string | null | undefined, e: React.MouseEvent) => void;
+}) {
   if (msg.system) {
     return (
       <div className="flex items-center gap-3 my-2 select-none">
@@ -155,6 +166,11 @@ function MessageRow({ msg, isOwn, showAvatar }: { msg: Message; isOwn: boolean; 
   }
 
   const userColor = isOwn ? C.accent : getUserColor(msg.user);
+  const clickable = !!(onAvatarClick && msg.user_id);
+
+  const handleAvatarClick = (e: React.MouseEvent) => {
+    if (clickable) onAvatarClick!(msg.user_id!, msg.user, msg.avatar_url, e);
+  };
 
   return (
     <motion.div
@@ -170,18 +186,20 @@ function MessageRow({ msg, isOwn, showAvatar }: { msg: Message; isOwn: boolean; 
             <img
               src={msg.avatar_url}
               alt={msg.user}
-              className="w-8 h-8 rounded-full object-cover shrink-0"
+              className={`w-8 h-8 rounded-full object-cover shrink-0 ${clickable ? "cursor-pointer hover:ring-2 hover:ring-white/20 transition-all" : ""}`}
               style={{ border: `1px solid ${userColor}35` }}
+              onClick={handleAvatarClick}
             />
           ) : (
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${clickable ? "cursor-pointer hover:ring-2 hover:ring-white/20 transition-all" : ""}`}
               style={{
                 background: `${userColor}18`,
                 border: `1px solid ${userColor}35`,
                 color: userColor,
                 fontFamily: "'Space Mono', monospace",
               }}
+              onClick={handleAvatarClick}
             >
               {msg.user[0]}
             </div>
@@ -201,8 +219,9 @@ function MessageRow({ msg, isOwn, showAvatar }: { msg: Message; isOwn: boolean; 
         {showAvatar && (
           <div className="flex items-baseline gap-2 mb-0.5">
             <span
-              className="text-sm font-semibold leading-none"
+              className={`text-sm font-semibold leading-none ${clickable ? "cursor-pointer hover:underline hover:underline-offset-2" : ""}`}
               style={{ fontFamily: "'Space Mono', monospace", color: userColor }}
+              onClick={handleAvatarClick}
             >
               {msg.user}
               {isOwn && (
@@ -297,6 +316,27 @@ export default function NexusDashboard() {
   const [messages, setMessages]           = useState<Message[]>([]);
   const [inputVal, setInputVal]           = useState("");
   const [darkNodes, setDarkNodes]         = useState<string[]>([]);
+
+  // ── ProfileCard state ──────────────────────────────────
+  const [pcUser,   setPcUser]   = useState<ProfileCardUser | null>(null);
+  const [pcAnchor, setPcAnchor] = useState<DOMRect | null>(null);
+
+  const openProfileCard = useCallback((
+    userId: string,
+    username: string,
+    avatarUrl: string | null | undefined,
+    planLevel: string | null | undefined,
+    e: React.MouseEvent,
+  ) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setPcUser({ userId, username, avatarUrl, planLevel, cognitiveCredits: 0 });
+    setPcAnchor(rect);
+  }, []);
+
+  const closeProfileCard = useCallback(() => {
+    setPcUser(null);
+    setPcAnchor(null);
+  }, []);
   
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [profile, setProfile] = useState<{
@@ -911,6 +951,16 @@ export default function NexusDashboard() {
                     msg={msg}
                     isOwn={msg.user === nodeName}
                     showAvatar={msg.showAvatar}
+                    onAvatarClick={(userId, username, avatarUrl, e) => {
+                      // plan_level'i profileCache'den almaya çalış
+                      // (fetchMessages sırasında plan_level cache'e eklenmemiştir;
+                      //  basit yaklaşım: kendi profiliyse profile state'inden al)
+                      const planLevel =
+                        profile && userId === profile.id
+                          ? profile.plan_level
+                          : null; // diğerleri için şimdilik null (Free görünür)
+                      openProfileCard(userId, username, avatarUrl, planLevel, e);
+                    }}
                   />
                 ))}
               </AnimatePresence>
@@ -1015,10 +1065,18 @@ export default function NexusDashboard() {
                   initial={{ opacity: 0, x: 6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className="flex items-center gap-2.5 px-2 py-2 rounded-md transition-colors cursor-default"
+                  className={`flex items-center gap-2.5 px-2 py-2 rounded-md transition-colors ${node.ghost ? "cursor-default" : "cursor-pointer"}`}
                   style={{ opacity: node.ghost ? 0.35 : 1 }}
                   onMouseEnter={(e) => { if (!node.ghost) (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.03)"; }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
+                  onClick={(e) => {
+                    if (node.ghost) return;
+                    // Aktif kullanıcı (root) için profile state'inden plan al
+                    const isCurrentUser = node.id === "root";
+                    const planLevel = isCurrentUser ? profile?.plan_level : null;
+                    const userId    = isCurrentUser ? (profile?.id ?? node.id) : node.id;
+                    openProfileCard(userId, node.name, null, planLevel, e);
+                  }}
                 >
                   {/* Avatar */}
                   <div
@@ -1100,6 +1158,14 @@ export default function NexusDashboard() {
 
         </div>{/* /3 kolon */}
       </div>
+
+      {/* ── ProfileCard Overlay ── */}
+      <ProfileCard
+        targetUser={pcUser}
+        currentUserId={currentUser?.id ?? null}
+        anchorRect={pcAnchor}
+        onClose={closeProfileCard}
+      />
     </>
   );
 }
