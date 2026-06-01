@@ -1,43 +1,27 @@
 /**
  * NexusDashboard.tsx — Must-b Premium Community Platform
  *
- * Design System v2 — "Must-b Premium"
- * ─ Palette : bg #0E1116 | surface #161B22 | border #30363D
- * ─ Text    : primary #E6EDF3 | secondary #8B949E | muted #484F58
+ * Design System v3 — "Must-b Classy Chat (WhatsApp/Telegram Style)"
+ * ─ Layout  : 3-column elegant layout
+ * ─ Palette : bg #0A0A0A | surfaces #121212 / #1E1E1E | borders #27272A
  * ─ Accent  : Must-b Blue #3B82F6
- * ─ Font    : Inter / system-ui sans-serif everywhere
- * ─ Messages: Twitter/X + Linear hybrid — avatar left, name+time right
+ * ─ Messages: Chat Bubbles style (Own right/blue, others left/gray)
  */
 
 import { useState, useRef, useEffect, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
-  Hash, Lock, Plus, Send, Ghost,
+  Lock, Plus, Send, Ghost,
   Shield, Wifi, LogOut, ChevronRight,
-  MessageSquare, Radio, BadgeCheck,
+  MessageSquare, BadgeCheck, Compass,
+  Settings, Sparkles, Hash
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { ProfileCard, type ProfileCardUser } from "@/components/ProfileCard";
 import { ProfileSettingsModal } from "@/components/ProfileSettingsModal";
 import { PricingModal } from "@/components/PricingModal";
-
-// ─────────────────────────────────────────────────────────
-// Design tokens — Must-b Premium
-// ─────────────────────────────────────────────────────────
-const C = {
-  bg:          "#0E1116",
-  surface:     "#161B22",
-  surfaceHov:  "#1C2128",
-  border:      "#30363D",
-  borderSub:   "#21262D",
-  accent:      "#3B82F6",
-  accentDim:   "rgba(59,130,246,0.10)",
-  accentBorder:"rgba(59,130,246,0.25)",
-  textPrimary: "#E6EDF3",
-  textSecondary:"#8B949E",
-  textMuted:   "#484F58",
-} as const;
+import { toast } from "sonner";
 
 // ─────────────────────────────────────────────────────────
 // Sabit veri
@@ -59,19 +43,6 @@ interface Message {
   avatar_url?: string | null;
 }
 
-const DEMO_MESSAGES: Message[] = [
-  { id: 1,  ts: "21:37", user: "Root_Node",    text: "Nexus terminali online. Şifreli kanal kuruldu.",          system: false },
-  { id: 2,  ts: "21:38", user: "SYSTEM",        text: "E2EE handshake tamamlandı. Oturum anahtarı üretildi.",   system: true  },
-  { id: 3,  ts: "21:39", user: "Elite_0x9A",   text: "v3.1.4 güncellemesindeki swarm koordinasyonu mükemmel.",  system: false },
-  { id: 4,  ts: "21:40", user: "Anon_7f3c",    text: "Bug-bounty kanalında yeni bir keşif paylaştım.",          system: false },
-  { id: 5,  ts: "21:41", user: "Root_Node",    text: "Göreceğim. AI agent tetiklendi mi?",                     system: false },
-  { id: 6,  ts: "21:42", user: "Elite_0x9A",   text: "Evet, must-b proxy üzerinden otomatik yanıt döndü.",     system: false },
-  { id: 7,  ts: "21:43", user: "SYSTEM",        text: "Yeni node bağlandı: Shadow_Relay",                       system: true  },
-  { id: 8,  ts: "21:44", user: "Shadow_Relay",  text: "Selam Nexus. Local sovereign kurulum tamam.",            system: false },
-  { id: 9,  ts: "21:45", user: "Anon_7f3c",    text: "Hangi model? Ollama mı yoksa BYOK mi?",                   system: false },
-  { id: 10, ts: "21:46", user: "Shadow_Relay",  text: "BYOK + air-gapped. Sıfır telemetri. 🛡️",               system: false },
-];
-
 const ACTIVE_NODES = [
   { id: "root",   name: "Root_Node",    role: "Admin",  ghost: false },
   { id: "elite",  name: "Elite_0x9A",  role: "Elite",  ghost: false },
@@ -80,7 +51,7 @@ const ACTIVE_NODES = [
   { id: "ghost1", name: "Node_??",     role: "—",      ghost: true  },
 ];
 
-// Kullanıcıya sabit, muted avatar renk atama
+// Muted, premium avatar colors
 const AVATAR_COLORS = [
   "#3B82F6", "#6366F1", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981", "#06B6D4",
 ];
@@ -93,35 +64,35 @@ const getAvatarColor = (username: string) => {
 };
 
 // ─────────────────────────────────────────────────────────
-// E2EE Rozeti — zarif, minimal
+// E2EE Badge — elegant, minimal
 // ─────────────────────────────────────────────────────────
 
 const E2EEBadge = memo(function E2EEBadge() {
   return (
     <div
-      className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg select-none"
+      className="flex items-center gap-1.5 px-3 py-1 rounded-full select-none"
       style={{
-        background: C.accentDim,
-        border: `1px solid ${C.accentBorder}`,
-        color: C.accent,
+        background: "rgba(59,130,246,0.10)",
+        border: "1px solid rgba(59,130,246,0.20)",
+        color: "#3B82F6",
         fontSize: 11,
         fontWeight: 600,
       }}
     >
       <motion.span
         className="w-1.5 h-1.5 rounded-full"
-        style={{ background: C.accent }}
+        style={{ background: "#3B82F6" }}
         animate={{ opacity: [1, 0.3, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       />
-      <Shield className="w-3 h-3" />
-      E2EE
+      <Shield className="w-3.5 h-3.5" />
+      E2EE Güvenli
     </div>
   );
 });
 
 // ─────────────────────────────────────────────────────────
-// MessageRow — Twitter/Linear hybrid style
+// MessageRow — Chat Bubbles Style (WhatsApp/iMessage hybrid)
 // ─────────────────────────────────────────────────────────
 
 const MessageRow = memo(function MessageRow({
@@ -137,14 +108,12 @@ const MessageRow = memo(function MessageRow({
 }) {
   if (msg.system) {
     return (
-      <div className="flex items-center gap-3 mx-4 my-4 select-none">
-        <div className="flex-1 h-px bg-[#30363D]" />
+      <div className="flex items-center gap-3 mx-4 my-4 select-none justify-center">
         <span
-          className="text-xs px-3 py-1 rounded-full text-[#8B949E] bg-[#161B22] border border-[#30363D]"
+          className="text-xs px-3 py-1 rounded-full text-[#8B949E] bg-[#1E1E1E]/80 border border-[#27272A]"
         >
           {msg.text}
         </span>
-        <div className="flex-1 h-px bg-[#30363D]" />
       </div>
     );
   }
@@ -156,28 +125,50 @@ const MessageRow = memo(function MessageRow({
     if (clickable) onAvatarClick!(msg.user_id!, msg.user, msg.avatar_url, e);
   };
 
+  // Kendi mesajımız ise -> Sağa Yasla (Mavi Balon)
+  if (isOwn) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 4 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.15 }}
+        className="flex justify-end mb-4 px-6"
+      >
+        <div className="flex flex-col items-end max-w-[70%]">
+          <div className="bg-blue-600 text-white p-3 px-4 rounded-2xl rounded-br-none shadow-md">
+            <p className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">
+              {msg.text}
+            </p>
+          </div>
+          <span className="text-[10px] text-[#8B949E] mt-1 pr-1">{msg.ts}</span>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Başkasının mesajı ise -> Sola Yasla (Koyu Gri Balon) + Solunda Avatar ve İsim
   return (
     <motion.div
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15 }}
-      className="flex gap-4 mb-6 hover:bg-[#161B22]/50 p-2 rounded-xl transition-colors"
+      className="flex items-start gap-3 mb-4 px-6"
     >
-      {/* Sol taraf: Avatar */}
-      <div className="flex-shrink-0">
+      {/* Sol tarafta Avatar */}
+      <div className="flex-shrink-0 mt-6">
         {msg.avatar_url ? (
           <img
             src={msg.avatar_url}
             alt={msg.user}
-            className={`w-10 h-10 rounded-full object-cover flex-shrink-0 ${clickable ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
+            className={`w-9 h-9 rounded-full object-cover flex-shrink-0 ${clickable ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
             onClick={handleAvatarClick}
           />
         ) : (
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 ${clickable ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
+            className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 ${clickable ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
             style={{
               background: `${avatarColor}18`,
-              border: `2px solid #30363D`,
+              border: `1px solid #27272A`,
               color: avatarColor,
             }}
             onClick={handleAvatarClick}
@@ -187,30 +178,21 @@ const MessageRow = memo(function MessageRow({
         )}
       </div>
 
-      {/* Sağ taraf kapsayıcı */}
-      <div className="flex flex-col flex-1 min-w-0">
-        {/* Üst Satır (İsim + Saat) */}
-        <div className="flex items-center gap-2 mb-1">
-          <span
-            className={`font-semibold text-[#E6EDF3] text-[14px] ${clickable ? "cursor-pointer hover:underline hover:underline-offset-2" : ""}`}
-            onClick={handleAvatarClick}
-          >
-            {msg.user}
-          </span>
-          {isOwn && (
-            <span className="text-[11px] text-[#8B949E]">
-              (sen)
-            </span>
-          )}
-          <span className="text-xs text-[#8B949E]">
-            {msg.ts}
-          </span>
+      {/* Mesaj İçeriği ve Adı */}
+      <div className="flex flex-col items-start max-w-[70%]">
+        {/* Üstte Gönderen Adı */}
+        <span
+          className={`text-[12px] font-semibold text-[#8B949E] mb-1 pl-1 ${clickable ? "cursor-pointer hover:underline hover:underline-offset-2" : ""}`}
+          onClick={handleAvatarClick}
+        >
+          {msg.user}
+        </span>
+        <div className="bg-[#1E1E1E] text-white p-3 px-4 rounded-2xl rounded-bl-none shadow-md">
+          <p className="text-[15px] leading-relaxed break-words whitespace-pre-wrap text-[#E6EDF3]">
+            {msg.text}
+          </p>
         </div>
-
-        {/* Alt Satır (Mesaj Metni) */}
-        <p className="text-[15px] leading-relaxed text-[#E6EDF3] whitespace-pre-wrap break-words">
-          {msg.text}
-        </p>
+        <span className="text-[10px] text-[#8B949E] mt-1 pl-1">{msg.ts}</span>
       </div>
     </motion.div>
   );
@@ -237,15 +219,15 @@ function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
 
   return (
     <div
-      className="rounded-xl px-3 py-2 transition-all duration-200"
+      className="rounded-xl px-3 py-2.5 transition-all duration-200"
       style={{
-        opacity: visible ? 1 : 0.4,
-        background: focused ? C.surfaceHov : "transparent",
-        border: `1px solid ${focused ? C.border : C.borderSub}`,
+        opacity: visible ? 1 : 0.6,
+        background: focused ? "#1E1E1E" : "#1A1A1A",
+        border: `1px solid ${focused ? "#3B82F6" : "#27272A"}`,
       }}
     >
       <div className="flex items-center gap-2">
-        <Ghost className="w-3.5 h-3.5 shrink-0" style={{ color: C.textMuted }} />
+        <Lock className="w-4 h-4 shrink-0 text-[#8B949E]" />
         <input
           type="text"
           value={val}
@@ -253,16 +235,15 @@ function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           onKeyDown={handleKeyDown}
-          placeholder="Enter room code..."
-          className="flex-1 bg-transparent text-xs outline-none w-full font-mono"
+          placeholder="Oda kodu girin..."
+          className="flex-1 bg-transparent text-xs text-white outline-none w-full font-medium placeholder:text-[#8B949E]/50"
           style={{
-            color: C.textSecondary,
-            caretColor: C.accent,
+            caretColor: "#3B82F6",
           }}
         />
         {val && (
-          <button onClick={() => { onEnter(val.trim()); setVal(""); }} style={{ color: C.textMuted }}>
-            <ChevronRight className="w-3 h-3" />
+          <button onClick={() => { onEnter(val.trim()); setVal(""); }} className="text-blue-500">
+            <ChevronRight className="w-4 h-4" />
           </button>
         )}
       </div>
@@ -271,8 +252,13 @@ function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
 }
 
 // ─────────────────────────────────────────────────────────
-// MessageInput — iMessage/Telegram style, isolated state
+// MessageInput — Telegram Style Rounded Input Area
 // ─────────────────────────────────────────────────────────
+
+interface MessageInputProps {
+  placeholder: string;
+  onSend: (text: string) => void;
+}
 
 const MessageInput = memo(function MessageInput({ placeholder, onSend }: MessageInputProps) {
   const [val, setVal]   = useState("");
@@ -301,42 +287,43 @@ const MessageInput = memo(function MessageInput({ placeholder, onSend }: Message
   const hasText = val.trim().length > 0;
 
   return (
-    <div className="bg-[#0E1116] p-4 border-t border-[#30363D] shrink-0">
-      <div className="bg-[#161B22] border border-[#30363D] rounded-2xl flex items-end gap-2 p-2 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all">
-        {/* Dosya ekle */}
+    <div className="bg-[#121212] border-t border-[#27272A] p-4 shrink-0">
+      <div className="flex items-center gap-3">
+        {/* Dosya ekle butonu */}
         <button
-          className="p-2 shrink-0 self-end rounded-xl transition-colors text-[#8B949E] hover:bg-[#30363D]/20 hover:text-[#E6EDF3]"
+          className="p-2 shrink-0 rounded-full transition-colors text-[#8B949E] hover:bg-[#27272A] hover:text-white"
           title="Dosya / Kod ekle"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-5 h-5" />
         </button>
 
-        <textarea
-          ref={taRef}
-          rows={1}
-          value={val}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className="flex-1 bg-transparent text-[15px] text-[#E6EDF3] caret-blue-500 placeholder:text-[#8B949E] outline-none focus:outline-none resize-none min-h-[24px] max-h-[120px] leading-relaxed py-1"
-        />
+        {/* Telegram tarzı yuvarlak input */}
+        <div className="flex-1 bg-[#1E1E1E] rounded-full px-5 py-2.5 flex items-center">
+          <textarea
+            ref={taRef}
+            rows={1}
+            value={val}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className="flex-1 bg-transparent text-[15px] text-white caret-blue-500 placeholder:text-[#8B949E] outline-none focus:outline-none resize-none max-h-[100px] leading-relaxed py-0.5"
+            style={{ minHeight: "22px" }}
+          />
+        </div>
 
+        {/* Gönder butonu (Mavi daire) */}
         <button
           onClick={handleSend}
           disabled={!hasText}
-          className={`p-2 rounded-xl shrink-0 self-end transition-all duration-150 ${
+          className={`p-3 rounded-full shrink-0 transition-all duration-150 flex items-center justify-center ${
             hasText
-              ? "text-blue-500 hover:bg-blue-500/10 cursor-pointer"
-              : "text-[#8B949E] cursor-not-allowed opacity-50"
+              ? "bg-blue-600 text-white hover:bg-blue-700 active:scale-95 cursor-pointer shadow-md shadow-blue-600/10"
+              : "bg-[#1E1E1E] text-[#8B949E] cursor-not-allowed opacity-50"
           }`}
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-4.5 h-4.5" />
         </button>
       </div>
-
-      <p className="text-[11px] mt-1.5 px-2 text-[#8B949E]">
-        Enter → gönder · Shift+Enter → satır
-      </p>
     </div>
   );
 });
@@ -350,8 +337,6 @@ export default function NexusDashboard() {
 
   const [activeChannel, setActiveChannel] = useState(CHANNELS[0].id);
   const [messages, setMessages]           = useState<Message[]>([]);
-  // inputVal ARTIK BURAYA TAŞINDI → MessageInput kendi state'ini tutar
-  // NexusDashboard sadece "gönder" sinyalini ref aracılığıyla alır
   const [darkNodes, setDarkNodes]         = useState<string[]>([]);
 
   // sendMessage'e dışarıdan erişim için ref köprüsü
@@ -388,7 +373,6 @@ export default function NexusDashboard() {
       if (!prev) return prev;
       return { ...prev, node_name: newNodeName, avatar_url: newAvatarUrl };
     });
-    // profileCache'i de anlık güncelle (mevcut kullanıcının ID'si üzerinden)
     setCurrentUser((prev: any) => {
       if (prev?.id) {
         profileCache.current[prev.id] = {
@@ -397,13 +381,11 @@ export default function NexusDashboard() {
           avatar_url: newAvatarUrl,
         };
       }
-      return prev; // currentUser kendisi değişmez
+      return prev;
     });
-    // Mesaj listesini de yenile ki yeni isim/avatar mesajlarda görünsün
     setMessages((prev) =>
       prev.map((msg) => {
         if (!msg.user_id) return msg;
-        // Sadece güncellenen kullanıcının mesajlarını değiştir
         const cached = profileCache.current[msg.user_id];
         if (!cached) return msg;
         return {
@@ -435,7 +417,6 @@ export default function NexusDashboard() {
   const nodeName = profile?.node_name || "Root_Node";
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  // inputRef ve textareaRef artık MessageInput bileşeni içinde yönetiliyor
 
   const scrollBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -455,7 +436,6 @@ export default function NexusDashboard() {
       const user = session.user;
       setCurrentUser(user);
       
-      // Fetch user's profile
       const { data: profileData, error } = await supabase
         .from("profiles")
         .select("id, email, node_name, avatar_url, plan_level, full_name, active_plan")
@@ -472,7 +452,6 @@ export default function NexusDashboard() {
           plan_level: profileData.plan_level || profileData.active_plan || "Free",
         });
 
-        // Cache the current user's profile immediately
         profileCache.current[user.id] = {
           node_name: mappedName,
           avatar_url: profileData.avatar_url,
@@ -480,7 +459,6 @@ export default function NexusDashboard() {
           email: profileData.email,
         };
       } else {
-        // Fallback profile if profile row is missing or error
         const mappedName = user.email?.split("@")[0] || "Anon_Node";
         setProfile({
           id: user.id,
@@ -505,7 +483,6 @@ export default function NexusDashboard() {
   // Fetch messages using Frontend Composition (Manual mapping)
   const fetchMessages = useCallback(async (channelId: string) => {
     try {
-      // 1. Fetch raw messages without relational join
       const { data: rawMessages, error: msgError } = await supabase
         .from("nexus_messages")
         .select("*")
@@ -519,15 +496,12 @@ export default function NexusDashboard() {
 
       if (!rawMessages) return;
 
-      // 2. Collect unique user_ids of senders
       const userIds = Array.from(
         new Set(rawMessages.map((m: any) => m.user_id).filter(Boolean))
       ) as string[];
 
-      // 3. Find user_ids that are not yet in the profile cache
       const missingUserIds = userIds.filter((id) => !profileCache.current[id]);
 
-      // 4. Fetch missing profiles in bulk
       if (missingUserIds.length > 0) {
         const { data: fetchedProfiles, error: profError } = await supabase
           .from("profiles")
@@ -546,7 +520,6 @@ export default function NexusDashboard() {
         }
       }
 
-      // 5. Compose / Map raw messages with the profiles stored in cache
       const mapped = rawMessages.map((msg: any) => {
         const tsDate = new Date(msg.created_at);
         const ts = isNaN(tsDate.getTime())
@@ -594,7 +567,6 @@ export default function NexusDashboard() {
           const senderId = newMsg.user_id;
 
           if (senderId && !profileCache.current[senderId]) {
-            // Check if sender is the current user first to reuse
             if (profile && senderId === profile.id) {
               profileCache.current[senderId] = {
                 node_name: profile.node_name,
@@ -603,7 +575,6 @@ export default function NexusDashboard() {
                 email: profile.email,
               };
             } else {
-              // Fetch missing sender profile from database
               const { data } = await supabase
                 .from("profiles")
                 .select("id, node_name, avatar_url, full_name, email")
@@ -655,7 +626,6 @@ export default function NexusDashboard() {
   }, [activeChannel, profile, fetchMessages, scrollBottom]);
 
   // Insert message into database
-  // Profile ve activeChannel ref'leri — closure stale olmadan erişim
   const profileRef       = useRef(profile);
   const activeChannelRef = useRef(activeChannel);
   useEffect(() => { profileRef.current = profile; }, [profile]);
@@ -679,9 +649,8 @@ export default function NexusDashboard() {
     } catch (err) {
       console.error("Failed to send message:", err);
     }
-  }, []); // bağımlılık yok → ref'lerden okur, hiç yeniden oluşmaz
+  }, []);
 
-  // Ref köprüsünü güncelle — MessageInput buna erişecek
   useEffect(() => { sendMessageRef.current = sendMessage; }, [sendMessage]);
 
   const handleSignOut = async () => {
@@ -699,7 +668,6 @@ export default function NexusDashboard() {
 
   const activeLabel = CHANNELS.find((c) => c.id === activeChannel)?.label ?? activeChannel;
 
-  // Aynı kullanıcının art arda mesajlarını grupla — sadece ilk satırda avatar/isim göster
   const messagesWithGroup = messages.map((msg, i) => ({
     ...msg,
     showAvatar: msg.system
@@ -718,7 +686,6 @@ export default function NexusDashboard() {
     return node;
   });
 
-  // ─── Render ─────────────────────────────────────────────
   return (
     <>
       <style>{`
@@ -727,76 +694,196 @@ export default function NexusDashboard() {
         /* Subtle scrollbar */
         .nx-scroll::-webkit-scrollbar       { width: 4px; }
         .nx-scroll::-webkit-scrollbar-track { background: transparent; }
-        .nx-scroll::-webkit-scrollbar-thumb { background: ${C.borderSub}; border-radius: 4px; }
-        .nx-scroll::-webkit-scrollbar-thumb:hover { background: ${C.border}; }
+        .nx-scroll::-webkit-scrollbar-thumb { background: #27272A; border-radius: 4px; }
+        .nx-scroll::-webkit-scrollbar-thumb:hover { background: #3F3F46; }
       `}</style>
 
       <div
-        className="h-screen w-screen overflow-hidden flex flex-col"
-        style={{ background: C.bg, fontFamily: "Inter, -apple-system, system-ui, sans-serif", color: C.textPrimary }}
+        className="h-screen w-screen overflow-hidden flex bg-[#0A0A0A] text-white font-sans"
+        style={{ fontFamily: "Inter, -apple-system, system-ui, sans-serif" }}
       >
 
-        {/* ═══════════════ TOP BAR ═══════════════ */}
+        {/* ═══════════════ SOL PANEL (Sidebar - WhatsApp/Telegram Style) ═══════════════ */}
         <div
-          className="flex items-center justify-between px-5 py-3 shrink-0 z-30"
-          style={{ background: C.surface, borderBottom: `1px solid ${C.border}` }}
+          className="w-72 shrink-0 flex flex-col bg-[#121212] border-r border-[#27272A]"
         >
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center"
-              style={{ background: C.accentDim, border: `1px solid ${C.accentBorder}` }}
-            >
-              <MessageSquare className="w-4 h-4" style={{ color: C.accent }} />
+          {/* Logo & Sürüm */}
+          <div className="p-4 border-b border-[#27272A] flex items-center justify-between bg-[#161616]">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shadow-blue-600/20">
+                <MessageSquare className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-base font-bold tracking-tight text-white">Must-b Hub</span>
             </div>
-            <span className="text-[15px] font-semibold" style={{ color: C.textPrimary }}>
-              Must-b
-            </span>
-            <span
-              className="text-[11px] px-2 py-0.5 rounded-md font-medium"
-              style={{
-                background: C.accentDim,
-                color: C.accent,
-                border: `1px solid ${C.accentBorder}`,
-              }}
-            >
-              v3.1.4
+            <span className="text-[10px] font-bold text-blue-500 bg-blue-600/10 px-2 py-0.5 rounded-full border border-blue-500/20">
+              v3.1
             </span>
           </div>
 
-          {/* Orta — kanal */}
-          <div className="flex items-center gap-1.5" style={{ color: C.textSecondary }}>
-            {darkNodes.includes(activeChannel) ? (
-              <Lock className="w-3.5 h-3.5" style={{ color: C.accent }} />
+          {/* Kendi Profilimiz */}
+          <div className="p-4 flex items-center gap-3 border-b border-[#27272A] bg-[#121212]">
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={nodeName}
+                className="w-10 h-10 rounded-full object-cover border border-[#27272A]"
+              />
             ) : (
-              <Hash className="w-3.5 h-3.5" />
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
+                style={{
+                  background: `${getAvatarColor(nodeName)}18`,
+                  border: `1px solid #27272A`,
+                  color: getAvatarColor(nodeName),
+                }}
+              >
+                {nodeName[0]?.toUpperCase()}
+              </div>
             )}
-            <span className="text-sm font-medium">{activeLabel}</span>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1">
+                <p className="text-sm font-semibold truncate text-white">{nodeName}</p>
+                {profile?.plan_level && profile.plan_level !== "Free" && (
+                  <BadgeCheck className="w-4 h-4 text-blue-500 shrink-0" />
+                )}
+              </div>
+              <p className="text-xs text-[#8B949E]">{profile?.plan_level || "Free"} Plan</p>
+            </div>
           </div>
 
-          {/* Sağ */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: "#22C55E" }} />
-              <span className="text-sm font-medium" style={{ color: C.textPrimary }}>
-                {nodeName}
-              </span>
-              {profile?.plan_level && profile.plan_level !== "Free" && (
-                <BadgeCheck className="w-4 h-4" style={{ color: C.accent }} />
-              )}
+          {/* WhatsApp Tarzı Navigasyon Menüleri */}
+          <div className="p-3 space-y-0.5 border-b border-[#27272A] bg-[#121212]">
+            <button
+              onClick={() => {
+                toast.info("Keşfet Aktif", { description: "Yakında Must-b topluluk keşif motoru yayında!" });
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm text-[#8B949E] hover:bg-[#27272A] hover:text-white transition-all"
+            >
+              <Compass className="w-4 h-4" />
+              <span className="font-medium">Keşfet</span>
+            </button>
+            
+            <button
+              onClick={() => setActiveChannel("nexus-terminal")}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm text-[#8B949E] hover:bg-[#27272A] hover:text-white transition-all"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span className="font-medium">Odalarım</span>
+            </button>
+
+            <button
+              onClick={() => setIsPricingOpen(true)}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm text-[#8B949E] hover:bg-[#27272A] hover:text-white transition-all"
+            >
+              <Sparkles className="w-4 h-4 text-blue-500" />
+              <span className="font-medium">Premium Planlar</span>
+            </button>
+
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm text-[#8B949E] hover:bg-[#27272A] hover:text-white transition-all"
+            >
+              <Settings className="w-4 h-4" />
+              <span className="font-medium">Ayarlar</span>
+            </button>
+          </div>
+
+          {/* Sohbet Listesi (WhatsApp Chat List Style) */}
+          <div className="flex-1 overflow-y-auto px-2 py-4 space-y-1 bg-[#121212] nx-scroll">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-[#8B949E]/50 mb-2 px-3">
+              Sohbet Odaları
+            </p>
+            
+            {CHANNELS.map((ch) => {
+              const isActive = ch.id === activeChannel;
+              return (
+                <button
+                  key={ch.id}
+                  onClick={() => setActiveChannel(ch.id)}
+                  className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all ${
+                    isActive ? "bg-blue-600 text-white" : "hover:bg-[#1E1E1E] text-[#8B949E] hover:text-white"
+                  }`}
+                >
+                  {/* Daire Kanal İkonu */}
+                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 ${
+                    isActive ? "bg-white/20 text-white" : "bg-[#27272A] text-white"
+                  }`}>
+                    {ch.label[0]?.toUpperCase()}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className={`text-sm truncate font-semibold ${isActive ? "text-white" : "text-[#E6EDF3]"}`}>
+                        {ch.label}
+                      </span>
+                      {ch.unread > 0 && !isActive && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-600 text-white">
+                          {ch.unread}
+                        </span>
+                      )}
+                    </div>
+                    <p className={`text-[11px] truncate ${isActive ? "text-white/70" : "text-[#8B949E]"}`}>
+                      Sohbete girmek için tıklayın...
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+
+            {/* Özel Karanlık Odalar (Ghost) */}
+            {darkNodes.length > 0 && (
+              <>
+                <div className="my-4 h-px bg-[#27272A]" />
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#8B949E]/50 mb-2 px-3">
+                  Karanlık Odalar
+                </p>
+                {darkNodes.map((code) => {
+                  const isActive = code === activeChannel;
+                  return (
+                    <button
+                      key={code}
+                      onClick={() => setActiveChannel(code)}
+                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all ${
+                        isActive ? "bg-blue-600 text-white" : "hover:bg-[#1E1E1E] text-[#8B949E] hover:text-white"
+                      }`}
+                    >
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 ${
+                        isActive ? "bg-white/20 text-white" : "bg-[#27272A] text-white"
+                      }`}>
+                        <Lock className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm truncate font-semibold block text-[#E6EDF3]">
+                          {code}
+                        </span>
+                        <p className="text-[11px] truncate text-[#8B949E]">
+                          Şifreli özel kanal
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </>
+            )}
+
+            {/* Ghost Protocol Giriş Alant */}
+            <div className="my-4 h-px bg-[#27272A]" />
+            <div className="px-2">
+              <GhostInput onEnter={handleEnterDarkNode} />
             </div>
+          </div>
+
+          {/* En Alt Güvenli Notu */}
+          <div
+            className="p-4 shrink-0 flex items-center gap-1.5 border-t border-[#27272A] bg-[#161616]"
+          >
+            <Shield className="w-3.5 h-3.5 text-[#8B949E]" />
+            <span className="text-xs text-[#8B949E]">
+              E2EE Şifreli Bağlantı
+            </span>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-1.5 text-xs transition-colors rounded-lg px-2 py-1"
-              style={{ color: C.textMuted }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#F87171";
-                e.currentTarget.style.background = "rgba(248,113,113,0.08)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = C.textMuted;
-                e.currentTarget.style.background = "transparent";
-              }}
+              className="ml-auto flex items-center gap-1 text-xs text-red-400 hover:text-red-500 transition-colors"
             >
               <LogOut className="w-3.5 h-3.5" />
               Çıkış
@@ -804,354 +891,162 @@ export default function NexusDashboard() {
           </div>
         </div>
 
-        {/* ═══════════════ 3 KOLON ═══════════════ */}
-        <div className="flex flex-1 min-h-0">
+        {/* ═══════════════ ORTA SOHBET ALANI (WhatsApp/Telegram Web Bubble Style) ═══════════════ */}
+        <div className="flex-1 flex flex-col min-w-0 bg-[#0A0A0A]">
+          {/* Sohbet Üst Barı */}
+          <div className="h-16 px-6 border-b border-[#27272A] flex items-center justify-between bg-[#121212] shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-500 font-semibold text-sm">
+                {activeLabel[0]?.toUpperCase()}
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-white">{activeLabel}</h2>
+                <p className="text-[11px] text-[#8B949E]">şifreli bağlantı aktif</p>
+              </div>
+            </div>
+            <E2EEBadge />
+          </div>
 
-          {/* ── SOL SİDEBAR ── */}
-          <div
-            className="w-60 shrink-0 flex flex-col"
-            style={{ background: C.surface, borderRight: `1px solid ${C.border}` }}
-          >
-            {/* Kullanıcı profil */}
-            <div
-              className="flex items-center gap-3 px-4 py-3.5 shrink-0"
-              style={{ borderBottom: `1px solid ${C.borderSub}` }}
-            >
-              {profile?.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt={nodeName}
-                  className="w-9 h-9 rounded-full object-cover shrink-0"
-                  style={{ border: `2px solid ${C.border}` }}
+          {/* Sohbet Balonları (Chat Bubbles) Akışı */}
+          <div className="flex-1 overflow-y-auto py-6 nx-scroll bg-[#0A0A0A]">
+            <div className="flex items-center gap-3 mx-6 mb-6 justify-center">
+              <span className="text-[11px] px-3 py-1 rounded-full bg-[#1E1E1E] text-[#8B949E]/70 border border-[#27272A]">
+                #{activeLabel} — güvenli oturum başlangıcı
+              </span>
+            </div>
+
+            <AnimatePresence initial={false}>
+              {messagesWithGroup.map((msg) => (
+                <MessageRow
+                  key={msg.id}
+                  msg={msg}
+                  isOwn={msg.user === nodeName}
+                  showAvatar={msg.showAvatar}
+                  onAvatarClick={(userId, username, avatarUrl, e) => {
+                    const planLevel =
+                      profile && userId === profile.id
+                        ? profile.plan_level
+                        : null;
+                    openProfileCard(userId, username, avatarUrl, planLevel, e);
+                  }}
                 />
-              ) : (
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
-                  style={{
-                    background: `${getAvatarColor(nodeName)}18`,
-                    border: `2px solid ${C.border}`,
-                    color: getAvatarColor(nodeName),
+              ))}
+            </AnimatePresence>
+
+            <div ref={messagesEndRef} className="h-2" />
+          </div>
+
+          {/* Telegram Tarzı Yuvarlak Yazma Alanı */}
+          <MessageInput
+            placeholder={`Mesaj yaz #${activeLabel}…`}
+            onSend={(text) => sendMessageRef.current?.(text)}
+          />
+        </div>
+
+        {/* ═══════════════ SAĞ PANEL (WhatsApp Grup Bilgisi Tarzı) ═══════════════ */}
+        <div
+          className="w-80 shrink-0 flex flex-col bg-[#121212] border-l border-[#27272A]"
+        >
+          {/* Üst Kısım: Grup Resmi & Detaylar */}
+          <div className="p-6 flex flex-col items-center text-center border-b border-[#27272A] bg-[#161616]">
+            <div className="w-20 h-20 rounded-full bg-blue-600/10 border-2 border-blue-500/20 flex items-center justify-center text-blue-500 mb-3 shadow-inner shadow-blue-500/10">
+              <MessageSquare className="w-10 h-10" />
+            </div>
+            <h3 className="text-base font-bold text-white mb-1">Must-b Topluluğu</h3>
+            <p className="text-xs text-[#8B949E]">
+              {activeLabel === "nexus-terminal"
+                ? "Ana Hub & İletişim Kanalı"
+                : `${activeLabel} Odası`}
+            </p>
+          </div>
+
+          {/* Üye Sayısı & Liste Başlığı */}
+          <div className="px-4 py-3 shrink-0 flex items-center gap-2 border-b border-[#27272A] bg-[#121212]">
+            <Wifi className="w-3.5 h-3.5 text-[#8B949E]" />
+            <span className="text-xs font-semibold flex-1 text-[#8B949E] uppercase tracking-wider">
+              Topluluk Üyeleri
+            </span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-600/10 text-blue-500 border border-blue-500/20">
+              {ACTIVE_NODES.length}
+            </span>
+          </div>
+
+          {/* Üye Listesi */}
+          <div className="flex-1 overflow-y-auto px-3 py-3 space-y-1.5 nx-scroll">
+            {dynamicActiveNodes.map((node, idx) => {
+              const nodeColor = getAvatarColor(node.name);
+              const isPremium = node.role === "Elite" || node.role === "Core" || node.role === "Admin" || node.role === "Root" || node.role === "Pro";
+              return (
+                <motion.div
+                  key={node.id}
+                  initial={{ opacity: 0, x: 6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className={`flex items-center gap-3 px-2.5 py-2 rounded-xl transition-all ${
+                    node.ghost ? "opacity-35 cursor-default" : "cursor-pointer hover:bg-[#27272A]"
+                  }`}
+                  onClick={(e) => {
+                    if (node.ghost) return;
+                    const isCurrentUser = node.id === "root";
+                    const planLevel = isCurrentUser ? profile?.plan_level : null;
+                    const userId    = isCurrentUser ? (profile?.id ?? node.id) : node.id;
+                    openProfileCard(userId, node.name, null, planLevel, e);
                   }}
                 >
-                  {nodeName[0]}
-                </div>
-              )}
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-sm font-semibold truncate" style={{ color: C.textPrimary }}>
-                    {nodeName}
-                  </p>
-                  {profile?.plan_level && profile.plan_level !== "Free" && (
-                    <BadgeCheck className="w-3.5 h-3.5 shrink-0" style={{ color: C.accent }} />
-                  )}
-                </div>
-                <p className="text-[11px] font-medium" style={{ color: C.textSecondary }}>
-                  {profile?.plan_level || "Free"} Plan
-                </p>
-              </div>
-            </div>
-
-            {/* Kanallar */}
-            <div className="flex-1 overflow-y-auto nx-scroll px-3 py-4">
-              <p
-                className="text-[11px] font-semibold uppercase tracking-wider mb-2 px-2"
-                style={{ color: C.textMuted }}
-              >
-                Channels
-              </p>
-
-              <div className="space-y-0.5">
-                {CHANNELS.map((ch) => {
-                  const isActive = ch.id === activeChannel;
-                  return (
-                    <button
-                      key={ch.id}
-                      onClick={() => setActiveChannel(ch.id)}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all duration-150"
-                      style={{
-                        background: isActive ? C.accentDim : "transparent",
-                        border: isActive ? `1px solid ${C.accentBorder}` : "1px solid transparent",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) e.currentTarget.style.background = C.surfaceHov;
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) e.currentTarget.style.background = "transparent";
-                      }}
-                    >
-                      <Hash
-                        className="w-4 h-4 shrink-0"
-                        style={{ color: isActive ? C.accent : C.textMuted }}
-                      />
-                      <span
-                        className="text-sm flex-1 truncate"
-                        style={{
-                          color: isActive ? C.accent : C.textSecondary,
-                          fontWeight: isActive ? 600 : 400,
-                        }}
-                      >
-                        {ch.label}
-                      </span>
-                      {ch.unread > 0 && !isActive && (
-                        <span
-                          className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0"
-                          style={{ background: C.accent, color: "#ffffff" }}
-                        >
-                          {ch.unread}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Karanlık Odalar */}
-              {darkNodes.length > 0 && (
-                <>
-                  <div className="my-4 h-px mx-2" style={{ background: C.borderSub }} />
-                  <p
-                    className="text-[11px] font-semibold uppercase tracking-wider mb-2 px-2"
-                    style={{ color: C.textMuted }}
+                  {/* Avatar */}
+                  <div
+                    className="w-8.5 h-8.5 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
+                    style={{
+                      background: `${nodeColor}15`,
+                      border: `1px solid #27272A`,
+                      color: nodeColor,
+                    }}
                   >
-                    Private Rooms
-                  </p>
-                  <div className="space-y-0.5">
-                    {darkNodes.map((code) => {
-                      const isActive = code === activeChannel;
-                      return (
-                        <button
-                          key={code}
-                          onClick={() => setActiveChannel(code)}
-                          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all duration-150"
-                          style={{
-                            background: isActive ? C.accentDim : "transparent",
-                            border: isActive ? `1px solid ${C.accentBorder}` : "1px solid transparent",
-                          }}
-                        >
-                          <Lock
-                            className="w-3.5 h-3.5 shrink-0"
-                            style={{ color: isActive ? C.accent : C.textMuted }}
-                          />
-                          <span
-                            className="text-sm flex-1 truncate font-mono"
-                            style={{
-                              color: isActive ? C.accent : C.textSecondary,
-                              fontWeight: isActive ? 600 : 400,
-                            }}
-                          >
-                            {code}
-                          </span>
-                        </button>
-                      );
-                    })}
+                    {node.name[0]?.toUpperCase()}
                   </div>
-                </>
-              )}
 
-              {/* Divider */}
-              <div className="my-4 h-px mx-2" style={{ background: C.borderSub }} />
-
-              {/* Ghost Protocol */}
-              <div className="flex items-center gap-1.5 px-2 mb-2.5">
-                <Radio className="w-3 h-3" style={{ color: C.textMuted }} />
-                <p className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: C.textMuted }}>
-                  Ghost Protocol
-                </p>
-              </div>
-              <GhostInput onEnter={handleEnterDarkNode} />
-            </div>
-
-            {/* Alt kilit */}
-            <div
-              className="px-4 py-3 shrink-0 flex items-center gap-1.5"
-              style={{ borderTop: `1px solid ${C.borderSub}` }}
-            >
-              <Shield className="w-3 h-3" style={{ color: C.textMuted }} />
-              <span className="text-[11px]" style={{ color: C.textMuted }}>
-                End-to-end encrypted
-              </span>
-            </div>
-          </div>
-
-          {/* ── ORTA ANA ALAN ── */}
-          <div className="flex-1 flex flex-col min-w-0 min-h-0" style={{ background: C.bg }}>
-
-            {/* Kanal header */}
-            <div
-              className="flex items-center justify-between px-5 py-3 shrink-0"
-              style={{ borderBottom: `1px solid ${C.border}` }}
-            >
-              <div className="flex items-center gap-2.5">
-                {darkNodes.includes(activeChannel) ? (
-                  <Lock className="w-4 h-4" style={{ color: C.accent }} />
-                ) : (
-                  <Hash className="w-4 h-4" style={{ color: C.accent }} />
-                )}
-                <span className="text-[15px] font-semibold" style={{ color: C.textPrimary }}>
-                  {activeLabel}
-                </span>
-                <span className="text-xs" style={{ color: C.textMuted }}>
-                  — encrypted channel
-                </span>
-              </div>
-              <E2EEBadge />
-            </div>
-
-            {/* Mesajlar */}
-            <div className="flex-1 overflow-y-auto nx-scroll py-4">
-              {/* Kanal başlangıç notu */}
-              <div className="flex items-center gap-3 mx-5 mb-6">
-                <div className="flex-1 h-px" style={{ background: C.borderSub }} />
-                <span className="text-[11px] px-3" style={{ color: C.textMuted }}>
-                  #{activeLabel} — beginning of conversation
-                </span>
-                <div className="flex-1 h-px" style={{ background: C.borderSub }} />
-              </div>
-
-              <AnimatePresence initial={false}>
-                {messagesWithGroup.map((msg) => (
-                  <MessageRow
-                    key={msg.id}
-                    msg={msg}
-                    isOwn={msg.user === nodeName}
-                    showAvatar={msg.showAvatar}
-                    onAvatarClick={(userId, username, avatarUrl, e) => {
-                      // plan_level'i profileCache'den almaya çalış
-                      // (fetchMessages sırasında plan_level cache'e eklenmemiştir;
-                      //  basit yaklaşım: kendi profiliyse profile state'inden al)
-                      const planLevel =
-                        profile && userId === profile.id
-                          ? profile.plan_level
-                          : null; // diğerleri için şimdilik null (Free görünür)
-                      openProfileCard(userId, username, avatarUrl, planLevel, e);
-                    }}
-                  />
-                ))}
-              </AnimatePresence>
-
-              <div ref={messagesEndRef} className="h-2" />
-            </div>
-
-            {/* Mesaj yazma kutusu — izole bileşen */}
-            <MessageInput
-              placeholder={`Message #${activeLabel}…`}
-              onSend={(text) => sendMessageRef.current?.(text)}
-            />
-          </div>
-
-          {/* ── SAĞ NODE PANELİ ── */}
-          <div
-            className="w-56 shrink-0 flex flex-col"
-            style={{ background: C.surface, borderLeft: `1px solid ${C.border}` }}
-          >
-            {/* Başlık */}
-            <div
-              className="px-4 py-3.5 shrink-0 flex items-center gap-2"
-              style={{ borderBottom: `1px solid ${C.borderSub}` }}
-            >
-              <Wifi className="w-3.5 h-3.5" style={{ color: C.textMuted }} />
-              <span className="text-xs font-semibold flex-1" style={{ color: C.textSecondary }}>
-                Online Members
-              </span>
-              <span
-                className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                style={{ background: C.accentDim, color: C.accent }}
-              >
-                {ACTIVE_NODES.length}
-              </span>
-            </div>
-
-            {/* Node listesi */}
-            <div className="flex-1 overflow-y-auto nx-scroll px-3 py-3 space-y-0.5">
-              {dynamicActiveNodes.map((node, idx) => {
-                const nodeColor = getAvatarColor(node.name);
-                return (
-                  <motion.div
-                    key={node.id}
-                    initial={{ opacity: 0, x: 6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    className={`flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors ${node.ghost ? "cursor-default" : "cursor-pointer"}`}
-                    style={{ opacity: node.ghost ? 0.35 : 1 }}
-                    onMouseEnter={(e) => { if (!node.ghost) (e.currentTarget as HTMLDivElement).style.background = C.surfaceHov; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
-                    onClick={(e) => {
-                      if (node.ghost) return;
-                      // Aktif kullanıcı (root) için profile state'inden plan al
-                      const isCurrentUser = node.id === "root";
-                      const planLevel = isCurrentUser ? profile?.plan_level : null;
-                      const userId    = isCurrentUser ? (profile?.id ?? node.id) : node.id;
-                      openProfileCard(userId, node.name, null, planLevel, e);
-                    }}
-                  >
-                    {/* Avatar */}
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-                      style={{
-                        background: `${nodeColor}15`,
-                        border: `2px solid ${C.border}`,
-                        color: nodeColor,
-                      }}
-                    >
-                      {node.name[0]}
-                    </div>
-
-                    {/* İsim & Rol */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1">
-                        <p className="text-sm font-medium truncate" style={{ color: node.ghost ? C.textMuted : C.textPrimary }}>
-                          {node.name}
-                        </p>
-                        {!node.ghost && (node.role === "Elite" || node.role === "Core" || node.role === "Admin") && (
-                          <BadgeCheck className="w-3.5 h-3.5 shrink-0" style={{ color: C.accent }} />
-                        )}
-                      </div>
-                      <p className="text-[11px]" style={{ color: node.ghost ? C.textMuted : C.textSecondary }}>
-                        {node.role}
+                  {/* İsim & Rol */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1">
+                      <p className="text-sm font-medium truncate text-[#E6EDF3]">
+                        {node.name}
                       </p>
+                      {!node.ghost && isPremium && (
+                        <BadgeCheck className="w-4 h-4 text-blue-500 shrink-0" />
+                      )}
                     </div>
+                    <p className="text-[11px] text-[#8B949E]">
+                      {node.role}
+                    </p>
+                  </div>
 
-                    {/* Online dot */}
-                    <div
-                      className="w-2 h-2 rounded-full shrink-0"
-                      style={{ background: node.ghost ? C.textMuted : "#22C55E" }}
-                    />
-                  </motion.div>
-                );
-              })}
-
-              {/* Alt not */}
-              <div className="mt-4 pt-3" style={{ borderTop: `1px solid ${C.borderSub}` }}>
-                <div className="flex items-center gap-1.5 px-2">
-                  <Shield className="w-3 h-3" style={{ color: C.textMuted }} />
-                  <span className="text-[11px]" style={{ color: C.textMuted }}>
-                    Identities encrypted
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bağlantı istatistiği */}
-            <div
-              className="px-4 py-3.5 shrink-0 space-y-2"
-              style={{ borderTop: `1px solid ${C.borderSub}` }}
-            >
-              {[
-                { label: "Latency",    value: "12 ms"   },
-                { label: "Encryption", value: "AES-256" },
-                { label: "Status",     value: "ONLINE"  },
-              ].map(({ label, value }) => (
-                <div key={label} className="flex items-center justify-between">
-                  <span className="text-xs" style={{ color: C.textMuted }}>{label}</span>
-                  <span className="text-[11px] font-medium font-mono" style={{ color: C.accent }}>
-                    {value}
-                  </span>
-                </div>
-              ))}
-            </div>
+                  {/* Online Durum Dot */}
+                  <div
+                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{ background: node.ghost ? "#484F58" : "#22C55E" }}
+                  />
+                </motion.div>
+              );
+            })}
           </div>
 
-        </div>{/* /3 kolon */}
+          {/* İstatistikler */}
+          <div className="p-4 border-t border-[#27272A] bg-[#161616] space-y-2">
+            {[
+              { label: "Gecikme", value: "12 ms" },
+              { label: "Şifreleme", value: "AES-256" },
+              { label: "Sunucu", value: "AKTİF" },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex items-center justify-between">
+                <span className="text-xs text-[#8B949E]">{label}</span>
+                <span className="text-[11px] font-semibold text-blue-500 font-mono">
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
 
       {/* ── ProfileCard Overlay ── */}
@@ -1164,7 +1059,7 @@ export default function NexusDashboard() {
         onUpgradeClick={() => setIsPricingOpen(true)}
       />
 
-      {/* ── Profile Settings Modal (z-99998) ── */}
+      {/* ── Profile Settings Modal ── */}
       <ProfileSettingsModal
         isOpen={isSettingsOpen}
         userId={currentUser?.id ?? null}
@@ -1174,7 +1069,7 @@ export default function NexusDashboard() {
         onSaved={handleProfileUpdated}
       />
 
-      {/* ── Pricing Modal (z-99999) ── */}
+      {/* ── Pricing Modal ── */}
       <PricingModal
         isOpen={isPricingOpen}
         currentPlanLevel={profile?.plan_level ?? null}
