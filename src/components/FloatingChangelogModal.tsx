@@ -302,7 +302,7 @@ interface FloatingChangelogModalProps {
   onClose: () => void;
 }
 
-const FloatingChangelogModal = ({ open, onClose }: FloatingChangelogModalProps) => {
+function FloatingChangelogModal({ open, onClose }: FloatingChangelogModalProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.split("-")[0] ?? "en";
   const [cardsVisible, setCardsVisible] = useState(false);
