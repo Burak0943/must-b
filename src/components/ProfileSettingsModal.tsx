@@ -179,11 +179,11 @@ export function ProfileSettingsModal({
   };
 
   const handleToggleConnection = (platform: string) => {
-    const existing = socialLinks[platform];
+    const existing = (socialLinks || {})[platform];
     if (existing) {
       // Disconnect
       setSocialLinks(prev => {
-        const copy = { ...prev };
+        const copy = { ...(prev || {}) };
         delete copy[platform];
         return copy;
       });
@@ -193,7 +193,7 @@ export function ProfileSettingsModal({
       const link = window.prompt(`${platform} kullanıcı adınızı veya profil linkinizi girin:`);
       if (link && link.trim()) {
         setSocialLinks(prev => ({
-          ...prev,
+          ...(prev || {}),
           [platform]: link.trim(),
         }));
         toast.success(`${platform} başarıyla bağlandı!`);
@@ -403,7 +403,7 @@ export function ProfileSettingsModal({
                         { id: "Spotify", icon: Music, desc: "Çalma listenizi eşleyin" },
                       ].map(item => {
                         const IconComponent = item.icon;
-                        const isOk = !!socialLinks[item.id];
+                        const isOk = !!(socialLinks || {})[item.id];
                         return (
                           <div
                             key={item.id}
@@ -416,7 +416,7 @@ export function ProfileSettingsModal({
                               <div>
                                 <span className="text-sm font-semibold text-[#E6EDF3] block">{item.id}</span>
                                 <span className="text-[11px] text-[#8B949E] truncate max-w-[200px] block">
-                                  {isOk ? socialLinks[item.id] : item.desc}
+                                  {isOk ? (socialLinks || {})[item.id] : item.desc}
                                 </span>
                               </div>
                             </div>
@@ -468,7 +468,7 @@ export function ProfileSettingsModal({
                         },
                       ].map(pref => {
                         const Icon = pref.icon;
-                        const val = prefs[pref.id as keyof typeof prefs];
+                        const val = (prefs || {})[pref.id as keyof typeof prefs] ?? false;
                         return (
                           <div
                             key={pref.id}
@@ -486,7 +486,7 @@ export function ProfileSettingsModal({
 
                             <Switch
                               checked={val}
-                              onChange={() => setPrefs(prev => ({ ...prev, [pref.id]: !prev[pref.id as keyof typeof prefs] }))}
+                              onChange={() => setPrefs(prev => ({ ...prev, [pref.id]: !(prev || {})[pref.id as keyof typeof prefs] }))}
                             />
                           </div>
                         );

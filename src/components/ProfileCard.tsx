@@ -311,16 +311,16 @@ export function ProfileCard({
               </div>
 
               {/* Bio */}
-              {targetUser.bio && (
+              {targetUser?.bio && (
                 <p className="text-xs text-[#8B949E] text-center mt-3 border-t border-[#30363D] pt-3 leading-relaxed whitespace-pre-wrap">
                   {targetUser.bio}
                 </p>
               )}
 
               {/* Social Links */}
-              {targetUser.social_links && Object.keys(targetUser.social_links).length > 0 && (
+              {targetUser?.social_links && Object.keys(targetUser.social_links || {}).length > 0 && (
                 <div className="flex justify-center gap-2 mt-3 border-t border-[#30363D] pt-3">
-                  {Object.entries(targetUser.social_links).map(([platform, link]) => {
+                  {Object.entries(targetUser.social_links || {}).map(([platform, link]) => {
                     if (!link) return null;
                     let Icon = Link;
                     const p = platform.toLowerCase();
