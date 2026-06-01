@@ -11,7 +11,10 @@
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Edit3, Zap, ArrowUpRight, BadgeCheck } from "lucide-react";
+import {
+  Lock, Edit3, Zap, ArrowUpRight, BadgeCheck,
+  Twitter, Github, MessageSquare, Instagram, Music, Link
+} from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────
 
@@ -21,6 +24,9 @@ export interface ProfileCardUser {
   avatarUrl?: string | null;
   planLevel?: string | null;
   cognitiveCredits?: number;
+  bio?: string | null;
+  social_links?: Record<string, string> | null;
+  preferences?: { sound?: boolean; desktop_notifications?: boolean; stealth_mode?: boolean } | null;
 }
 
 interface ProfileCardProps {
@@ -303,6 +309,42 @@ export function ProfileCard({
                   <PlanBadge plan={plan} />
                 </div>
               </div>
+
+              {/* Bio */}
+              {targetUser.bio && (
+                <p className="text-xs text-[#8B949E] text-center mt-3 border-t border-[#30363D] pt-3 leading-relaxed whitespace-pre-wrap">
+                  {targetUser.bio}
+                </p>
+              )}
+
+              {/* Social Links */}
+              {targetUser.social_links && Object.keys(targetUser.social_links).length > 0 && (
+                <div className="flex justify-center gap-2 mt-3 border-t border-[#30363D] pt-3">
+                  {Object.entries(targetUser.social_links).map(([platform, link]) => {
+                    if (!link) return null;
+                    let Icon = Link;
+                    const p = platform.toLowerCase();
+                    if (p.includes("twitter") || p.includes("x")) Icon = Twitter;
+                    else if (p.includes("github")) Icon = Github;
+                    else if (p.includes("discord")) Icon = MessageSquare;
+                    else if (p.includes("instagram")) Icon = Instagram;
+                    else if (p.includes("spotify")) Icon = Music;
+
+                    return (
+                      <a
+                        key={platform}
+                        href={link.startsWith("http") ? link : `https://${link}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-8 h-8 rounded-lg bg-[#161B22] border border-[#30363D] flex items-center justify-center text-[#8B949E] hover:text-[#E6EDF3] hover:border-[#8B949E] transition-all"
+                        title={`${platform}: ${link}`}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* Cognitive Credits */}
               <CognitiveCreditsRow credits={targetUser.cognitiveCredits ?? 0} />

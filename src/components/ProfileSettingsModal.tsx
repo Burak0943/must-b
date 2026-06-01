@@ -23,8 +23,17 @@ export interface ProfileSettingsModalProps {
   userId: string | null;
   initialNodeName: string;
   initialAvatarUrl: string | null;
+  initialBio: string | null;
+  initialSocialLinks: Record<string, string> | null;
+  initialPreferences: { sound?: boolean; desktop_notifications?: boolean; stealth_mode?: boolean } | null;
   onClose: () => void;
-  onSaved: (nodeName: string, avatarUrl: string | null) => void;
+  onSaved: (
+    nodeName: string,
+    avatarUrl: string | null,
+    bio: string | null,
+    socialLinks: Record<string, string> | null,
+    preferences: { sound?: boolean; desktop_notifications?: boolean; stealth_mode?: boolean } | null
+  ) => void;
 }
 
 // ─── Switch Component (iOS/X Style) ───────────────────────
@@ -54,6 +63,9 @@ export function ProfileSettingsModal({
   userId,
   initialNodeName,
   initialAvatarUrl,
+  initialBio,
+  initialSocialLinks,
+  initialPreferences,
   onClose,
   onSaved,
 }: ProfileSettingsModalProps) {
@@ -69,20 +81,17 @@ export function ProfileSettingsModal({
   const [showAvatarInput, setShowAvatarInput] = useState(false);
   const [avatarInputVal, setAvatarInputVal] = useState(avatarUrl);
 
-  // Mock social connections state
-  const [connected, setConnected] = useState<Record<string, boolean>>({
-    "Twitter/X": false,
-    "GitHub": false,
-    "Discord": false,
-    "Instagram": false,
-    "Spotify": false,
-  });
+  // Real data-bound bio
+  const [bio, setBio] = useState(initialBio ?? "");
 
-  // Mock preferences state
+  // Real data-bound social connections state
+  const [socialLinks, setSocialLinks] = useState<Record<string, string>>(initialSocialLinks ?? {});
+
+  // Real data-bound preferences state
   const [prefs, setPrefs] = useState({
-    sounds: true,
-    notifications: true,
-    ghostMode: false,
+    sound: initialPreferences?.sound ?? true,
+    desktop_notifications: initialPreferences?.desktop_notifications ?? true,
+    stealth_mode: initialPreferences?.stealth_mode ?? false,
   });
 
   // Reset inputs on modal open
@@ -91,10 +100,17 @@ export function ProfileSettingsModal({
       setNodeName(initialNodeName);
       setAvatarUrl(initialAvatarUrl ?? "");
       setAvatarInputVal(initialAvatarUrl ?? "");
+      setBio(initialBio ?? "");
+      setSocialLinks(initialSocialLinks ?? {});
+      setPrefs({
+        sound: initialPreferences?.sound ?? true,
+        desktop_notifications: initialPreferences?.desktop_notifications ?? true,
+        stealth_mode: initialPreferences?.stealth_mode ?? false,
+      });
       setActiveTab("profile");
       setShowAvatarInput(false);
     }
-  }, [isOpen, initialNodeName, initialAvatarUrl]);
+  }, [isOpen, initialNodeName, initialAvatarUrl, initialBio, initialSocialLinks, initialPreferences]);
 
   // Lock body scroll
   useEffect(() => {
@@ -124,6 +140,7 @@ export function ProfileSettingsModal({
     if (!userId) return;
     const trimmedName = nodeName.trim();
     const trimmedUrl  = avatarUrl.trim() || null;
+    const trimmedBio  = bio.trim() || null;
 
     if (!trimmedName) {
       toast.error("Kullanıcı adı boş bırakılamaz.");
@@ -135,14 +152,17 @@ export function ProfileSettingsModal({
       const { error } = await supabase
         .from("profiles")
         .update({
-          node_name:  trimmedName,
-          avatar_url: trimmedUrl,
+          node_name:    trimmedName,
+          avatar_url:   trimmedUrl,
+          bio:          trimmedBio,
+          social_links: socialLinks,
+          preferences:  prefs,
         })
         .eq("id", userId);
 
       if (error) throw error;
 
-      onSaved(trimmedName, trimmedUrl);
+      onSaved(trimmedName, trimmedUrl, trimmedBio, socialLinks, prefs);
       onClose();
       toast.success("Profiliniz başarıyla güncellendi!", {
         description: `Kullanıcı adınız: ${trimmedName}`,
@@ -158,12 +178,27 @@ export function ProfileSettingsModal({
     }
   };
 
-  const toggleConnection = (platform: string) => {
-    setConnected(prev => {
-      const state = !prev[platform];
-      toast.success(state ? `${platform} başarıyla bağlandı!` : `${platform} bağlantısı kaldırıldı.`);
-      return { ...prev, [platform]: state };
-    });
+  const handleToggleConnection = (platform: string) => {
+    const existing = socialLinks[platform];
+    if (existing) {
+      // Disconnect
+      setSocialLinks(prev => {
+        const copy = { ...prev };
+        delete copy[platform];
+        return copy;
+      });
+      toast.success(`${platform} bağlantısı kaldırıldı.`);
+    } else {
+      // Connect
+      const link = window.prompt(`${platform} kullanıcı adınızı veya profil linkinizi girin:`);
+      if (link && link.trim()) {
+        setSocialLinks(prev => ({
+          ...prev,
+          [platform]: link.trim(),
+        }));
+        toast.success(`${platform} başarıyla bağlandı!`);
+      }
+    }
   };
 
   // Sleek Avatar Change confirm
@@ -343,6 +378,8 @@ export function ProfileSettingsModal({
                       <textarea
                         id="bio"
                         placeholder="Kendinizden bahsedin, burası topluluğa yansıyacak..."
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
                         className="w-full bg-[#0E1116] border border-[#27272A] focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm text-white rounded-xl px-4 py-3 outline-none transition-all h-24 resize-none placeholder:text-[#484F58]"
                       />
                     </div>
@@ -366,7 +403,7 @@ export function ProfileSettingsModal({
                         { id: "Spotify", icon: Music, desc: "Çalma listenizi eşleyin" },
                       ].map(item => {
                         const IconComponent = item.icon;
-                        const isOk = connected[item.id];
+                        const isOk = !!socialLinks[item.id];
                         return (
                           <div
                             key={item.id}
@@ -378,12 +415,14 @@ export function ProfileSettingsModal({
                               </div>
                               <div>
                                 <span className="text-sm font-semibold text-[#E6EDF3] block">{item.id}</span>
-                                <span className="text-[11px] text-[#8B949E]">{item.desc}</span>
+                                <span className="text-[11px] text-[#8B949E] truncate max-w-[200px] block">
+                                  {isOk ? socialLinks[item.id] : item.desc}
+                                </span>
                               </div>
                             </div>
 
                             <button
-                              onClick={() => toggleConnection(item.id)}
+                              onClick={() => handleToggleConnection(item.id)}
                               className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all ${
                                 isOk
                                   ? "bg-green-600 hover:bg-green-700 text-white"
@@ -410,21 +449,21 @@ export function ProfileSettingsModal({
                     <div className="space-y-3">
                       {[
                         {
-                          id: "sounds",
+                          id: "sound",
                           title: "Mesaj Sesleri",
-                          desc: "Yeni bir mesaj geldiğinde bildirim sesi çalsın.",
+                          desc: "Yeni bir mesaj gelen kutunuza ulaştığında bildirim sesi çalsın.",
                           icon: Volume2
                         },
                         {
-                          id: "notifications",
+                          id: "desktop_notifications",
                           title: "Masaüstü Bildirimleri",
-                          desc: "Arka plandayken gelen mesajları anlık bildirim olarak göster.",
+                          desc: "Arka plandayken gelen mesajları anlık masaüstü bildirimi olarak göster.",
                           icon: Bell
                         },
                         {
-                          id: "ghostMode",
-                          title: "Gizli Mod (Ghost Mode)",
-                          desc: "Çevrimiçi statünüzü gizleyerek sessizce gezinin.",
+                          id: "stealth_mode",
+                          title: "Gizli Mod (stealth_mode)",
+                          desc: "Topluluk listesinde çevrimiçi durumunuzu gizleyerek sessizce gezinin.",
                           icon: ShieldAlert
                         },
                       ].map(pref => {

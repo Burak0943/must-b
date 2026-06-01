@@ -341,7 +341,6 @@ export default function NexusDashboard() {
 
   // sendMessage'e dışarıdan erişim için ref köprüsü
   const sendMessageRef = useRef<((text: string) => Promise<void>) | null>(null);
-
   // ── ProfileCard state ──────────────────────────────────
   const [pcUser,   setPcUser]   = useState<ProfileCardUser | null>(null);
   const [pcAnchor, setPcAnchor] = useState<DOMRect | null>(null);
@@ -350,7 +349,7 @@ export default function NexusDashboard() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isPricingOpen,  setIsPricingOpen]  = useState(false);
 
-  const openProfileCard = useCallback((
+  const openProfileCard = useCallback(async (
     userId: string,
     username: string,
     avatarUrl: string | null | undefined,
@@ -358,9 +357,42 @@ export default function NexusDashboard() {
     e: React.MouseEvent,
   ) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    setPcUser({ userId, username, avatarUrl, planLevel, cognitiveCredits: 0 });
+    
+    let cached = profileCache.current[userId];
+    if (!cached || cached.bio === undefined) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("bio, social_links, preferences, plan_level, active_plan")
+        .eq("id", userId)
+        .single();
+      if (data) {
+        cached = {
+          ...cached,
+          node_name: username,
+          avatar_url: avatarUrl ?? null,
+          full_name: null,
+          email: null,
+          bio: data.bio,
+          social_links: data.social_links,
+          preferences: data.preferences,
+          plan_level: data.plan_level || data.active_plan || "Free",
+        };
+        profileCache.current[userId] = cached;
+      }
+    }
+
+    setPcUser({
+      userId,
+      username,
+      avatarUrl,
+      planLevel: planLevel ?? cached?.plan_level ?? "Free",
+      cognitiveCredits: 0,
+      bio: cached?.bio,
+      social_links: cached?.social_links,
+      preferences: cached?.preferences,
+    });
     setPcAnchor(rect);
-  }, []);
+  }, [profile]);
 
   const closeProfileCard = useCallback(() => {
     setPcUser(null);
@@ -368,24 +400,43 @@ export default function NexusDashboard() {
   }, []);
 
   /** ProfileSettingsModal kaydettiğinde profile state + cache'i anında güncelle */
-  const handleProfileUpdated = useCallback((newNodeName: string, newAvatarUrl: string | null) => {
+  const handleProfileUpdated = useCallback((
+    newNodeName: string,
+    newAvatarUrl: string | null,
+    newBio: string | null,
+    newSocialLinks: Record<string, string> | null,
+    newPreferences: { sound?: boolean; desktop_notifications?: boolean; stealth_mode?: boolean } | null
+  ) => {
     setProfile((prev) => {
       if (!prev) return prev;
-      return { ...prev, node_name: newNodeName, avatar_url: newAvatarUrl };
+      return {
+        ...prev,
+        node_name: newNodeName,
+        avatar_url: newAvatarUrl,
+        bio: newBio,
+        social_links: newSocialLinks,
+        preferences: newPreferences,
+      };
     });
+    // profileCache'i de anlık güncelle (mevcut kullanıcının ID'si üzerinden)
     setCurrentUser((prev: any) => {
       if (prev?.id) {
         profileCache.current[prev.id] = {
           ...profileCache.current[prev.id],
           node_name:  newNodeName,
           avatar_url: newAvatarUrl,
+          bio:        newBio,
+          social_links: newSocialLinks,
+          preferences:  newPreferences,
         };
       }
-      return prev;
+      return prev; // currentUser kendisi değişmez
     });
+    // Mesaj listesini de yenile ki yeni isim/avatar mesajlarda görünsün
     setMessages((prev) =>
       prev.map((msg) => {
         if (!msg.user_id) return msg;
+        // Sadece güncellenen kullanıcının mesajlarını değiştir
         const cached = profileCache.current[msg.user_id];
         if (!cached) return msg;
         return {
@@ -404,6 +455,9 @@ export default function NexusDashboard() {
     node_name: string | null;
     avatar_url: string | null;
     plan_level: string | null;
+    bio?: string | null;
+    social_links?: Record<string, string> | null;
+    preferences?: { sound?: boolean; desktop_notifications?: boolean; stealth_mode?: boolean } | null;
   } | null>(null);
 
   // Profile Cache to prevent redundant profile fetches
@@ -412,6 +466,9 @@ export default function NexusDashboard() {
     avatar_url: string | null;
     full_name: string | null;
     email: string | null;
+    bio?: string | null;
+    social_links?: Record<string, string> | null;
+    preferences?: { sound?: boolean; desktop_notifications?: boolean; stealth_mode?: boolean } | null;
   }>>({});
 
   const nodeName = profile?.node_name || "Root_Node";
@@ -436,9 +493,10 @@ export default function NexusDashboard() {
       const user = session.user;
       setCurrentUser(user);
       
+      // Fetch user's profile
       const { data: profileData, error } = await supabase
         .from("profiles")
-        .select("id, email, node_name, avatar_url, plan_level, full_name, active_plan")
+        .select("id, email, node_name, avatar_url, plan_level, full_name, active_plan, bio, social_links, preferences")
         .eq("id", user.id)
         .single();
         
@@ -450,15 +508,23 @@ export default function NexusDashboard() {
           node_name: mappedName,
           avatar_url: profileData.avatar_url,
           plan_level: profileData.plan_level || profileData.active_plan || "Free",
+          bio: profileData.bio,
+          social_links: profileData.social_links,
+          preferences: profileData.preferences,
         });
 
+        // Cache the current user's profile immediately
         profileCache.current[user.id] = {
           node_name: mappedName,
           avatar_url: profileData.avatar_url,
           full_name: profileData.full_name,
           email: profileData.email,
+          bio: profileData.bio,
+          social_links: profileData.social_links,
+          preferences: profileData.preferences,
         };
       } else {
+        // Fallback profile if profile row is missing or error
         const mappedName = user.email?.split("@")[0] || "Anon_Node";
         setProfile({
           id: user.id,
@@ -577,7 +643,7 @@ export default function NexusDashboard() {
             } else {
               const { data } = await supabase
                 .from("profiles")
-                .select("id, node_name, avatar_url, full_name, email")
+                .select("id, node_name, avatar_url, full_name, email, bio, social_links, preferences")
                 .eq("id", senderId)
                 .single();
               
@@ -587,6 +653,9 @@ export default function NexusDashboard() {
                   avatar_url: data.avatar_url,
                   full_name: data.full_name,
                   email: data.email,
+                  bio: data.bio,
+                  social_links: data.social_links,
+                  preferences: data.preferences,
                 };
               }
             }
@@ -1065,6 +1134,9 @@ export default function NexusDashboard() {
         userId={currentUser?.id ?? null}
         initialNodeName={profile?.node_name ?? ""}
         initialAvatarUrl={profile?.avatar_url ?? null}
+        initialBio={profile?.bio ?? null}
+        initialSocialLinks={profile?.social_links ?? null}
+        initialPreferences={profile?.preferences ?? null}
         onClose={() => setIsSettingsOpen(false)}
         onSaved={handleProfileUpdated}
       />
