@@ -302,7 +302,7 @@ interface FloatingChangelogModalProps {
   onClose: () => void;
 }
 
-function FloatingChangelogModal({ open, onClose }: FloatingChangelogModalProps) {
+export default function FloatingChangelogModal({ open, onClose }: FloatingChangelogModalProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.split("-")[0] ?? "en";
   const [cardsVisible, setCardsVisible] = useState(false);
@@ -477,14 +477,12 @@ function FloatingChangelogModal({ open, onClose }: FloatingChangelogModalProps) 
                   </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>,
-    document.body
-  );
-};
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>,
+      document.body
+    );
+  }
 
-export default FloatingChangelogModal;
 export type { ChangelogEntry };
