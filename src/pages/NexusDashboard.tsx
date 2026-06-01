@@ -8,7 +8,7 @@
  * ─ Mesajlar  : Rahat, havadar, balon değil Discord-satır stili
  */
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -103,9 +103,11 @@ const getUserColor = (username: string) => {
 // E2EE Rozeti
 // ─────────────────────────────────────────────────────────
 
-function E2EEBadge() {
+// memo: E2EEBadge hiçbir prop almaz, mount'tan sonra asla değişmez
+const E2EEBadge = memo(function E2EEBadge() {
   return (
-    <motion.div
+    // boxShadow animasyonu GPU'yu yoran bir özellik — sadece opacity kullanıyoruz
+    <div
       className="flex items-center gap-1.5 px-2.5 py-1 rounded-md select-none"
       style={{
         background: C.accentDim,
@@ -115,27 +117,29 @@ function E2EEBadge() {
         fontFamily: "'Space Mono', monospace",
         fontWeight: 700,
         letterSpacing: "0.08em",
+        // Sabit, hafif glow — animasyonlu değil
+        boxShadow: "0 0 6px rgba(34,197,94,0.15)",
       }}
-      animate={{ boxShadow: ["0 0 0px rgba(34,197,94,0)", "0 0 8px rgba(34,197,94,0.2)", "0 0 0px rgba(34,197,94,0)"] }}
-      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
     >
+      {/* Sadece opacity animasyonu — GPU dostu */}
       <motion.span
         className="w-1.5 h-1.5 rounded-full"
         style={{ background: C.accent }}
-        animate={{ opacity: [1, 0.25, 1] }}
-        transition={{ duration: 1.4, repeat: Infinity }}
+        animate={{ opacity: [1, 0.2, 1] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
       />
       <Shield className="w-3 h-3" />
       E2EE
-    </motion.div>
+    </div>
   );
-}
+});
 
 // ─────────────────────────────────────────────────────────
 // Mesaj satırı
 // ─────────────────────────────────────────────────────────
 
-function MessageRow({
+// ─── React.memo: prop değişmediği sürece mesaj satırı re-render yapmaz ───
+const MessageRow = memo(function MessageRow({
   msg,
   isOwn,
   showAvatar,
@@ -250,7 +254,7 @@ function MessageRow({
       </div>
     </motion.div>
   );
-}
+});
 
 // ─────────────────────────────────────────────────────────
 // Ghost Protocol Input
@@ -308,6 +312,108 @@ function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
 }
 
 // ─────────────────────────────────────────────────────────
+// MessageInput — İzole mesaj yazma bileşeni
+// Kendi inputVal state'ini tutar → NexusDashboard re-render etmez.
+// onSend: ebeveynin ref köprüsünden gelen async fonksiyon.
+// ─────────────────────────────────────────────────────────
+
+interface MessageInputProps {
+  placeholder: string;
+  onSend: (text: string) => void;
+}
+
+const MessageInput = memo(function MessageInput({ placeholder, onSend }: MessageInputProps) {
+  const [val, setVal]   = useState("");
+  const taRef           = useRef<HTMLTextAreaElement>(null);
+
+  const handleSend = () => {
+    const text = val.trim();
+    if (!text) return;
+    onSend(text);
+    setVal("");
+    if (taRef.current) {
+      taRef.current.style.height = "auto";
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setVal(e.target.value);
+    e.target.style.height = "auto";
+    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
+  };
+
+  const hasText = val.trim().length > 0;
+
+  return (
+    <div className="px-4 pb-4 pt-2 shrink-0">
+      <div
+        className="flex items-end gap-2 rounded-xl px-3 py-2.5"
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          border: `1px solid ${C.border}`,
+        }}
+      >
+        {/* Dosya ekle */}
+        <button
+          className="p-1 shrink-0 self-end mb-0.5 rounded transition-colors"
+          style={{ color: C.textMuted }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = C.textSecondary)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = C.textMuted)}
+          title="Dosya / Kod ekle"
+        >
+          <Plus className="w-4 h-4" />
+        </button>
+
+        {/* Textarea — uncontrolled gibi davranır, re-render'ı sadece bu bileşene hapseder */}
+        <textarea
+          ref={taRef}
+          rows={1}
+          value={val}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          className="flex-1 bg-transparent text-sm outline-none resize-none min-h-[24px] max-h-[120px] leading-relaxed"
+          style={{
+            fontFamily: "Inter, -apple-system, sans-serif",
+            color: C.textPrimary,
+            caretColor: C.accent,
+          }}
+        />
+
+        {/* Gönder — whileHover/Tap GPU dostu transform kullanır */}
+        <motion.button
+          onClick={handleSend}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+          disabled={!hasText}
+          className="p-1.5 rounded-lg shrink-0 self-end mb-0.5 transition-colors duration-200"
+          style={{
+            background:  hasText ? C.accentDim  : "transparent",
+            border:      `1px solid ${hasText ? C.accentBorder : C.borderSub}`,
+            color:       hasText ? C.accent     : C.textGhost,
+            // boxShadow sabit — animasyonlu değil
+            boxShadow:   hasText ? "0 0 10px rgba(34,197,94,0.12)" : "none",
+          }}
+        >
+          <Send className="w-4 h-4" />
+        </motion.button>
+      </div>
+
+      <p
+        className="text-[10px] mt-1.5 px-1"
+        style={{ fontFamily: "'Space Mono', monospace", color: C.textGhost }}
+      >
+        Enter → gönder · Shift+Enter → satır
+      </p>
+    </div>
+  );
+});
+
+// ─────────────────────────────────────────────────────────
 // Ana Bileşen
 // ─────────────────────────────────────────────────────────
 
@@ -316,8 +422,12 @@ export default function NexusDashboard() {
 
   const [activeChannel, setActiveChannel] = useState(CHANNELS[0].id);
   const [messages, setMessages]           = useState<Message[]>([]);
-  const [inputVal, setInputVal]           = useState("");
+  // inputVal ARTIK BURAYA TAŞINDI → MessageInput kendi state'ini tutar
+  // NexusDashboard sadece "gönder" sinyalini ref aracılığıyla alır
   const [darkNodes, setDarkNodes]         = useState<string[]>([]);
+
+  // sendMessage'e dışarıdan erişim için ref köprüsü
+  const sendMessageRef = useRef<((text: string) => Promise<void>) | null>(null);
 
   // ── ProfileCard state ──────────────────────────────────
   const [pcUser,   setPcUser]   = useState<ProfileCardUser | null>(null);
@@ -397,8 +507,7 @@ export default function NexusDashboard() {
   const nodeName = profile?.node_name || "Root_Node";
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef       = useRef<HTMLTextAreaElement>(null);
-  const textareaRef    = useRef<HTMLTextAreaElement>(null);
+  // inputRef ve textareaRef artık MessageInput bileşeni içinde yönetiliyor
 
   const scrollBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -618,35 +727,34 @@ export default function NexusDashboard() {
   }, [activeChannel, profile, fetchMessages, scrollBottom]);
 
   // Insert message into database
-  const sendMessage = useCallback(async () => {
-    const text = inputVal.trim();
-    if (!text || !profile) return;
-    
-    setInputVal("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
-    
+  // Profile ve activeChannel ref'leri — closure stale olmadan erişim
+  const profileRef       = useRef(profile);
+  const activeChannelRef = useRef(activeChannel);
+  useEffect(() => { profileRef.current = profile; }, [profile]);
+  useEffect(() => { activeChannelRef.current = activeChannel; }, [activeChannel]);
+
+  const sendMessage = useCallback(async (text: string) => {
+    const trimmed = text.trim();
+    const prof    = profileRef.current;
+    const channel = activeChannelRef.current;
+    if (!trimmed || !prof) return;
+
     try {
       const { error } = await supabase
         .from("nexus_messages")
         .insert({
-          channel_id: activeChannel,
-          user_id: profile.id,
-          content: text
+          channel_id: channel,
+          user_id:    prof.id,
+          content:    trimmed,
         });
-        
-      if (error) {
-        console.error("Error inserting message:", error.message);
-      }
+      if (error) console.error("Error inserting message:", error.message);
     } catch (err) {
       console.error("Failed to send message:", err);
     }
-  }, [inputVal, profile, activeChannel]);
+  }, []); // bağımlılık yok → ref'lerden okur, hiç yeniden oluşmaz
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  };
+  // Ref köprüsünü güncelle — MessageInput buna erişecek
+  useEffect(() => { sendMessageRef.current = sendMessage; }, [sendMessage]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -1007,71 +1115,11 @@ export default function NexusDashboard() {
               <div ref={messagesEndRef} className="h-2" />
             </div>
 
-            {/* Mesaj yazma kutusu */}
-            <div className="px-4 pb-4 pt-2 shrink-0">
-              <div
-                className="flex items-end gap-2 rounded-xl px-3 py-2.5 transition-all"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: `1px solid ${C.border}`,
-                }}
-              >
-                {/* Dosya ekle */}
-                <button
-                  className="p-1 shrink-0 self-end mb-0.5 rounded transition-colors"
-                  style={{ color: C.textMuted }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = C.textSecondary)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = C.textMuted)}
-                  title="Dosya / Kod ekle"
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
-
-                {/* Textarea */}
-                <textarea
-                  ref={textareaRef}
-                  rows={1}
-                  value={inputVal}
-                  onChange={(e) => {
-                    setInputVal(e.target.value);
-                    e.target.style.height = "auto";
-                    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-                  }}
-                  onKeyDown={handleKeyDown}
-                  placeholder={`#${activeLabel} kanalına mesaj yaz…`}
-                  className="flex-1 bg-transparent text-sm outline-none resize-none min-h-[24px] max-h-[120px] leading-relaxed"
-                  style={{
-                    fontFamily: "Inter, -apple-system, sans-serif",
-                    color: C.textPrimary,
-                    caretColor: C.accent,
-                  }}
-                />
-
-                {/* Gönder */}
-                <motion.button
-                  onClick={sendMessage}
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.92 }}
-                  disabled={!inputVal.trim()}
-                  className="p-1.5 rounded-lg shrink-0 self-end mb-0.5 transition-all duration-200"
-                  style={{
-                    background: inputVal.trim() ? C.accentDim : "transparent",
-                    border: `1px solid ${inputVal.trim() ? C.accentBorder : C.borderSub}`,
-                    color: inputVal.trim() ? C.accent : C.textGhost,
-                    boxShadow: inputVal.trim() ? `0 0 12px rgba(34,197,94,0.15)` : "none",
-                  }}
-                >
-                  <Send className="w-4 h-4" />
-                </motion.button>
-              </div>
-
-              <p
-                className="text-[10px] mt-1.5 px-1"
-                style={{ fontFamily: "'Space Mono', monospace", color: C.textGhost }}
-              >
-                Enter → gönder · Shift+Enter → satır
-              </p>
-            </div>
+            {/* Mesaj yazma kutusu — izole bileşen, NexusDashboard re-render'ını tetiklemez */}
+            <MessageInput
+              placeholder={`#${activeLabel} kanalına mesaj yaz…`}
+              onSend={(text) => sendMessageRef.current?.(text)}
+            />
           </div>
 
           {/* ── SAĞ NODE PANELİ ── */}

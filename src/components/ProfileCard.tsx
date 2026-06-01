@@ -205,14 +205,24 @@ function EliteBorderGlow() {
     <>
       <style>{`
         @keyframes pc-neon-pulse {
-          0%,100% { opacity: 0.6; box-shadow: 0 0 0px 0px rgba(168,85,247,0); }
-          50%      { opacity: 1;   box-shadow: 0 0 22px 4px rgba(168,85,247,0.45), 0 0 40px 8px rgba(99,102,241,0.25); }
+          /* box-shadow animasyonu GPU'yu yoran layout/paint işlemi tetikler.
+             Sadece opacity + scale kullanıyoruz (compositor-only, sıfır repaint). */
+          0%,100% { opacity: 0.55; transform: scale(1); }
+          50%      { opacity: 1;   transform: scale(1.003); }
         }
-        .pc-elite-border { animation: pc-neon-pulse 2.4s ease-in-out infinite; }
+        .pc-elite-border {
+          animation: pc-neon-pulse 2.4s ease-in-out infinite;
+          will-change: opacity, transform;
+        }
       `}</style>
       <div
         className="pc-elite-border absolute inset-0 rounded-2xl pointer-events-none"
-        style={{ border: "1.5px solid rgba(168,85,247,0.6)", borderRadius: "inherit" }}
+        style={{
+          border: "1.5px solid rgba(168,85,247,0.65)",
+          borderRadius: "inherit",
+          /* Sabit glow — animate edilmiyor, GPU dostu */
+          boxShadow: "0 0 18px 2px rgba(168,85,247,0.22), inset 0 0 12px rgba(168,85,247,0.06)",
+        }}
       />
     </>
   );
