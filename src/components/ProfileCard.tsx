@@ -2,16 +2,16 @@
  * ProfileCard.tsx — Modüler Profil Kartı (Popover/Modal)
  *
  * Plan hiyerarşisi görselliği:
- *   Free  → Gri rozet + kilitli Kozmetikler bölümü + Upgrade butonu
- *   Core  → Yeşil rozet + yeşil glow
- *   Elite / Root → Animated neon mor/mavi border (pulse)
+ *   Free  → No badge icon
+ *   Core  → BadgeCheck icon (verified style)
+ *   Elite / Root / Pro → BadgeCheck icon (verified style)
  *
  * v2: onEditClick ve onUpgradeClick prop'ları eklendi.
  */
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Edit3, Cpu, Zap, ArrowUpRight } from "lucide-react";
+import { Lock, Edit3, Zap, ArrowUpRight, BadgeCheck } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────
 
@@ -46,11 +46,11 @@ export function normalizePlan(raw?: string | null): "Free" | "Core" | "Elite" | 
 }
 
 export const PLAN_META = {
-  Free:  { label: "Free Node",  badge: "#6b7280", glow: null },
-  Core:  { label: "Core Node",  badge: "#22c55e", glow: "0 0 15px rgba(34,197,94,0.3)" },
-  Pro:   { label: "Pro Node",   badge: "#38bdf8", glow: "0 0 15px rgba(56,189,248,0.3)" },
-  Elite: { label: "Elite Node", badge: "#a855f7", glow: null /* animated */ },
-  Root:  { label: "Root Node",  badge: "#a855f7", glow: null /* animated */ },
+  Free:  { label: "Free",  ring: "#484F58" },
+  Core:  { label: "Core",  ring: "#3B82F6" },
+  Pro:   { label: "Pro",   ring: "#6366F1" },
+  Elite: { label: "Elite", ring: "#8B5CF6" },
+  Root:  { label: "Root",  ring: "#8B5CF6" },
 } as const;
 
 // ─── Avatar ───────────────────────────────────────────────
@@ -58,7 +58,7 @@ export const PLAN_META = {
 function Avatar({ user, size = 64 }: { user: ProfileCardUser; size?: number }) {
   const plan  = normalizePlan(user.planLevel);
   const meta  = PLAN_META[plan];
-  const color = meta.badge;
+  const color = meta.ring;
 
   if (user.avatarUrl) {
     return (
@@ -70,7 +70,6 @@ function Avatar({ user, size = 64 }: { user: ProfileCardUser; size?: number }) {
           width:  size,
           height: size,
           border: `2px solid ${color}60`,
-          boxShadow: meta.glow ?? undefined,
         }}
       />
     );
@@ -86,8 +85,7 @@ function Avatar({ user, size = 64 }: { user: ProfileCardUser; size?: number }) {
         border:     `2px solid ${color}50`,
         color,
         fontSize:   size * 0.38,
-        fontFamily: "'Space Mono', monospace",
-        boxShadow:  meta.glow ?? undefined,
+        fontFamily: "Inter, system-ui, sans-serif",
       }}
     >
       {user.username[0]?.toUpperCase()}
@@ -99,18 +97,20 @@ function Avatar({ user, size = 64 }: { user: ProfileCardUser; size?: number }) {
 
 function PlanBadge({ plan }: { plan: ReturnType<typeof normalizePlan> }) {
   const meta = PLAN_META[plan];
+  const hasBadge = plan !== "Free";
+
   return (
     <span
-      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase select-none"
+      className="inline-flex items-center gap-1.5 text-[12px] font-medium select-none"
       style={{
-        background: `${meta.badge}18`,
-        border:     `1px solid ${meta.badge}45`,
-        color:       meta.badge,
-        fontFamily: "'Space Mono', monospace",
+        color: "#8B949E",
+        fontFamily: "Inter, system-ui, sans-serif",
       }}
     >
-      <Cpu className="w-3 h-3" />
       {meta.label}
+      {hasBadge && (
+        <BadgeCheck className="w-4 h-4 text-blue-500" />
+      )}
     </span>
   );
 }
@@ -122,22 +122,22 @@ function CognitiveCreditsRow({ credits }: { credits: number }) {
     <div
       className="flex items-center justify-between rounded-lg px-3 py-2.5 mt-3"
       style={{
-        background: "rgba(56,189,248,0.05)",
-        border: "1px solid rgba(56,189,248,0.15)",
+        background: "rgba(59,130,246,0.06)",
+        border: "1px solid #30363D",
       }}
     >
       <div className="flex items-center gap-2">
-        <Zap className="w-3.5 h-3.5" style={{ color: "#38bdf8" }} />
+        <Zap className="w-3.5 h-3.5 text-blue-500" />
         <span
           className="text-xs font-semibold tracking-wide"
-          style={{ color: "rgba(255,255,255,0.55)", fontFamily: "Inter, sans-serif" }}
+          style={{ color: "#8B949E", fontFamily: "Inter, system-ui, sans-serif" }}
         >
           Cognitive Credits
         </span>
       </div>
       <span
         className="text-sm font-bold tabular-nums"
-        style={{ fontFamily: "'Space Mono', monospace", color: "#38bdf8" }}
+        style={{ fontFamily: "'Space Mono', monospace", color: "#3B82F6" }}
       >
         {credits.toLocaleString()}
       </span>
@@ -152,42 +152,31 @@ function LockedCosmeticsSection({ onUpgrade }: { onUpgrade?: () => void }) {
     <div
       className="mt-3 rounded-lg px-3 py-3 flex flex-col gap-2"
       style={{
-        background: "rgba(255,255,255,0.025)",
-        border: "1px dashed rgba(255,255,255,0.1)",
+        background: "rgba(255,255,255,0.02)",
+        border: "1px dashed #30363D",
       }}
     >
       <div className="flex items-center gap-2 select-none">
-        <Lock className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.3)" }} />
+        <Lock className="w-3.5 h-3.5" style={{ color: "#484F58" }} />
         <span
           className="text-xs font-semibold tracking-wide"
-          style={{ color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif" }}
+          style={{ color: "#484F58", fontFamily: "Inter, system-ui, sans-serif" }}
         >
           Kozmetikler
         </span>
       </div>
       <p
         className="text-[10px] leading-relaxed select-none"
-        style={{ color: "rgba(255,255,255,0.22)", fontFamily: "Inter, sans-serif" }}
+        style={{ color: "#484F58", fontFamily: "Inter, system-ui, sans-serif" }}
       >
         🔒 Elite Plan ile açılır — özel avatar çerçeveleri, neon efektler ve daha fazlası.
       </p>
       {onUpgrade && (
         <button
           onClick={onUpgrade}
-          className="flex items-center justify-center gap-1.5 w-full rounded-lg py-1.5 text-[11px] font-semibold transition-all duration-150 active:scale-95"
+          className="flex items-center justify-center gap-1.5 w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-1.5 text-[11px] font-semibold transition-colors duration-150 active:scale-95"
           style={{
-            background: "rgba(168,85,247,0.10)",
-            border: "1px solid rgba(168,85,247,0.30)",
-            color: "#a855f7",
-            fontFamily: "Inter, sans-serif",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(168,85,247,0.18)";
-            e.currentTarget.style.boxShadow = "0 0 12px rgba(168,85,247,0.20)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(168,85,247,0.10)";
-            e.currentTarget.style.boxShadow = "none";
+            fontFamily: "Inter, system-ui, sans-serif",
           }}
         >
           <ArrowUpRight className="w-3 h-3" />
@@ -195,36 +184,6 @@ function LockedCosmeticsSection({ onUpgrade }: { onUpgrade?: () => void }) {
         </button>
       )}
     </div>
-  );
-}
-
-// ─── Animated Neon Border (Elite / Root) ──────────────────
-
-function EliteBorderGlow() {
-  return (
-    <>
-      <style>{`
-        @keyframes pc-neon-pulse {
-          /* box-shadow animasyonu GPU'yu yoran layout/paint işlemi tetikler.
-             Sadece opacity + scale kullanıyoruz (compositor-only, sıfır repaint). */
-          0%,100% { opacity: 0.55; transform: scale(1); }
-          50%      { opacity: 1;   transform: scale(1.003); }
-        }
-        .pc-elite-border {
-          animation: pc-neon-pulse 2.4s ease-in-out infinite;
-          will-change: opacity, transform;
-        }
-      `}</style>
-      <div
-        className="pc-elite-border absolute inset-0 rounded-2xl pointer-events-none"
-        style={{
-          border: "1.5px solid rgba(168,85,247,0.65)",
-          borderRadius: "inherit",
-          /* Sabit glow — animate edilmiyor, GPU dostu */
-          boxShadow: "0 0 18px 2px rgba(168,85,247,0.22), inset 0 0 12px rgba(168,85,247,0.06)",
-        }}
-      />
-    </>
   );
 }
 
@@ -321,43 +280,13 @@ export function ProfileCard({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: -8 }}
             transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
-            className="fixed z-[9999] w-72 rounded-2xl overflow-hidden"
+            className="fixed z-[9999] w-72 rounded-2xl overflow-hidden bg-[#161B22]/95 backdrop-blur-xl border border-[#30363D] shadow-2xl"
             style={{
               ...getPosition(),
-              background:     "rgba(17,17,17,0.92)",
-              backdropFilter: "blur(20px) saturate(180%)",
-              WebkitBackdropFilter: "blur(20px) saturate(180%)",
-              border: plan === "Free"
-                ? "1px solid rgba(255,255,255,0.09)"
-                : isEliteOrRoot
-                ? "1px solid rgba(168,85,247,0.5)"
-                : `1px solid ${PLAN_META[plan].badge}45`,
-              boxShadow: plan === "Core"
-                ? "0 0 15px rgba(34,197,94,0.3), 0 8px 32px rgba(0,0,0,0.6)"
-                : plan === "Pro"
-                ? "0 0 15px rgba(56,189,248,0.3), 0 8px 32px rgba(0,0,0,0.6)"
-                : "0 8px 32px rgba(0,0,0,0.7)",
             }}
           >
-            {/* Elite / Root — animated neon border */}
-            {isEliteOrRoot && <EliteBorderGlow />}
-
-            {/* Header gradient strip */}
-            <div
-              className="h-1.5 w-full"
-              style={{
-                background: plan === "Core"
-                  ? "linear-gradient(90deg,#22c55e,#4ade80)"
-                  : plan === "Pro"
-                  ? "linear-gradient(90deg,#38bdf8,#818cf8)"
-                  : isEliteOrRoot
-                  ? "linear-gradient(90deg,#a855f7,#6366f1,#a855f7)"
-                  : "linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.12))",
-              }}
-            />
-
             {/* Content */}
-            <div className="px-5 pb-5 pt-4">
+            <div className="px-5 pb-5 pt-5">
               {/* Avatar + isim */}
               <div className="flex flex-col items-center gap-3 text-center">
                 <Avatar user={targetUser} size={72} />
@@ -365,8 +294,8 @@ export function ProfileCard({
                   <p
                     className="text-base font-bold leading-none mb-2"
                     style={{
-                      color: "rgba(255,255,255,0.92)",
-                      fontFamily: "Inter, -apple-system, sans-serif",
+                      color: "#E6EDF3",
+                      fontFamily: "Inter, system-ui, sans-serif",
                       letterSpacing: "-0.01em",
                     }}
                   >
@@ -388,20 +317,9 @@ export function ProfileCard({
               {(plan === "Core" || plan === "Pro") && onUpgradeClick && (
                 <button
                   onClick={handleUpgradeClick}
-                  className="mt-3 w-full flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-medium transition-all duration-150 active:scale-95"
+                  className="mt-3 w-full flex items-center justify-center gap-1.5 rounded-xl py-1.5 text-[11px] font-medium transition-colors duration-150 active:scale-95 bg-blue-600 hover:bg-blue-700 text-white"
                   style={{
-                    background: "rgba(168,85,247,0.06)",
-                    border: "1px solid rgba(168,85,247,0.18)",
-                    color: "rgba(168,85,247,0.70)",
-                    fontFamily: "Inter, sans-serif",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(168,85,247,0.12)";
-                    e.currentTarget.style.color = "#a855f7";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(168,85,247,0.06)";
-                    e.currentTarget.style.color = "rgba(168,85,247,0.70)";
+                    fontFamily: "Inter, system-ui, sans-serif",
                   }}
                 >
                   <ArrowUpRight className="w-3 h-3" />
@@ -413,22 +331,18 @@ export function ProfileCard({
               {isSelf && (
                 <button
                   onClick={handleEditClick}
-                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all duration-200 active:scale-95"
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-colors duration-150 active:scale-95"
                   style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border:     "1px solid rgba(255,255,255,0.12)",
-                    color:      "rgba(255,255,255,0.70)",
-                    fontFamily: "Inter, sans-serif",
+                    background: "#161B22",
+                    border:     "1px solid #30363D",
+                    color:      "#E6EDF3",
+                    fontFamily: "Inter, system-ui, sans-serif",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.09)";
-                    e.currentTarget.style.color      = "rgba(255,255,255,0.90)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.22)";
+                    e.currentTarget.style.background = "#1C2128";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                    e.currentTarget.style.color      = "rgba(255,255,255,0.70)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
+                    e.currentTarget.style.background = "#161B22";
                   }}
                 >
                   <Edit3 className="w-4 h-4" />

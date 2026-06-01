@@ -1,11 +1,12 @@
 /**
- * NexusDashboard.tsx — Must-b Nexus Topluluk Terminali
+ * NexusDashboard.tsx — Must-b Premium Community Platform
  *
- * Revizyon: Premium dark mode (Discord/Linear tarzı)
- * ─ Arka plan : sidebar #161616 | orta #0f0f0f
- * ─ Metin     : Inter (sans-serif) genel | Space Mono yalnız ts/ID/system
- * ─ Neon yeşil: Sadece vurgular (aktif kanal, send btn, online dot, kendi mesajı)
- * ─ Mesajlar  : Rahat, havadar, balon değil Discord-satır stili
+ * Design System v2 — "Must-b Premium"
+ * ─ Palette : bg #0E1116 | surface #161B22 | border #30363D
+ * ─ Text    : primary #E6EDF3 | secondary #8B949E | muted #484F58
+ * ─ Accent  : Must-b Blue #3B82F6
+ * ─ Font    : Inter / system-ui sans-serif everywhere
+ * ─ Messages: Twitter/X + Linear hybrid — avatar left, name+time right
  */
 
 import { useState, useRef, useEffect, useCallback, memo } from "react";
@@ -14,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Hash, Lock, Plus, Send, Ghost,
   Shield, Wifi, LogOut, ChevronRight,
-  Terminal, Radio, AlertTriangle,
+  MessageSquare, Radio, BadgeCheck,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { ProfileCard, type ProfileCardUser } from "@/components/ProfileCard";
@@ -22,21 +23,20 @@ import { ProfileSettingsModal } from "@/components/ProfileSettingsModal";
 import { PricingModal } from "@/components/PricingModal";
 
 // ─────────────────────────────────────────────────────────
-// Design tokens
+// Design tokens — Must-b Premium
 // ─────────────────────────────────────────────────────────
 const C = {
-  bg:        "#0f0f0f",   // orta alan
-  sidebar:   "#161616",   // sol & sağ kolon
-  topbar:    "#111111",   // üst çubuk
-  border:    "rgba(255,255,255,0.06)",
-  borderSub: "rgba(255,255,255,0.04)",
-  accent:    "#22c55e",   // neon yeşil — daha soft (green-500)
-  accentDim: "rgba(34,197,94,0.12)",
-  accentBorder: "rgba(34,197,94,0.25)",
-  textPrimary:   "rgba(255,255,255,0.90)",
-  textSecondary: "rgba(255,255,255,0.50)",
-  textMuted:     "rgba(255,255,255,0.25)",
-  textGhost:     "rgba(255,255,255,0.12)",
+  bg:          "#0E1116",
+  surface:     "#161B22",
+  surfaceHov:  "#1C2128",
+  border:      "#30363D",
+  borderSub:   "#21262D",
+  accent:      "#3B82F6",
+  accentDim:   "rgba(59,130,246,0.10)",
+  accentBorder:"rgba(59,130,246,0.25)",
+  textPrimary: "#E6EDF3",
+  textSecondary:"#8B949E",
+  textMuted:   "#484F58",
 } as const;
 
 // ─────────────────────────────────────────────────────────
@@ -73,60 +73,46 @@ const DEMO_MESSAGES: Message[] = [
 ];
 
 const ACTIVE_NODES = [
-  { id: "root",   name: "Root_Node",    role: "Admin",  color: "#22c55e",  ghost: false },
-  { id: "elite",  name: "Elite_0x9A",  role: "Elite",  color: "#38bdf8",  ghost: false },
-  { id: "anon",   name: "Anon_7f3c",   role: "Core",   color: "#a3e635",  ghost: false },
-  { id: "shadow", name: "Shadow_Relay", role: "Local",  color: "#c084fc",  ghost: false },
-  { id: "ghost1", name: "Node_??",     role: "—",      color: "#444444",  ghost: true  },
+  { id: "root",   name: "Root_Node",    role: "Admin",  ghost: false },
+  { id: "elite",  name: "Elite_0x9A",  role: "Elite",  ghost: false },
+  { id: "anon",   name: "Anon_7f3c",   role: "Core",   ghost: false },
+  { id: "shadow", name: "Shadow_Relay", role: "Local",  ghost: false },
+  { id: "ghost1", name: "Node_??",     role: "—",      ghost: true  },
 ];
 
-// Her kullanıcıya sabit renk ata
-const USER_COLORS: Record<string, string> = {
-  Root_Node:    "#22c55e",
-  "Elite_0x9A": "#38bdf8",
-  "Anon_7f3c":  "#a3e635",
-  Shadow_Relay: "#c084fc",
-};
-
-const getUserColor = (username: string) => {
-  if (USER_COLORS[username]) return USER_COLORS[username];
-  const colors = ["#22c55e", "#38bdf8", "#a3e635", "#c084fc", "#f43f5e", "#fb923c", "#eab308"];
+// Kullanıcıya sabit, muted avatar renk atama
+const AVATAR_COLORS = [
+  "#3B82F6", "#6366F1", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981", "#06B6D4",
+];
+const getAvatarColor = (username: string) => {
   let hash = 0;
   for (let i = 0; i < username.length; i++) {
     hash = username.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const index = Math.abs(hash) % colors.length;
-  return colors[index];
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 };
 
 // ─────────────────────────────────────────────────────────
-// E2EE Rozeti
+// E2EE Rozeti — zarif, minimal
 // ─────────────────────────────────────────────────────────
 
-// memo: E2EEBadge hiçbir prop almaz, mount'tan sonra asla değişmez
 const E2EEBadge = memo(function E2EEBadge() {
   return (
-    // boxShadow animasyonu GPU'yu yoran bir özellik — sadece opacity kullanıyoruz
     <div
-      className="flex items-center gap-1.5 px-2.5 py-1 rounded-md select-none"
+      className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg select-none"
       style={{
         background: C.accentDim,
         border: `1px solid ${C.accentBorder}`,
         color: C.accent,
         fontSize: 11,
-        fontFamily: "'Space Mono', monospace",
-        fontWeight: 700,
-        letterSpacing: "0.08em",
-        // Sabit, hafif glow — animasyonlu değil
-        boxShadow: "0 0 6px rgba(34,197,94,0.15)",
+        fontWeight: 600,
       }}
     >
-      {/* Sadece opacity animasyonu — GPU dostu */}
       <motion.span
         className="w-1.5 h-1.5 rounded-full"
         style={{ background: C.accent }}
-        animate={{ opacity: [1, 0.2, 1] }}
-        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [1, 0.3, 1] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       />
       <Shield className="w-3 h-3" />
       E2EE
@@ -135,14 +121,13 @@ const E2EEBadge = memo(function E2EEBadge() {
 });
 
 // ─────────────────────────────────────────────────────────
-// Mesaj satırı
+// MessageRow — Twitter/Linear hybrid style
 // ─────────────────────────────────────────────────────────
 
-// ─── React.memo: prop değişmediği sürece mesaj satırı re-render yapmaz ───
 const MessageRow = memo(function MessageRow({
   msg,
   isOwn,
-  showAvatar,
+  showAvatar: _showAvatar,
   onAvatarClick,
 }: {
   msg: Message;
@@ -152,26 +137,19 @@ const MessageRow = memo(function MessageRow({
 }) {
   if (msg.system) {
     return (
-      <div className="flex items-center gap-3 my-2 select-none">
-        <div className="flex-1 h-px" style={{ background: C.borderSub }} />
+      <div className="flex items-center gap-3 mx-4 my-4 select-none">
+        <div className="flex-1 h-px bg-[#30363D]" />
         <span
-          className="text-xs px-2 py-0.5 rounded"
-          style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: 10,
-            color: "rgba(34,197,94,0.5)",
-            background: "rgba(34,197,94,0.05)",
-            border: "1px solid rgba(34,197,94,0.1)",
-          }}
+          className="text-xs px-3 py-1 rounded-full text-[#8B949E] bg-[#161B22] border border-[#30363D]"
         >
-          ⚡ {msg.text}
+          {msg.text}
         </span>
-        <div className="flex-1 h-px" style={{ background: C.borderSub }} />
+        <div className="flex-1 h-px bg-[#30363D]" />
       </div>
     );
   }
 
-  const userColor = isOwn ? C.accent : getUserColor(msg.user);
+  const avatarColor = getAvatarColor(msg.user);
   const clickable = !!(onAvatarClick && msg.user_id);
 
   const handleAvatarClick = (e: React.MouseEvent) => {
@@ -183,72 +161,54 @@ const MessageRow = memo(function MessageRow({
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15 }}
-      className="group flex items-start gap-3 px-4 py-1.5 rounded-lg hover:bg-white/[0.025] transition-colors"
+      className="flex gap-4 mb-6 hover:bg-[#161B22]/50 p-2 rounded-xl transition-colors"
     >
-      {/* Avatar — sadece ilk mesajda */}
-      <div className="w-8 shrink-0 mt-0.5">
-        {showAvatar ? (
-          msg.avatar_url ? (
-            <img
-              src={msg.avatar_url}
-              alt={msg.user}
-              className={`w-8 h-8 rounded-full object-cover shrink-0 ${clickable ? "cursor-pointer hover:ring-2 hover:ring-white/20 transition-all" : ""}`}
-              style={{ border: `1px solid ${userColor}35` }}
-              onClick={handleAvatarClick}
-            />
-          ) : (
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${clickable ? "cursor-pointer hover:ring-2 hover:ring-white/20 transition-all" : ""}`}
-              style={{
-                background: `${userColor}18`,
-                border: `1px solid ${userColor}35`,
-                color: userColor,
-                fontFamily: "'Space Mono', monospace",
-              }}
-              onClick={handleAvatarClick}
-            >
-              {msg.user[0]}
-            </div>
-          )
+      {/* Sol taraf: Avatar */}
+      <div className="flex-shrink-0">
+        {msg.avatar_url ? (
+          <img
+            src={msg.avatar_url}
+            alt={msg.user}
+            className={`w-10 h-10 rounded-full object-cover flex-shrink-0 ${clickable ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
+            onClick={handleAvatarClick}
+          />
         ) : (
-          /* Hover'da saat göster */
-          <span
-            className="text-right text-[10px] leading-8 opacity-0 group-hover:opacity-100 transition-opacity block w-full"
-            style={{ fontFamily: "'Space Mono', monospace", color: C.textGhost }}
+          <div
+            className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 ${clickable ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
+            style={{
+              background: `${avatarColor}18`,
+              border: `2px solid #30363D`,
+              color: avatarColor,
+            }}
+            onClick={handleAvatarClick}
           >
-            {msg.ts}
-          </span>
+            {msg.user[0]?.toUpperCase()}
+          </div>
         )}
       </div>
 
-      <div className="flex-1 min-w-0">
-        {showAvatar && (
-          <div className="flex items-baseline gap-2 mb-0.5">
-            <span
-              className={`text-sm font-semibold leading-none ${clickable ? "cursor-pointer hover:underline hover:underline-offset-2" : ""}`}
-              style={{ fontFamily: "'Space Mono', monospace", color: userColor }}
-              onClick={handleAvatarClick}
-            >
-              {msg.user}
-              {isOwn && (
-                <span className="font-normal ml-1.5" style={{ color: C.textGhost, fontSize: 10 }}>
-                  (sen)
-                </span>
-              )}
+      {/* Sağ taraf kapsayıcı */}
+      <div className="flex flex-col flex-1 min-w-0">
+        {/* Üst Satır (İsim + Saat) */}
+        <div className="flex items-center gap-2 mb-1">
+          <span
+            className={`font-semibold text-[#E6EDF3] text-[14px] ${clickable ? "cursor-pointer hover:underline hover:underline-offset-2" : ""}`}
+            onClick={handleAvatarClick}
+          >
+            {msg.user}
+          </span>
+          {isOwn && (
+            <span className="text-[11px] text-[#8B949E]">
+              (sen)
             </span>
-            <span
-              className="text-[10px] leading-none"
-              style={{ fontFamily: "'Space Mono', monospace", color: C.textGhost }}
-            >
-              {msg.ts}
-            </span>
-          </div>
-        )}
-        {/* Mesaj metni — Inter, okunabilir */}
-        <p
-          className="text-sm leading-relaxed break-words"
-          style={{ color: C.textPrimary, fontFamily: "Inter, -apple-system, sans-serif" }}
-        >
+          )}
+          <span className="text-xs text-[#8B949E]">
+            {msg.ts}
+          </span>
+        </div>
+
+        {/* Alt Satır (Mesaj Metni) */}
+        <p className="text-[15px] leading-relaxed text-[#E6EDF3] whitespace-pre-wrap break-words">
           {msg.text}
         </p>
       </div>
@@ -257,7 +217,7 @@ const MessageRow = memo(function MessageRow({
 });
 
 // ─────────────────────────────────────────────────────────
-// Ghost Protocol Input
+// Ghost Protocol Input — minimal, clean
 // ─────────────────────────────────────────────────────────
 
 function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
@@ -277,11 +237,11 @@ function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
 
   return (
     <div
-      className="rounded-lg px-3 py-2 transition-all duration-400"
+      className="rounded-xl px-3 py-2 transition-all duration-200"
       style={{
-        opacity: visible ? 0.8 : 0.18,
-        background: focused ? "rgba(255,255,255,0.04)" : "transparent",
-        border: `1px solid ${focused ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)"}`,
+        opacity: visible ? 1 : 0.4,
+        background: focused ? C.surfaceHov : "transparent",
+        border: `1px solid ${focused ? C.border : C.borderSub}`,
       }}
     >
       <div className="flex items-center gap-2">
@@ -293,10 +253,9 @@ function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           onKeyDown={handleKeyDown}
-          placeholder="Enter Node Code..."
-          className="flex-1 bg-transparent text-xs outline-none w-full"
+          placeholder="Enter room code..."
+          className="flex-1 bg-transparent text-xs outline-none w-full font-mono"
           style={{
-            fontFamily: "'Space Mono', monospace",
             color: C.textSecondary,
             caretColor: C.accent,
           }}
@@ -312,15 +271,8 @@ function GhostInput({ onEnter }: { onEnter: (code: string) => void }) {
 }
 
 // ─────────────────────────────────────────────────────────
-// MessageInput — İzole mesaj yazma bileşeni
-// Kendi inputVal state'ini tutar → NexusDashboard re-render etmez.
-// onSend: ebeveynin ref köprüsünden gelen async fonksiyon.
+// MessageInput — iMessage/Telegram style, isolated state
 // ─────────────────────────────────────────────────────────
-
-interface MessageInputProps {
-  placeholder: string;
-  onSend: (text: string) => void;
-}
 
 const MessageInput = memo(function MessageInput({ placeholder, onSend }: MessageInputProps) {
   const [val, setVal]   = useState("");
@@ -349,26 +301,16 @@ const MessageInput = memo(function MessageInput({ placeholder, onSend }: Message
   const hasText = val.trim().length > 0;
 
   return (
-    <div className="px-4 pb-4 pt-2 shrink-0">
-      <div
-        className="flex items-end gap-2 rounded-xl px-3 py-2.5"
-        style={{
-          background: "rgba(255,255,255,0.04)",
-          border: `1px solid ${C.border}`,
-        }}
-      >
+    <div className="bg-[#0E1116] p-4 border-t border-[#30363D] shrink-0">
+      <div className="bg-[#161B22] border border-[#30363D] rounded-2xl flex items-end gap-2 p-2 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all">
         {/* Dosya ekle */}
         <button
-          className="p-1 shrink-0 self-end mb-0.5 rounded transition-colors"
-          style={{ color: C.textMuted }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = C.textSecondary)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = C.textMuted)}
+          className="p-2 shrink-0 self-end rounded-xl transition-colors text-[#8B949E] hover:bg-[#30363D]/20 hover:text-[#E6EDF3]"
           title="Dosya / Kod ekle"
         >
           <Plus className="w-4 h-4" />
         </button>
 
-        {/* Textarea — uncontrolled gibi davranır, re-render'ı sadece bu bileşene hapseder */}
         <textarea
           ref={taRef}
           rows={1}
@@ -376,37 +318,23 @@ const MessageInput = memo(function MessageInput({ placeholder, onSend }: Message
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="flex-1 bg-transparent text-sm outline-none resize-none min-h-[24px] max-h-[120px] leading-relaxed"
-          style={{
-            fontFamily: "Inter, -apple-system, sans-serif",
-            color: C.textPrimary,
-            caretColor: C.accent,
-          }}
+          className="flex-1 bg-transparent text-[15px] text-[#E6EDF3] caret-blue-500 placeholder:text-[#8B949E] outline-none focus:outline-none resize-none min-h-[24px] max-h-[120px] leading-relaxed py-1"
         />
 
-        {/* Gönder — whileHover/Tap GPU dostu transform kullanır */}
-        <motion.button
+        <button
           onClick={handleSend}
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.92 }}
           disabled={!hasText}
-          className="p-1.5 rounded-lg shrink-0 self-end mb-0.5 transition-colors duration-200"
-          style={{
-            background:  hasText ? C.accentDim  : "transparent",
-            border:      `1px solid ${hasText ? C.accentBorder : C.borderSub}`,
-            color:       hasText ? C.accent     : C.textGhost,
-            // boxShadow sabit — animasyonlu değil
-            boxShadow:   hasText ? "0 0 10px rgba(34,197,94,0.12)" : "none",
-          }}
+          className={`p-2 rounded-xl shrink-0 self-end transition-all duration-150 ${
+            hasText
+              ? "text-blue-500 hover:bg-blue-500/10 cursor-pointer"
+              : "text-[#8B949E] cursor-not-allowed opacity-50"
+          }`}
         >
           <Send className="w-4 h-4" />
-        </motion.button>
+        </button>
       </div>
 
-      <p
-        className="text-[10px] mt-1.5 px-1"
-        style={{ fontFamily: "'Space Mono', monospace", color: C.textGhost }}
-      >
+      <p className="text-[11px] mt-1.5 px-2 text-[#8B949E]">
         Enter → gönder · Shift+Enter → satır
       </p>
     </div>
@@ -784,62 +712,52 @@ export default function NexusDashboard() {
       return {
         ...node,
         name: nodeName,
-        role: profile?.plan_level ? `${profile.plan_level} Node` : "Admin",
-        color: getUserColor(nodeName),
+        role: profile?.plan_level ? `${profile.plan_level}` : "Admin",
       };
     }
-    return {
-      ...node,
-      color: getUserColor(node.name),
-    };
+    return node;
   });
 
   // ─── Render ─────────────────────────────────────────────
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         /* Subtle scrollbar */
-        .nx-scroll::-webkit-scrollbar       { width: 3px; }
+        .nx-scroll::-webkit-scrollbar       { width: 4px; }
         .nx-scroll::-webkit-scrollbar-track { background: transparent; }
-        .nx-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-        .nx-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
-
-        @keyframes nd-dot {
-          0%,100% { opacity:1; } 50% { opacity:0.25; }
-        }
-        .nd-dot { animation: nd-dot 2.8s ease-in-out infinite; }
+        .nx-scroll::-webkit-scrollbar-thumb { background: ${C.borderSub}; border-radius: 4px; }
+        .nx-scroll::-webkit-scrollbar-thumb:hover { background: ${C.border}; }
       `}</style>
 
       <div
         className="h-screen w-screen overflow-hidden flex flex-col"
-        style={{ background: C.bg, fontFamily: "Inter, -apple-system, sans-serif" }}
+        style={{ background: C.bg, fontFamily: "Inter, -apple-system, system-ui, sans-serif", color: C.textPrimary }}
       >
 
         {/* ═══════════════ TOP BAR ═══════════════ */}
         <div
           className="flex items-center justify-between px-5 py-3 shrink-0 z-30"
-          style={{ background: C.topbar, borderBottom: `1px solid ${C.border}` }}
+          style={{ background: C.surface, borderBottom: `1px solid ${C.border}` }}
         >
           {/* Logo */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center"
+              className="w-8 h-8 rounded-xl flex items-center justify-center"
               style={{ background: C.accentDim, border: `1px solid ${C.accentBorder}` }}
             >
-              <Terminal className="w-3.5 h-3.5" style={{ color: C.accent }} />
+              <MessageSquare className="w-4 h-4" style={{ color: C.accent }} />
             </div>
-            <span className="text-sm font-semibold" style={{ color: C.textPrimary }}>
-              Must-b Nexus
+            <span className="text-[15px] font-semibold" style={{ color: C.textPrimary }}>
+              Must-b
             </span>
             <span
-              className="text-[10px] px-1.5 py-0.5 rounded font-medium"
+              className="text-[11px] px-2 py-0.5 rounded-md font-medium"
               style={{
-                fontFamily: "'Space Mono', monospace",
-                background: "rgba(255,255,255,0.05)",
-                color: C.textMuted,
-                border: `1px solid ${C.borderSub}`,
+                background: C.accentDim,
+                color: C.accent,
+                border: `1px solid ${C.accentBorder}`,
               }}
             >
               v3.1.4
@@ -847,37 +765,38 @@ export default function NexusDashboard() {
           </div>
 
           {/* Orta — kanal */}
-          <div className="flex items-center gap-1.5" style={{ color: C.textMuted }}>
+          <div className="flex items-center gap-1.5" style={{ color: C.textSecondary }}>
             {darkNodes.includes(activeChannel) ? (
-              <Lock className="w-3.5 h-3.5 text-red-500/80" style={{ color: C.accent }} />
+              <Lock className="w-3.5 h-3.5" style={{ color: C.accent }} />
             ) : (
               <Hash className="w-3.5 h-3.5" />
             )}
-            <span className="text-sm" style={{ color: C.textSecondary }}>{activeLabel}</span>
+            <span className="text-sm font-medium">{activeLabel}</span>
           </div>
 
           {/* Sağ */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <motion.span
-                className="w-2 h-2 rounded-full"
-                style={{ background: C.accent }}
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              <span
-                className="text-xs font-medium"
-                style={{ fontFamily: "'Space Mono', monospace", color: C.accent }}
-              >
+              <div className="w-2 h-2 rounded-full" style={{ background: "#22C55E" }} />
+              <span className="text-sm font-medium" style={{ color: C.textPrimary }}>
                 {nodeName}
               </span>
+              {profile?.plan_level && profile.plan_level !== "Free" && (
+                <BadgeCheck className="w-4 h-4" style={{ color: C.accent }} />
+              )}
             </div>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-1.5 text-xs transition-colors"
+              className="flex items-center gap-1.5 text-xs transition-colors rounded-lg px-2 py-1"
               style={{ color: C.textMuted }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#f87171")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = C.textMuted)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#F87171";
+                e.currentTarget.style.background = "rgba(248,113,113,0.08)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = C.textMuted;
+                e.currentTarget.style.background = "transparent";
+              }}
             >
               <LogOut className="w-3.5 h-3.5" />
               Çıkış
@@ -891,7 +810,7 @@ export default function NexusDashboard() {
           {/* ── SOL SİDEBAR ── */}
           <div
             className="w-60 shrink-0 flex flex-col"
-            style={{ background: C.sidebar, borderRight: `1px solid ${C.border}` }}
+            style={{ background: C.surface, borderRight: `1px solid ${C.border}` }}
           >
             {/* Kullanıcı profil */}
             <div
@@ -902,28 +821,32 @@ export default function NexusDashboard() {
                 <img
                   src={profile.avatar_url}
                   alt={nodeName}
-                  className="w-8 h-8 rounded-full object-cover shrink-0"
-                  style={{ border: `1.5px solid ${getUserColor(nodeName)}40` }}
+                  className="w-9 h-9 rounded-full object-cover shrink-0"
+                  style={{ border: `2px solid ${C.border}` }}
                 />
               ) : (
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
                   style={{
-                    background: `${getUserColor(nodeName)}18`,
-                    border: `1.5px solid ${getUserColor(nodeName)}40`,
-                    color: getUserColor(nodeName),
-                    fontFamily: "'Space Mono', monospace",
+                    background: `${getAvatarColor(nodeName)}18`,
+                    border: `2px solid ${C.border}`,
+                    color: getAvatarColor(nodeName),
                   }}
                 >
                   {nodeName[0]}
                 </div>
               )}
               <div className="min-w-0">
-                <p className="text-sm font-semibold truncate" style={{ color: C.textPrimary }}>
-                  {nodeName}
-                </p>
-                <p className="text-[10px] font-medium tracking-wide" style={{ color: C.textMuted }}>
-                  {profile?.plan_level ? `${profile.plan_level} Node` : "Admin Node"}
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm font-semibold truncate" style={{ color: C.textPrimary }}>
+                    {nodeName}
+                  </p>
+                  {profile?.plan_level && profile.plan_level !== "Free" && (
+                    <BadgeCheck className="w-3.5 h-3.5 shrink-0" style={{ color: C.accent }} />
+                  )}
+                </div>
+                <p className="text-[11px] font-medium" style={{ color: C.textSecondary }}>
+                  {profile?.plan_level || "Free"} Plan
                 </p>
               </div>
             </div>
@@ -931,10 +854,10 @@ export default function NexusDashboard() {
             {/* Kanallar */}
             <div className="flex-1 overflow-y-auto nx-scroll px-3 py-4">
               <p
-                className="text-[10px] font-semibold uppercase tracking-widest mb-2 px-2"
-                style={{ color: C.textGhost, fontFamily: "'Space Mono', monospace" }}
+                className="text-[11px] font-semibold uppercase tracking-wider mb-2 px-2"
+                style={{ color: C.textMuted }}
               >
-                Kanallar
+                Channels
               </p>
 
               <div className="space-y-0.5">
@@ -944,14 +867,20 @@ export default function NexusDashboard() {
                     <button
                       key={ch.id}
                       onClick={() => setActiveChannel(ch.id)}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all duration-150"
                       style={{
                         background: isActive ? C.accentDim : "transparent",
                         border: isActive ? `1px solid ${C.accentBorder}` : "1px solid transparent",
                       }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) e.currentTarget.style.background = C.surfaceHov;
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) e.currentTarget.style.background = "transparent";
+                      }}
                     >
                       <Hash
-                        className="w-3.5 h-3.5 shrink-0"
+                        className="w-4 h-4 shrink-0"
                         style={{ color: isActive ? C.accent : C.textMuted }}
                       />
                       <span
@@ -966,7 +895,7 @@ export default function NexusDashboard() {
                       {ch.unread > 0 && !isActive && (
                         <span
                           className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0"
-                          style={{ background: C.accentDim, color: C.accent, border: `1px solid ${C.accentBorder}` }}
+                          style={{ background: C.accent, color: "#ffffff" }}
                         >
                           {ch.unread}
                         </span>
@@ -979,12 +908,12 @@ export default function NexusDashboard() {
               {/* Karanlık Odalar */}
               {darkNodes.length > 0 && (
                 <>
-                  <div className="my-5 h-px mx-2" style={{ background: C.borderSub }} />
+                  <div className="my-4 h-px mx-2" style={{ background: C.borderSub }} />
                   <p
-                    className="text-[10px] font-semibold uppercase tracking-widest mb-2 px-2"
-                    style={{ color: C.textGhost, fontFamily: "'Space Mono', monospace" }}
+                    className="text-[11px] font-semibold uppercase tracking-wider mb-2 px-2"
+                    style={{ color: C.textMuted }}
                   >
-                    Karanlık Odalar
+                    Private Rooms
                   </p>
                   <div className="space-y-0.5">
                     {darkNodes.map((code) => {
@@ -993,7 +922,7 @@ export default function NexusDashboard() {
                         <button
                           key={code}
                           onClick={() => setActiveChannel(code)}
-                          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150"
+                          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all duration-150"
                           style={{
                             background: isActive ? C.accentDim : "transparent",
                             border: isActive ? `1px solid ${C.accentBorder}` : "1px solid transparent",
@@ -1001,19 +930,16 @@ export default function NexusDashboard() {
                         >
                           <Lock
                             className="w-3.5 h-3.5 shrink-0"
-                            style={{ color: isActive ? C.accent : "rgba(239, 68, 68, 0.6)" }}
+                            style={{ color: isActive ? C.accent : C.textMuted }}
                           />
                           <span
-                            className="text-sm flex-1 truncate font-mono tracking-wider"
+                            className="text-sm flex-1 truncate font-mono"
                             style={{
                               color: isActive ? C.accent : C.textSecondary,
                               fontWeight: isActive ? 600 : 400,
                             }}
                           >
                             {code}
-                          </span>
-                          <span className="text-[10px]" style={{ color: C.textGhost }}>
-                            🔒
                           </span>
                         </button>
                       );
@@ -1023,15 +949,12 @@ export default function NexusDashboard() {
               )}
 
               {/* Divider */}
-              <div className="my-5 h-px mx-2" style={{ background: C.borderSub }} />
+              <div className="my-4 h-px mx-2" style={{ background: C.borderSub }} />
 
               {/* Ghost Protocol */}
               <div className="flex items-center gap-1.5 px-2 mb-2.5">
-                <Radio className="w-3 h-3" style={{ color: C.textGhost }} />
-                <p
-                  className="text-[10px] font-semibold tracking-widest uppercase"
-                  style={{ fontFamily: "'Space Mono', monospace", color: C.textGhost }}
-                >
+                <Radio className="w-3 h-3" style={{ color: C.textMuted }} />
+                <p className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: C.textMuted }}>
                   Ghost Protocol
                 </p>
               </div>
@@ -1043,12 +966,9 @@ export default function NexusDashboard() {
               className="px-4 py-3 shrink-0 flex items-center gap-1.5"
               style={{ borderTop: `1px solid ${C.borderSub}` }}
             >
-              <Lock className="w-3 h-3" style={{ color: C.textGhost }} />
-              <span
-                className="text-[10px]"
-                style={{ fontFamily: "'Space Mono', monospace", color: C.textGhost }}
-              >
-                E2EE · AES-256-GCM
+              <Shield className="w-3 h-3" style={{ color: C.textMuted }} />
+              <span className="text-[11px]" style={{ color: C.textMuted }}>
+                End-to-end encrypted
               </span>
             </div>
           </div>
@@ -1063,15 +983,15 @@ export default function NexusDashboard() {
             >
               <div className="flex items-center gap-2.5">
                 {darkNodes.includes(activeChannel) ? (
-                  <Lock className="w-4 h-4 text-red-500/80" style={{ color: C.accent }} />
+                  <Lock className="w-4 h-4" style={{ color: C.accent }} />
                 ) : (
                   <Hash className="w-4 h-4" style={{ color: C.accent }} />
                 )}
-                <span className="text-sm font-semibold" style={{ color: C.textPrimary }}>
+                <span className="text-[15px] font-semibold" style={{ color: C.textPrimary }}>
                   {activeLabel}
                 </span>
                 <span className="text-xs" style={{ color: C.textMuted }}>
-                  — uçtan uca şifreli
+                  — encrypted channel
                 </span>
               </div>
               <E2EEBadge />
@@ -1080,13 +1000,10 @@ export default function NexusDashboard() {
             {/* Mesajlar */}
             <div className="flex-1 overflow-y-auto nx-scroll py-4">
               {/* Kanal başlangıç notu */}
-              <div className="flex items-center gap-3 mx-4 mb-6">
+              <div className="flex items-center gap-3 mx-5 mb-6">
                 <div className="flex-1 h-px" style={{ background: C.borderSub }} />
-                <span
-                  className="text-[10px] px-2"
-                  style={{ fontFamily: "'Space Mono', monospace", color: C.textGhost }}
-                >
-                  #{activeLabel} başlangıcı
+                <span className="text-[11px] px-3" style={{ color: C.textMuted }}>
+                  #{activeLabel} — beginning of conversation
                 </span>
                 <div className="flex-1 h-px" style={{ background: C.borderSub }} />
               </div>
@@ -1115,9 +1032,9 @@ export default function NexusDashboard() {
               <div ref={messagesEndRef} className="h-2" />
             </div>
 
-            {/* Mesaj yazma kutusu — izole bileşen, NexusDashboard re-render'ını tetiklemez */}
+            {/* Mesaj yazma kutusu — izole bileşen */}
             <MessageInput
-              placeholder={`#${activeLabel} kanalına mesaj yaz…`}
+              placeholder={`Message #${activeLabel}…`}
               onSend={(text) => sendMessageRef.current?.(text)}
             />
           </div>
@@ -1125,7 +1042,7 @@ export default function NexusDashboard() {
           {/* ── SAĞ NODE PANELİ ── */}
           <div
             className="w-56 shrink-0 flex flex-col"
-            style={{ background: C.sidebar, borderLeft: `1px solid ${C.border}` }}
+            style={{ background: C.surface, borderLeft: `1px solid ${C.border}` }}
           >
             {/* Başlık */}
             <div
@@ -1134,11 +1051,11 @@ export default function NexusDashboard() {
             >
               <Wifi className="w-3.5 h-3.5" style={{ color: C.textMuted }} />
               <span className="text-xs font-semibold flex-1" style={{ color: C.textSecondary }}>
-                Aktif Node'lar
+                Online Members
               </span>
               <span
-                className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
-                style={{ background: C.accentDim, color: C.accent, border: `1px solid ${C.accentBorder}` }}
+                className="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                style={{ background: C.accentDim, color: C.accent }}
               >
                 {ACTIVE_NODES.length}
               </span>
@@ -1146,75 +1063,69 @@ export default function NexusDashboard() {
 
             {/* Node listesi */}
             <div className="flex-1 overflow-y-auto nx-scroll px-3 py-3 space-y-0.5">
-              {dynamicActiveNodes.map((node, idx) => (
-                <motion.div
-                  key={node.id}
-                  initial={{ opacity: 0, x: 6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className={`flex items-center gap-2.5 px-2 py-2 rounded-md transition-colors ${node.ghost ? "cursor-default" : "cursor-pointer"}`}
-                  style={{ opacity: node.ghost ? 0.35 : 1 }}
-                  onMouseEnter={(e) => { if (!node.ghost) (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.03)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
-                  onClick={(e) => {
-                    if (node.ghost) return;
-                    // Aktif kullanıcı (root) için profile state'inden plan al
-                    const isCurrentUser = node.id === "root";
-                    const planLevel = isCurrentUser ? profile?.plan_level : null;
-                    const userId    = isCurrentUser ? (profile?.id ?? node.id) : node.id;
-                    openProfileCard(userId, node.name, null, planLevel, e);
-                  }}
-                >
-                  {/* Avatar */}
-                  <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                    style={{
-                      background: `${node.color}15`,
-                      border: `1px solid ${node.color}30`,
-                      color: node.color,
-                      fontFamily: "'Space Mono', monospace",
+              {dynamicActiveNodes.map((node, idx) => {
+                const nodeColor = getAvatarColor(node.name);
+                return (
+                  <motion.div
+                    key={node.id}
+                    initial={{ opacity: 0, x: 6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className={`flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors ${node.ghost ? "cursor-default" : "cursor-pointer"}`}
+                    style={{ opacity: node.ghost ? 0.35 : 1 }}
+                    onMouseEnter={(e) => { if (!node.ghost) (e.currentTarget as HTMLDivElement).style.background = C.surfaceHov; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
+                    onClick={(e) => {
+                      if (node.ghost) return;
+                      // Aktif kullanıcı (root) için profile state'inden plan al
+                      const isCurrentUser = node.id === "root";
+                      const planLevel = isCurrentUser ? profile?.plan_level : null;
+                      const userId    = isCurrentUser ? (profile?.id ?? node.id) : node.id;
+                      openProfileCard(userId, node.name, null, planLevel, e);
                     }}
                   >
-                    {node.name[0]}
-                  </div>
-
-                  {/* İsim & Rol */}
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className="text-sm font-medium truncate"
-                      style={{ color: node.ghost ? C.textGhost : C.textPrimary }}
-                    >
-                      {node.name}
-                    </p>
-                    <p
-                      className="text-[10px]"
+                    {/* Avatar */}
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
                       style={{
-                        fontFamily: "'Space Mono', monospace",
-                        color: node.ghost ? C.textGhost : `${node.color}90`,
+                        background: `${nodeColor}15`,
+                        border: `2px solid ${C.border}`,
+                        color: nodeColor,
                       }}
                     >
-                      {node.role}
-                    </p>
-                  </div>
+                      {node.name[0]}
+                    </div>
 
-                  {/* Online noktası */}
-                  <div
-                    className="nd-dot w-2 h-2 rounded-full shrink-0"
-                    style={{
-                      background: node.ghost ? C.textGhost : node.color,
-                      boxShadow: node.ghost ? "none" : `0 0 5px ${node.color}`,
-                      animationDelay: `${idx * 0.5}s`,
-                    }}
-                  />
-                </motion.div>
-              ))}
+                    {/* İsim & Rol */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1">
+                        <p className="text-sm font-medium truncate" style={{ color: node.ghost ? C.textMuted : C.textPrimary }}>
+                          {node.name}
+                        </p>
+                        {!node.ghost && (node.role === "Elite" || node.role === "Core" || node.role === "Admin") && (
+                          <BadgeCheck className="w-3.5 h-3.5 shrink-0" style={{ color: C.accent }} />
+                        )}
+                      </div>
+                      <p className="text-[11px]" style={{ color: node.ghost ? C.textMuted : C.textSecondary }}>
+                        {node.role}
+                      </p>
+                    </div>
+
+                    {/* Online dot */}
+                    <div
+                      className="w-2 h-2 rounded-full shrink-0"
+                      style={{ background: node.ghost ? C.textMuted : "#22C55E" }}
+                    />
+                  </motion.div>
+                );
+              })}
 
               {/* Alt not */}
               <div className="mt-4 pt-3" style={{ borderTop: `1px solid ${C.borderSub}` }}>
                 <div className="flex items-center gap-1.5 px-2">
-                  <AlertTriangle className="w-3 h-3 text-yellow-600/60" />
-                  <span className="text-[10px]" style={{ color: C.textGhost }}>
-                    Kimlikler şifreli
+                  <Shield className="w-3 h-3" style={{ color: C.textMuted }} />
+                  <span className="text-[11px]" style={{ color: C.textMuted }}>
+                    Identities encrypted
                   </span>
                 </div>
               </div>
@@ -1226,16 +1137,13 @@ export default function NexusDashboard() {
               style={{ borderTop: `1px solid ${C.borderSub}` }}
             >
               {[
-                { label: "Gecikme",   value: "12 ms"   },
-                { label: "Şifreleme", value: "AES-256" },
-                { label: "Kanal",     value: "OPEN"    },
+                { label: "Latency",    value: "12 ms"   },
+                { label: "Encryption", value: "AES-256" },
+                { label: "Status",     value: "ONLINE"  },
               ].map(({ label, value }) => (
                 <div key={label} className="flex items-center justify-between">
                   <span className="text-xs" style={{ color: C.textMuted }}>{label}</span>
-                  <span
-                    className="text-[10px] font-medium"
-                    style={{ fontFamily: "'Space Mono', monospace", color: C.accent }}
-                  >
+                  <span className="text-[11px] font-medium font-mono" style={{ color: C.accent }}>
                     {value}
                   </span>
                 </div>

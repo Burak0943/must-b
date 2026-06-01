@@ -24,7 +24,7 @@ export interface ProfileSettingsModalProps {
   onSaved: (nodeName: string, avatarUrl: string | null) => void;
 }
 
-// ─── Fütüristik input bileşeni ────────────────────────────
+// ─── Premium input bileşeni ───────────────────────────────
 
 interface FuturisticInputProps {
   id: string;
@@ -46,21 +46,20 @@ function FuturisticInput({
     <div className="flex flex-col gap-1.5">
       <label
         htmlFor={id}
-        className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest select-none"
-        style={{ color: focused ? "#22c55e" : "rgba(255,255,255,0.40)", fontFamily: "'Space Mono', monospace", transition: "color 0.2s" }}
+        className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-widest select-none transition-colors duration-200 ${
+          focused ? "text-blue-500" : "text-[#8B949E]"
+        }`}
+        style={{ fontFamily: "Inter, system-ui, sans-serif" }}
       >
         {icon}
         {label}
       </label>
       <div
-        className="relative rounded-xl transition-all duration-200"
-        style={{
-          background: focused ? "rgba(34,197,94,0.04)" : "rgba(255,255,255,0.03)",
-          border: focused
-            ? "1px solid rgba(34,197,94,0.40)"
-            : "1px solid rgba(255,255,255,0.08)",
-          boxShadow: focused ? "0 0 0 3px rgba(34,197,94,0.07)" : "none",
-        }}
+        className={`relative rounded-xl transition-all duration-200 bg-[#0E1116] ${
+          focused
+            ? "border border-blue-500 ring-1 ring-blue-500/20"
+            : "border border-[#30363D]"
+        }`}
       >
         <input
           id={id}
@@ -71,16 +70,15 @@ function FuturisticInput({
           onBlur={() => setFocused(false)}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full bg-transparent px-4 py-3 text-sm outline-none rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{
-            color: "rgba(255,255,255,0.88)",
-            fontFamily: "Inter, sans-serif",
-            caretColor: "#22c55e",
-          }}
+          className="w-full bg-transparent px-4 py-3 text-sm text-[#E6EDF3] caret-blue-500 placeholder:text-[#484F58] outline-none rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ fontFamily: "Inter, system-ui, sans-serif" }}
         />
       </div>
       {hint && (
-        <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.22)", fontFamily: "Inter, sans-serif" }}>
+        <p
+          className="text-[10px] text-[#484F58]"
+          style={{ fontFamily: "Inter, system-ui, sans-serif" }}
+        >
           {hint}
         </p>
       )}
@@ -101,8 +99,7 @@ function AvatarPreview({ url, nodeName }: { url: string; nodeName: string }) {
       <img
         src={url}
         alt="preview"
-        className="w-16 h-16 rounded-full object-cover"
-        style={{ border: "2px solid rgba(34,197,94,0.35)" }}
+        className="w-16 h-16 rounded-full object-cover border-2 border-[#30363D]"
         onError={() => setImgOk(false)}
       />
     );
@@ -110,13 +107,8 @@ function AvatarPreview({ url, nodeName }: { url: string; nodeName: string }) {
 
   return (
     <div
-      className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold select-none"
-      style={{
-        background: "rgba(34,197,94,0.12)",
-        border: "2px solid rgba(34,197,94,0.30)",
-        color: "#22c55e",
-        fontFamily: "'Space Mono', monospace",
-      }}
+      className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold select-none bg-blue-600/10 border-2 border-[#30363D] text-blue-500"
+      style={{ fontFamily: "Inter, system-ui, sans-serif" }}
     >
       {nodeName?.[0]?.toUpperCase() ?? "?"}
     </div>
@@ -219,8 +211,7 @@ export function ProfileSettingsModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="fixed inset-0 z-[99998] flex items-center justify-center"
-          style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }}
+          className="fixed inset-0 z-[99998] flex items-center justify-center bg-black/60 backdrop-blur-sm"
           onClick={handleBackdropClick}
         >
           <motion.div
@@ -229,52 +220,30 @@ export function ProfileSettingsModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.93, y: 16 }}
             transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative w-full max-w-md mx-4 rounded-2xl overflow-hidden"
-            style={{
-              background: "rgba(17,17,17,0.97)",
-              backdropFilter: "blur(24px) saturate(180%)",
-              WebkitBackdropFilter: "blur(24px) saturate(180%)",
-              border: "1px solid rgba(34,197,94,0.18)",
-              boxShadow: "0 0 40px rgba(34,197,94,0.08), 0 24px 64px rgba(0,0,0,0.75)",
-            }}
+            className="relative w-full max-w-md mx-4 rounded-2xl overflow-hidden bg-[#161B22]/95 backdrop-blur-xl border border-[#30363D] shadow-2xl"
           >
-            {/* Neon yeşil header strip */}
-            <div
-              className="h-1 w-full"
-              style={{ background: "linear-gradient(90deg, #22c55e, #4ade80, #22c55e)" }}
-            />
+            {/* Blue/indigo header strip */}
+            <div className="h-0.5 w-full bg-gradient-to-r from-blue-600 to-indigo-600" />
 
             {/* Header */}
-            <div
-              className="flex items-center justify-between px-6 py-4"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-            >
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#30363D]">
               <div>
                 <h2
-                  className="text-base font-bold"
-                  style={{ color: "rgba(255,255,255,0.92)", fontFamily: "Inter, sans-serif", letterSpacing: "-0.01em" }}
+                  className="text-base font-bold text-[#E6EDF3]"
+                  style={{ fontFamily: "Inter, system-ui, sans-serif", letterSpacing: "-0.01em" }}
                 >
                   Edit Profile
                 </h2>
                 <p
-                  className="text-xs mt-0.5"
-                  style={{ color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif" }}
+                  className="text-xs mt-0.5 text-[#8B949E]"
+                  style={{ fontFamily: "Inter, system-ui, sans-serif" }}
                 >
                   Node identity settings
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150"
-                style={{ color: "rgba(255,255,255,0.35)", border: "1px solid rgba(255,255,255,0.08)" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.80)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.35)";
-                }}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-150 text-[#484F58] hover:text-[#E6EDF3] hover:bg-[#1C2128]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -285,9 +254,12 @@ export function ProfileSettingsModal({
               {/* Avatar önizleme */}
               <div className="flex items-center gap-4">
                 <AvatarPreview url={avatarUrl} nodeName={nodeName} />
-                <div className="text-xs space-y-0.5" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif" }}>
-                  <p>Live avatar preview</p>
-                  <p style={{ color: "rgba(255,255,255,0.20)" }}>Paste an image URL below</p>
+                <div
+                  className="text-xs space-y-0.5"
+                  style={{ fontFamily: "Inter, system-ui, sans-serif" }}
+                >
+                  <p className="text-[#8B949E]">Live avatar preview</p>
+                  <p className="text-[#484F58]">Paste an image URL below</p>
                 </div>
               </div>
 
@@ -317,22 +289,12 @@ export function ProfileSettingsModal({
             </div>
 
             {/* Footer */}
-            <div
-              className="flex items-center justify-end gap-3 px-6 py-4"
-              style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
-            >
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[#30363D]">
               <button
                 onClick={onClose}
                 disabled={saving}
-                className="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-150 disabled:opacity-40"
-                style={{
-                  color: "rgba(255,255,255,0.45)",
-                  background: "transparent",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  fontFamily: "Inter, sans-serif",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                className="px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-150 disabled:opacity-40 bg-transparent border border-[#30363D] text-[#8B949E] hover:bg-[#1C2128]"
+                style={{ fontFamily: "Inter, system-ui, sans-serif" }}
               >
                 Cancel
               </button>
@@ -340,24 +302,8 @@ export function ProfileSettingsModal({
               <button
                 onClick={handleSave}
                 disabled={saving || !nodeName.trim()}
-                className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
-                style={{
-                  background: saving ? "rgba(34,197,94,0.15)" : "rgba(34,197,94,0.18)",
-                  border: "1px solid rgba(34,197,94,0.40)",
-                  color: "#22c55e",
-                  fontFamily: "Inter, sans-serif",
-                  boxShadow: saving ? "none" : "0 0 12px rgba(34,197,94,0.15)",
-                }}
-                onMouseEnter={(e) => {
-                  if (!saving) {
-                    e.currentTarget.style.background = "rgba(34,197,94,0.25)";
-                    e.currentTarget.style.boxShadow = "0 0 20px rgba(34,197,94,0.25)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = saving ? "rgba(34,197,94,0.15)" : "rgba(34,197,94,0.18)";
-                  e.currentTarget.style.boxShadow = saving ? "none" : "0 0 12px rgba(34,197,94,0.15)";
-                }}
+                className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 bg-blue-600 hover:bg-blue-700 text-white"
+                style={{ fontFamily: "Inter, system-ui, sans-serif" }}
               >
                 {saving ? (
                   <>

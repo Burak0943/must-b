@@ -30,7 +30,7 @@ const PLANS = [
     name:        "Free Node",
     price:       null,
     priceLabel:  "Free forever",
-    color:       "#6b7280",
+    color:       "#8B949E",
     glow:        null as string | null,
     animated:    false,
     icon:        Ghost,
@@ -52,8 +52,8 @@ const PLANS = [
     name:        "Core Node",
     price:       9,
     priceLabel:  "$9 / month",
-    color:       "#22c55e",
-    glow:        "0 0 15px rgba(34,197,94,0.30), 0 0 40px rgba(34,197,94,0.10)",
+    color:       "#3B82F6",
+    glow:        null as string | null,
     animated:    false,
     icon:        Shield,
     description: "For power users building with Must-b.",
@@ -62,7 +62,7 @@ const PLANS = [
       "500K token/month",
       "Priority queue",
       "Custom avatar frame",
-      "Green node glow",
+      "Blue node accent",
     ],
     locked: [
       "Ghost Protocol rooms",
@@ -73,9 +73,9 @@ const PLANS = [
     name:        "Elite Node",
     price:       29,
     priceLabel:  "$29 / month",
-    color:       "#a855f7",
-    glow:        null,
-    animated:    true,
+    color:       "#6366F1",
+    glow:        null as string | null,
+    animated:    false,
     icon:        Sparkles,
     description: "Maximum access. Zero limits.",
     features: [
@@ -83,7 +83,7 @@ const PLANS = [
       "10M token/month",
       "Ghost Protocol rooms",
       "1,000 Cognitive Credits",
-      "Animated neon border",
+      "Exclusive border",
       "Elite badge",
       "Priority support",
     ],
@@ -93,33 +93,20 @@ const PLANS = [
 
 type PlanId = (typeof PLANS)[number]["id"];
 
-// ─── Animated neon border for Elite ──────────────────────
+// ─── Helper: check-mark color per plan ────────────────────
 
-function EliteCardGlow() {
-  return (
-    <>
-      <style>{`
-        @keyframes pm-elite-pulse {
-          /* compositor-only: opacity + transform — box-shadow kald\u0131r\u0131ld\u0131 */
-          0%,100% { opacity: 0.55; transform: scale(1); }
-          50%      { opacity: 1;   transform: scale(1.002); }
-        }
-        .pm-elite-glow {
-          animation: pm-elite-pulse 2.4s ease-in-out infinite;
-          will-change: opacity, transform;
-        }
-      `}</style>
-      <div
-        className="pm-elite-glow absolute inset-0 rounded-2xl pointer-events-none"
-        style={{
-          border: "1.5px solid rgba(168,85,247,0.65)",
-          borderRadius: "inherit",
-          /* Sabit glow \u2014 animate edilmiyor */
-          boxShadow: "0 0 20px 2px rgba(168,85,247,0.20), inset 0 0 10px rgba(168,85,247,0.05)",
-        }}
-      />
-    </>
-  );
+function checkColor(planId: string): string {
+  if (planId === "Elite") return "#6366F1";
+  if (planId === "Core") return "#3B82F6";
+  return "#8B949E";
+}
+
+// ─── Helper: card border class per plan ───────────────────
+
+function cardBorderClass(planId: string): string {
+  if (planId === "Elite") return "border border-indigo-500/30";
+  if (planId === "Core") return "border border-blue-500/30";
+  return "border border-[#30363D]";
 }
 
 // ─── Single Plan Card ─────────────────────────────────────
@@ -148,39 +135,31 @@ function PlanCard({
     onUpgrade(plan.id as PlanId);
   };
 
+  // Button classes
+  const buttonClasses = isCurrent
+    ? "bg-[#161B22] border border-[#30363D] text-[#484F58] cursor-not-allowed opacity-60"
+    : plan.id === "Elite"
+    ? "bg-indigo-600 hover:bg-indigo-700 text-white border border-transparent"
+    : plan.id === "Core"
+    ? "bg-blue-600 hover:bg-blue-700 text-white border border-transparent"
+    : "bg-[#161B22] border border-[#30363D] text-[#8B949E] hover:bg-[#1C2128]";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="relative flex flex-col rounded-2xl overflow-hidden flex-1 min-w-0"
-      style={{
-        background: plan.animated
-          ? "rgba(168,85,247,0.04)"
-          : isCurrent
-          ? `${plan.color}08`
-          : "rgba(255,255,255,0.025)",
-        border: plan.animated
-          ? "1px solid rgba(168,85,247,0.40)"
-          : isCurrent
-          ? `1px solid ${plan.color}50`
-          : `1px solid ${plan.color}22`,
-        boxShadow: plan.glow ?? undefined,
-      }}
+      className={`relative flex flex-col rounded-2xl overflow-hidden flex-1 min-w-0 bg-[#0E1116] ${cardBorderClass(plan.id)}`}
     >
-      {/* Elite animated border */}
-      {plan.animated && <EliteCardGlow />}
-
-      {/* Top color accent */}
+      {/* Top color accent — thin gradient line */}
       <div
-        className="h-1 w-full"
-        style={{
-          background: plan.animated
-            ? "linear-gradient(90deg,#a855f7,#6366f1,#a855f7)"
+        className={`h-0.5 w-full ${
+          plan.id === "Elite"
+            ? "bg-gradient-to-r from-indigo-600 to-purple-600"
             : plan.id === "Core"
-            ? "linear-gradient(90deg,#22c55e,#4ade80)"
-            : "linear-gradient(90deg,rgba(107,114,128,0.5),rgba(107,114,128,0.8))",
-        }}
+            ? "bg-gradient-to-r from-blue-600 to-blue-400"
+            : "bg-[#30363D]"
+        }`}
       />
 
       <div className="flex flex-col flex-1 p-5 gap-4">
@@ -188,24 +167,15 @@ function PlanCard({
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center"
-              style={{
-                background: `${plan.color}15`,
-                border: `1px solid ${plan.color}35`,
-              }}
+              className="w-8 h-8 rounded-xl flex items-center justify-center bg-[#161B22] border border-[#30363D]"
             >
               <PlanIcon className="w-4 h-4" style={{ color: plan.color }} />
             </div>
 
             {isCurrent && (
               <span
-                className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
-                style={{
-                  background: `${plan.color}15`,
-                  border: `1px solid ${plan.color}35`,
-                  color: plan.color,
-                  fontFamily: "'Space Mono', monospace",
-                }}
+                className="text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider bg-[#161B22] border border-[#30363D] text-[#8B949E]"
+                style={{ fontFamily: "Inter, system-ui, sans-serif" }}
               >
                 Current
               </span>
@@ -215,13 +185,13 @@ function PlanCard({
           <div>
             <h3
               className="text-sm font-bold"
-              style={{ color: plan.color, fontFamily: "Inter, sans-serif" }}
+              style={{ color: plan.color, fontFamily: "Inter, system-ui, sans-serif" }}
             >
               {plan.name}
             </h3>
             <p
-              className="text-[11px] mt-0.5"
-              style={{ color: "rgba(255,255,255,0.40)", fontFamily: "Inter, sans-serif" }}
+              className="text-[11px] mt-0.5 text-[#484F58]"
+              style={{ fontFamily: "Inter, system-ui, sans-serif" }}
             >
               {plan.description}
             </p>
@@ -232,17 +202,17 @@ function PlanCard({
             {plan.price ? (
               <div className="flex items-baseline gap-1">
                 <span
-                  className="text-2xl font-bold"
-                  style={{ color: "rgba(255,255,255,0.90)", fontFamily: "Inter, sans-serif" }}
+                  className="text-2xl font-bold text-[#E6EDF3]"
+                  style={{ fontFamily: "Inter, system-ui, sans-serif" }}
                 >
                   ${plan.price}
                 </span>
-                <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/mo</span>
+                <span className="text-xs text-[#484F58]">/mo</span>
               </div>
             ) : (
               <span
-                className="text-lg font-bold"
-                style={{ color: "rgba(255,255,255,0.40)", fontFamily: "Inter, sans-serif" }}
+                className="text-lg font-bold text-[#484F58]"
+                style={{ fontFamily: "Inter, system-ui, sans-serif" }}
               >
                 Free
               </span>
@@ -256,11 +226,11 @@ function PlanCard({
             <li key={f} className="flex items-start gap-2">
               <Check
                 className="w-3.5 h-3.5 mt-0.5 shrink-0"
-                style={{ color: plan.color }}
+                style={{ color: checkColor(plan.id) }}
               />
               <span
-                className="text-xs leading-relaxed"
-                style={{ color: "rgba(255,255,255,0.65)", fontFamily: "Inter, sans-serif" }}
+                className="text-xs leading-relaxed text-[#8B949E]"
+                style={{ fontFamily: "Inter, system-ui, sans-serif" }}
               >
                 {f}
               </span>
@@ -268,10 +238,10 @@ function PlanCard({
           ))}
           {plan.locked.map((f) => (
             <li key={f} className="flex items-start gap-2 opacity-35">
-              <Lock className="w-3 h-3 mt-0.5 shrink-0" style={{ color: "rgba(255,255,255,0.35)" }} />
+              <Lock className="w-3 h-3 mt-0.5 shrink-0 text-[#484F58]" />
               <span
-                className="text-xs leading-relaxed line-through"
-                style={{ color: "rgba(255,255,255,0.40)", fontFamily: "Inter, sans-serif" }}
+                className="text-xs leading-relaxed line-through text-[#484F58]"
+                style={{ fontFamily: "Inter, system-ui, sans-serif" }}
               >
                 {f}
               </span>
@@ -283,23 +253,8 @@ function PlanCard({
         <button
           onClick={handleUpgrade}
           disabled={isCurrent || loading}
-          className="mt-auto w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all duration-200 active:scale-95 disabled:cursor-not-allowed"
-          style={{
-            background: isCurrent
-              ? `${plan.color}10`
-              : plan.animated
-              ? "rgba(168,85,247,0.18)"
-              : plan.id === "Core"
-              ? "rgba(34,197,94,0.18)"
-              : "rgba(107,114,128,0.12)",
-            border: isCurrent
-              ? `1px solid ${plan.color}20`
-              : `1px solid ${plan.color}40`,
-            color: isCurrent ? `${plan.color}60` : plan.color,
-            fontFamily: "Inter, sans-serif",
-            boxShadow: isCurrent ? "none" : `0 0 12px ${plan.color}18`,
-            opacity: isCurrent ? 0.6 : 1,
-          }}
+          className={`mt-auto w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-colors duration-200 active:scale-95 disabled:cursor-not-allowed ${buttonClasses}`}
+          style={{ fontFamily: "Inter, system-ui, sans-serif" }}
         >
           {loading ? (
             <>
@@ -377,8 +332,7 @@ export function PricingModal({ isOpen, currentPlanLevel, onClose }: PricingModal
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.80)", backdropFilter: "blur(8px)" }}
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
           onClick={handleBackdropClick}
         >
           <motion.div
@@ -387,52 +341,30 @@ export function PricingModal({ isOpen, currentPlanLevel, onClose }: PricingModal
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.93, y: 16 }}
             transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative w-full max-w-3xl rounded-2xl overflow-hidden"
-            style={{
-              background: "rgba(15,15,15,0.97)",
-              backdropFilter: "blur(28px) saturate(200%)",
-              WebkitBackdropFilter: "blur(28px) saturate(200%)",
-              border: "1px solid rgba(255,255,255,0.07)",
-              boxShadow: "0 32px 80px rgba(0,0,0,0.80)",
-            }}
+            className="relative w-full max-w-3xl rounded-2xl overflow-hidden bg-[#161B22] border border-[#30363D] shadow-2xl"
           >
-            {/* Rainbow header strip */}
-            <div
-              className="h-1 w-full"
-              style={{ background: "linear-gradient(90deg, #22c55e, #38bdf8, #a855f7, #6366f1, #a855f7, #38bdf8, #22c55e)" }}
-            />
+            {/* Thin gradient header line */}
+            <div className="h-0.5 w-full bg-gradient-to-r from-blue-600 to-indigo-600" />
 
             {/* Header */}
-            <div
-              className="flex items-center justify-between px-6 py-5"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-            >
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#30363D]">
               <div>
                 <h2
-                  className="text-lg font-bold"
-                  style={{ color: "rgba(255,255,255,0.92)", fontFamily: "Inter, sans-serif", letterSpacing: "-0.01em" }}
+                  className="text-lg font-bold text-[#E6EDF3]"
+                  style={{ fontFamily: "Inter, system-ui, sans-serif", letterSpacing: "-0.01em" }}
                 >
                   Upgrade Your Node
                 </h2>
                 <p
-                  className="text-xs mt-1"
-                  style={{ color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif" }}
+                  className="text-xs mt-1 text-[#484F58]"
+                  style={{ fontFamily: "Inter, system-ui, sans-serif" }}
                 >
                   Choose a plan that matches your agentic ambitions.
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150"
-                style={{ color: "rgba(255,255,255,0.35)", border: "1px solid rgba(255,255,255,0.08)" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.80)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.35)";
-                }}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-150 text-[#484F58] border border-[#30363D] hover:bg-[#1C2128] hover:text-[#E6EDF3]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -451,12 +383,10 @@ export function PricingModal({ isOpen, currentPlanLevel, onClose }: PricingModal
             </div>
 
             {/* Footer note */}
-            <div
-              className="px-6 pb-5 text-center"
-            >
+            <div className="px-6 pb-5 text-center">
               <p
-                className="text-[11px]"
-                style={{ color: "rgba(255,255,255,0.20)", fontFamily: "'Space Mono', monospace" }}
+                className="text-[11px] text-[#484F58]"
+                style={{ fontFamily: "'Space Mono', monospace" }}
               >
                 All plans include E2EE · AES-256-GCM · Ed25519 identity · Cancel anytime
               </p>
