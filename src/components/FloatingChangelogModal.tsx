@@ -477,12 +477,13 @@ export default function FloatingChangelogModal({ open, onClose }: FloatingChange
                   </div>
                 </div>
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>,
-      document.body
-    );
-  }
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>,
+    document.body
+  );
+}
 
 export type { ChangelogEntry };

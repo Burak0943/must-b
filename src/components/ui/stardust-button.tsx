@@ -5,12 +5,12 @@ interface StardustButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   children?: React.ReactNode;
 }
 
-export const StardustButton = ({ 
+export function StardustButton({ 
   children = "Get Started", 
   onClick, 
   className = "",
   ...props 
-}: StardustButtonProps) => {
+}: StardustButtonProps) {
   // Navbar için özel olarak küçültülmüş boyutlar
   const buttonStyle = {
     '--white': '#e6f3ff',
