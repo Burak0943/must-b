@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { ProfileCard, type ProfileCardUser } from "@/components/ProfileCard";
+import { ProfileSettingsModal } from "@/components/ProfileSettingsModal";
+import { PricingModal } from "@/components/PricingModal";
 
 // ─────────────────────────────────────────────────────────
 // Design tokens
@@ -321,6 +323,10 @@ export default function NexusDashboard() {
   const [pcUser,   setPcUser]   = useState<ProfileCardUser | null>(null);
   const [pcAnchor, setPcAnchor] = useState<DOMRect | null>(null);
 
+  // ── Modal state'leri ───────────────────────────────────
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isPricingOpen,  setIsPricingOpen]  = useState(false);
+
   const openProfileCard = useCallback((
     userId: string,
     username: string,
@@ -336,6 +342,39 @@ export default function NexusDashboard() {
   const closeProfileCard = useCallback(() => {
     setPcUser(null);
     setPcAnchor(null);
+  }, []);
+
+  /** ProfileSettingsModal kaydettiğinde profile state + cache'i anında güncelle */
+  const handleProfileUpdated = useCallback((newNodeName: string, newAvatarUrl: string | null) => {
+    setProfile((prev) => {
+      if (!prev) return prev;
+      return { ...prev, node_name: newNodeName, avatar_url: newAvatarUrl };
+    });
+    // profileCache'i de anlık güncelle (mevcut kullanıcının ID'si üzerinden)
+    setCurrentUser((prev: any) => {
+      if (prev?.id) {
+        profileCache.current[prev.id] = {
+          ...profileCache.current[prev.id],
+          node_name:  newNodeName,
+          avatar_url: newAvatarUrl,
+        };
+      }
+      return prev; // currentUser kendisi değişmez
+    });
+    // Mesaj listesini de yenile ki yeni isim/avatar mesajlarda görünsün
+    setMessages((prev) =>
+      prev.map((msg) => {
+        if (!msg.user_id) return msg;
+        // Sadece güncellenen kullanıcının mesajlarını değiştir
+        const cached = profileCache.current[msg.user_id];
+        if (!cached) return msg;
+        return {
+          ...msg,
+          user: cached.node_name || cached.full_name || cached.email?.split("@")[0] || msg.user,
+          avatar_url: cached.avatar_url ?? msg.avatar_url,
+        };
+      })
+    );
   }, []);
   
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -1165,6 +1204,25 @@ export default function NexusDashboard() {
         currentUserId={currentUser?.id ?? null}
         anchorRect={pcAnchor}
         onClose={closeProfileCard}
+        onEditClick={() => setIsSettingsOpen(true)}
+        onUpgradeClick={() => setIsPricingOpen(true)}
+      />
+
+      {/* ── Profile Settings Modal (z-99998) ── */}
+      <ProfileSettingsModal
+        isOpen={isSettingsOpen}
+        userId={currentUser?.id ?? null}
+        initialNodeName={profile?.node_name ?? ""}
+        initialAvatarUrl={profile?.avatar_url ?? null}
+        onClose={() => setIsSettingsOpen(false)}
+        onSaved={handleProfileUpdated}
+      />
+
+      {/* ── Pricing Modal (z-99999) ── */}
+      <PricingModal
+        isOpen={isPricingOpen}
+        currentPlanLevel={profile?.plan_level ?? null}
+        onClose={() => setIsPricingOpen(false)}
       />
     </>
   );
