@@ -97,7 +97,6 @@ function Avatar({ user, size = 64 }: { user: ProfileCardUser; size?: number }) {
 
 function PlanBadge({ plan }: { plan: ReturnType<typeof normalizePlan> }) {
   const meta = PLAN_META[plan];
-  const hasBadge = plan !== "Free";
 
   return (
     <span
@@ -108,9 +107,6 @@ function PlanBadge({ plan }: { plan: ReturnType<typeof normalizePlan> }) {
       }}
     >
       {meta.label}
-      {hasBadge && (
-        <BadgeCheck className="w-4 h-4 text-blue-500" />
-      )}
     </span>
   );
 }
@@ -292,7 +288,7 @@ export function ProfileCard({
                 <Avatar user={targetUser} size={72} />
                 <div>
                   <p
-                    className="text-base font-bold leading-none mb-2"
+                    className="text-base font-bold leading-none mb-2 flex items-center justify-center gap-1"
                     style={{
                       color: "#E6EDF3",
                       fontFamily: "Inter, system-ui, sans-serif",
@@ -300,6 +296,9 @@ export function ProfileCard({
                     }}
                   >
                     {targetUser.username}
+                    {(plan === "Core" || plan === "Elite" || plan === "Root" || plan === "Pro") && (
+                      <BadgeCheck className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                    )}
                   </p>
                   <PlanBadge plan={plan} />
                 </div>
